@@ -1,12 +1,16 @@
 import * as React from 'react';
 import {
   Card,
+  CardActions,
   CardBody,
+  CardHeader,
   CardTitle,
   EmptyState,
   EmptyStateIcon,
   Spinner,
   Title,
+  Toolbar,
+  ToolbarContent,
 } from '@patternfly/react-core';
 import {
   Chart,
@@ -21,7 +25,7 @@ import {
 import { CubesIcon } from '@patternfly/react-icons';
 import { TimeframeTimeRange } from '~/pages/modelServing/screens/const';
 import { ModelServingMetricsContext } from './ModelServingMetricsContext';
-import { MetricChartLine, ProcessedMetrics } from './types';
+import { DomainCalculator, MetricChartLine, ProcessedMetrics, MetricChartThreshold } from './types';
 import {
   convertTimestamp,
   formatToShow,
@@ -30,37 +34,51 @@ import {
   useStableMetrics,
 } from './utils';
 
+const defaultDomainCalculator: DomainCalculator = (maxYValue) => ({
+  y: maxYValue === 0 ? [0, 1] : [0, maxYValue],
+});
+
 type MetricsChartProps = {
   title: string;
   color?: string;
   metrics: MetricChartLine;
-  threshold?: number;
+  thresholds?: MetricChartThreshold[];
+  domain?: DomainCalculator;
+  toolbar?: React.ReactElement<typeof ToolbarContent>;
 };
 
 const MetricsChart: React.FC<MetricsChartProps> = ({
   title,
   color,
   metrics: unstableMetrics,
-  threshold,
+  thresholds = [],
+  domain = defaultDomainCalculator,
+  toolbar,
 }) => {
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = React.useState(0);
   const { currentTimeframe, lastUpdateTime } = React.useContext(ModelServingMetricsContext);
   const metrics = useStableMetrics(unstableMetrics, title);
 
-  const { data: graphLines, maxYValue } = React.useMemo(
+  const {
+    data: graphLines,
+    maxYValue,
+    minYValue,
+  } = React.useMemo(
     () =>
       metrics.reduce<ProcessedMetrics>(
         (acc, metric) => {
           const lineValues = createGraphMetricLine(metric);
           const newMaxValue = Math.max(...lineValues.map((v) => v.y));
+          const newMinValue = Math.min(...lineValues.map((v) => v.y));
 
           return {
             data: [...acc.data, lineValues],
             maxYValue: Math.max(acc.maxYValue, newMaxValue),
+            minYValue: Math.min(acc.minYValue, newMinValue),
           };
         },
-        { data: [], maxYValue: 0 },
+        { data: [], maxYValue: 0, minYValue: 0 },
       ),
     [metrics],
   );
@@ -94,7 +112,14 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
 
   return (
     <Card>
-      <CardTitle>{title}</CardTitle>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        {toolbar && (
+          <CardActions>
+            <Toolbar>{toolbar}</Toolbar>
+          </CardActions>
+        )}
+      </CardHeader>
       <CardBody style={{ height: hasSomeData ? 400 : 200, padding: 0 }}>
         <div ref={bodyRef}>
           {hasSomeData ? (
@@ -106,7 +131,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
                   constrainToVisibleArea
                 />
               }
-              domain={{ y: maxYValue === 0 ? [0, 1] : [0, maxYValue + 1] }}
+              domain={domain(maxYValue, minYValue)}
               height={400}
               width={chartWidth}
               padding={{ left: 70, right: 50, bottom: 70, top: 50 }}
@@ -127,7 +152,14 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
                   <ChartArea key={i} data={line} />
                 ))}
               </ChartGroup>
-              {threshold && <ChartThreshold data={getThresholdData(graphLines, threshold)} />}
+              {thresholds.map((t, i) => (
+                <ChartThreshold
+                  key={i}
+                  data={getThresholdData(graphLines, t.value)}
+                  style={t.color ? { data: { stroke: t.color } } : undefined}
+                  name={t.label}
+                />
+              ))}
             </Chart>
           ) : (
             <EmptyState>
