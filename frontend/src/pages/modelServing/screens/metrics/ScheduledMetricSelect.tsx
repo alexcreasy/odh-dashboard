@@ -2,6 +2,7 @@ import React from 'react';
 import { Select, SelectOption } from '@patternfly/react-core';
 import { TrustyMetaData } from '~/pages/modelServing/screens/metrics/types';
 
+//TODO: This component is currently designed to demo some features but will need to be overhauled in the next iteration.
 type ScheduledMetricSelectProps = {
   metadata: TrustyMetaData[];
 };

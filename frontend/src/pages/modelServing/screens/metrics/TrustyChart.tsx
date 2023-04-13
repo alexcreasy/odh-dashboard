@@ -12,7 +12,7 @@ import { DomainCalculator, TrustyMetaData } from '~/pages/modelServing/screens/m
 type TrustyChartProps = {
   title: string;
   abbreviation: string;
-  trustyMetricType: InferenceMetricType;
+  trustyMetricType: InferenceMetricType.TRUSTY_AI_SPD | InferenceMetricType.TRUSTY_AI_DIR;
   tooltip: React.ReactNode;
   thresholds: [number, number];
   domain: DomainCalculator;
