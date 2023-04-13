@@ -9,6 +9,9 @@ import {
   EmptyStateIcon,
   Spinner,
   Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
 } from '@patternfly/react-core';
 import {
   Chart,
@@ -33,6 +36,7 @@ import {
   useStableMetrics,
 } from './utils';
 
+//TODO: color should be an enum of limitd values, not an openended string.
 export type Threshold = {
   value: number;
   color?: string;
@@ -44,24 +48,13 @@ export type DomainCalculator = (maxYValue: number) => ForAxes<DomainTuple>;
 const defaultDomainCalculator: DomainCalculator = (maxYValue) => ({
   y: maxYValue === 0 ? [0, 1] : [0, maxYValue],
 });
-
 type MetricsChartProps = {
   title: string;
   color?: string;
   metrics: MetricChartLine;
   thresholds?: Threshold[];
-  //TODO: this needs to be an enum not a string allowing any color under the sun.
-  /*
-    [
-    {
-      value: number
-      color?: emum
-      label?: string
-    }
-    ]
-   */
   domain?: DomainCalculator;
-  toolbar?: React.ReactNode;
+  toolbar?: React.ReactElement<typeof ToolbarContent>;
 };
 
 const MetricsChart: React.FC<MetricsChartProps> = ({
@@ -129,7 +122,11 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
         {
           //TODO: Only accept React Nodes of type Toolbar Content. Look at table as an example.
         }
-        {toolbar && <CardActions>{toolbar}</CardActions>}
+        {toolbar && (
+          <CardActions>
+            <Toolbar>{toolbar}</Toolbar>
+          </CardActions>
+        )}
       </CardHeader>
       <CardBody style={{ height: hasSomeData ? 400 : 200, padding: 0 }}>
         <div ref={bodyRef}>

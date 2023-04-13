@@ -54,15 +54,13 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
       }}
       domain={domain}
       toolbar={
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem>{tooltip}</ToolbarItem>
-            <ToolbarItem variant="label">Scheduled Metric</ToolbarItem>
-            <ToolbarItem>
-              <ScheduledMetricSelect metadata={metadataSet} />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
+        <ToolbarContent>
+          <ToolbarItem>{tooltip}</ToolbarItem>
+          <ToolbarItem variant="label">Scheduled Metric</ToolbarItem>
+          <ToolbarItem>
+            <ScheduledMetricSelect metadata={metadataSet} />
+          </ToolbarItem>
+        </ToolbarContent>
       }
       thresholds={thresholds.map((t) => ({
         value: t,
