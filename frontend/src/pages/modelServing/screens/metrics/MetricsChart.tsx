@@ -27,7 +27,7 @@ import { CubesIcon } from '@patternfly/react-icons';
 import { DomainTuple, ForAxes } from 'victory-core';
 import { TimeframeTimeRange } from '~/pages/modelServing/screens/const';
 import { ModelServingMetricsContext } from './ModelServingMetricsContext';
-import { MetricChartLine, ProcessedMetrics } from './types';
+import { DomainCalculator, MetricChartLine, ProcessedMetrics, MetricChartThreshold } from './types';
 import {
   convertTimestamp,
   formatToShow,
@@ -36,23 +36,15 @@ import {
   useStableMetrics,
 } from './utils';
 
-//TODO: color should be an enum of limitd values, not an openended string.
-export type Threshold = {
-  value: number;
-  color?: string;
-  label?: string;
-};
-
-export type DomainCalculator = (maxYValue: number) => ForAxes<DomainTuple>;
-
 const defaultDomainCalculator: DomainCalculator = (maxYValue) => ({
   y: maxYValue === 0 ? [0, 1] : [0, maxYValue],
 });
+
 type MetricsChartProps = {
   title: string;
   color?: string;
   metrics: MetricChartLine;
-  thresholds?: Threshold[];
+  thresholds?: MetricChartThreshold[];
   domain?: DomainCalculator;
   toolbar?: React.ReactElement<typeof ToolbarContent>;
 };

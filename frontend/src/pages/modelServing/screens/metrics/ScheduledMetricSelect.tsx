@@ -1,18 +1,6 @@
 import React from 'react';
 import { Select, SelectOption } from '@patternfly/react-core';
-
-/*
-Protected Attribute: input-3=1, Favorable Output: output-0=0
-Protected Attribute: input-5=1, Favorable Output: output-0=0
-Protected Attribute: input-5=1, Favorable Output: output-0=1
-
- */
-export type TrustyMetaData = {
-  protectedAttribute: string;
-  protectedValue: number;
-  favorableOutput: string;
-  favorableValue: number;
-};
+import { TrustyMetaData } from '~/pages/modelServing/screens/metrics/types';
 
 type ScheduledMetricSelectProps = {
   metadata: TrustyMetaData[];
@@ -23,10 +11,8 @@ const ScheduledMetricSelect: React.FC<ScheduledMetricSelectProps> = ({ metadata 
 
   const onToggle = () => setIsOpen(!isOpen);
   const onSelect = (event, selection) => {
-    console.log('select: %O', selection);
     setSelected(selection);
     setIsOpen(false);
-    //showPayload(selection);
   };
 
   const formatOption = (option: TrustyMetaData) =>

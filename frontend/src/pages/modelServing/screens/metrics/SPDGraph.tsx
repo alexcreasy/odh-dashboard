@@ -1,8 +1,8 @@
 import React from 'react';
 import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
-import { DomainCalculator } from '~/pages/modelServing/screens/metrics/MetricsChart';
 import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
 import SPDTooltip from '~/pages/modelServing/screens/metrics/SPDTooltip';
+import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
 
 const SPDGraph = () => {
   const domainCalc: DomainCalculator = (maxYValue) => ({
@@ -17,8 +17,6 @@ const SPDGraph = () => {
       tooltip={<SPDTooltip />}
       domain={domainCalc}
       thresholds={[0.1, -0.1]}
-      // threshold={0.1}
-      // minThreshold={-0.1}
     />
   );
 };

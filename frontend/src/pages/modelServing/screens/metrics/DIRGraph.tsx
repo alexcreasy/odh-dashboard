@@ -1,8 +1,8 @@
 import React from 'react';
 import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
-import { DomainCalculator } from '~/pages/modelServing/screens/metrics/MetricsChart';
 import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
 import DIRTooltip from '~/pages/modelServing/screens/metrics/DIRTooltip';
+import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
 
 const DirGraph = () => {
   const domainCalc: DomainCalculator = (maxYValue) => ({

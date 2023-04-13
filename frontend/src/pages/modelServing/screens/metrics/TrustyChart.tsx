@@ -1,14 +1,13 @@
 import React from 'react';
 import { ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import _ from 'lodash';
-import MetricsChart, { DomainCalculator } from '~/pages/modelServing/screens/metrics/MetricsChart';
-import ScheduledMetricSelect, {
-  TrustyMetaData,
-} from '~/pages/modelServing/screens/metrics/ScheduledMetricSelect';
+import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
+import ScheduledMetricSelect from '~/pages/modelServing/screens/metrics/ScheduledMetricSelect';
 import {
   InferenceMetricType,
   ModelServingMetricsContext,
 } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
+import { DomainCalculator, TrustyMetaData } from '~/pages/modelServing/screens/metrics/types';
 
 type TrustyChartProps = {
   title: string;
