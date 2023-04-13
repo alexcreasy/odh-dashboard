@@ -1,5 +1,5 @@
 import React from 'react';
-import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import _ from 'lodash';
 import MetricsChart, { DomainCalculator } from '~/pages/modelServing/screens/metrics/MetricsChart';
 import ScheduledMetricSelect, {
@@ -35,7 +35,7 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
   };
   const fullPayload = data[trustyMetricType].data;
 
-  // TODO: Subject to change in next iteration.
+  // TODO: Subject to change in next iteration. This is just a placeholder for the demo that needs redesigning.
   const metadata: TrustyMetaData[] = fullPayload.map((payload) => ({
     protectedAttribute: payload.metric.protected,
     protectedValue: payload.metric.privileged,
