@@ -13,7 +13,7 @@ const DIRChart = () => {
     <TrustyChart
       title="Disparate Impact Ratio"
       abbreviation="DIR"
-      trustyMetricType={InferenceMetricType.TRUSTY_AI_DIR}
+      metricType={InferenceMetricType.TRUSTY_AI_DIR}
       tooltip={<DIRTooltip />}
       domain={domainCalc}
       thresholds={[1.2, 0.8]}

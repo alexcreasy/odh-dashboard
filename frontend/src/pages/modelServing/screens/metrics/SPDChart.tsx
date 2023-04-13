@@ -13,7 +13,7 @@ const SPDChart = () => {
     <TrustyChart
       title="Statistical Parity Difference"
       abbreviation="SPD"
-      trustyMetricType={InferenceMetricType.TRUSTY_AI_SPD}
+      metricType={InferenceMetricType.TRUSTY_AI_SPD}
       tooltip={<SPDTooltip />}
       domain={domainCalc}
       thresholds={[0.1, -0.1]}

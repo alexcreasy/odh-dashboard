@@ -12,7 +12,7 @@ import { DomainCalculator, TrustyMetaData } from '~/pages/modelServing/screens/m
 type TrustyChartProps = {
   title: string;
   abbreviation: string;
-  trustyMetricType: InferenceMetricType.TRUSTY_AI_SPD | InferenceMetricType.TRUSTY_AI_DIR;
+  metricType: InferenceMetricType.TRUSTY_AI_SPD | InferenceMetricType.TRUSTY_AI_DIR;
   tooltip: React.ReactNode;
   thresholds: [number, number];
   domain: DomainCalculator;
@@ -21,7 +21,7 @@ type TrustyChartProps = {
 const TrustyChart: React.FC<TrustyChartProps> = ({
   title,
   abbreviation,
-  trustyMetricType,
+  metricType,
   tooltip,
   thresholds,
   domain,
@@ -29,10 +29,10 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
   const THRESHOLD_COLOR = 'red';
   const { data } = React.useContext(ModelServingMetricsContext);
   const metric = {
-    ...data[trustyMetricType],
-    data: data[trustyMetricType].data[0]?.values,
+    ...data[metricType],
+    data: data[metricType].data[0]?.values,
   };
-  const fullPayload = data[trustyMetricType].data;
+  const fullPayload = data[metricType].data;
 
   // TODO: Subject to change in next iteration. This is just a placeholder for the demo that needs redesigning.
   const metadata: TrustyMetaData[] = fullPayload.map((payload) => ({
