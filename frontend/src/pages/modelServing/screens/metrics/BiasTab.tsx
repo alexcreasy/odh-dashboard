@@ -1,8 +1,8 @@
 import React from 'react';
 import { PageSection, Stack, StackItem } from '@patternfly/react-core';
-import DIRGraph from '~/pages/modelServing/screens/metrics/DIRGraph';
+import DIRGraph from '~/pages/modelServing/screens/metrics/DIRChart';
 import MetricsPageToolbar from './MetricsPageToolbar';
-import SPDGraph from './SPDGraph';
+import SPDChart from './SPDChart';
 
 const BiasTab = () => (
   <Stack>
@@ -12,7 +12,7 @@ const BiasTab = () => (
     <PageSection isFilled>
       <Stack hasGutter>
         <StackItem>
-          <SPDGraph />
+          <SPDChart />
         </StackItem>
         <StackItem>
           <DIRGraph />

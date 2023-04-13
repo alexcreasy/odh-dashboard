@@ -1,24 +1,23 @@
 import React from 'react';
 import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
-import DIRTooltip from '~/pages/modelServing/screens/metrics/DIRTooltip';
+import SPDTooltip from '~/pages/modelServing/screens/metrics/SPDTooltip';
 import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
 
-const DirGraph = () => {
+const SPDChart = () => {
   const domainCalc: DomainCalculator = (maxYValue) => ({
-    y: maxYValue > 1.2 ? [0, maxYValue + 0.1] : [0, 1.3],
+    y: maxYValue > 0.1 ? [-1 * maxYValue - 0.1, maxYValue + 0.1] : [-0.2, 0.2],
   });
 
   return (
     <TrustyChart
-      title="Disparate Impact Ratio"
-      abbreviation="DIR"
-      trustyMetricType={InferenceMetricType.TRUSTY_AI_DIR}
-      tooltip={<DIRTooltip />}
+      title="Statistical Parity Difference"
+      abbreviation="SPD"
+      trustyMetricType={InferenceMetricType.TRUSTY_AI_SPD}
+      tooltip={<SPDTooltip />}
       domain={domainCalc}
-      thresholds={[1.2, 0.8]}
+      thresholds={[0.1, -0.1]}
     />
   );
 };
-
-export default DirGraph;
+export default SPDChart;
