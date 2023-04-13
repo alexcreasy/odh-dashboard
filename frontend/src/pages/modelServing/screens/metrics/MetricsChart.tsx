@@ -33,13 +33,14 @@ import {
   useStableMetrics,
 } from './utils';
 
-export type DomainCalculator = (maxYValue: number) => ForAxes<DomainTuple>;
-
 export type Threshold = {
   value: number;
   color?: string;
   label?: string;
 };
+
+export type DomainCalculator = (maxYValue: number) => ForAxes<DomainTuple>;
+
 const defaultDomainCalculator: DomainCalculator = (maxYValue) => ({
   y: maxYValue === 0 ? [0, 1] : [0, maxYValue],
 });
@@ -48,9 +49,7 @@ type MetricsChartProps = {
   title: string;
   color?: string;
   metrics: MetricChartLine;
-  threshold2?: Threshold[];
-  threshold?: number;
-  minThreshold?: number;
+  thresholds?: Threshold[];
   //TODO: this needs to be an enum not a string allowing any color under the sun.
   /*
     [
@@ -61,7 +60,6 @@ type MetricsChartProps = {
     }
     ]
    */
-  thresholdColor?: string;
   domain?: DomainCalculator;
   toolbar?: React.ReactNode;
 };
@@ -70,10 +68,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
   title,
   color,
   metrics: unstableMetrics,
-  threshold2 = [],
-  threshold,
-  minThreshold,
-  thresholdColor,
+  thresholds = [],
   domain = defaultDomainCalculator,
   toolbar,
 }) => {
@@ -168,38 +163,14 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
                   <ChartArea key={i} data={line} />
                 ))}
               </ChartGroup>
-              {threshold2.map((t) => (
+              {thresholds.map((t, i) => (
                 <ChartThreshold
+                  key={i}
                   data={getThresholdData(graphLines, t.value)}
                   style={t.color ? { data: { stroke: t.color } } : undefined}
                   name={t.label}
                 />
               ))}
-              {/*{threshold && (*/}
-              {/*  <ChartThreshold*/}
-              {/*    data={getThresholdData(graphLines, threshold)}*/}
-              {/*    style={*/}
-              {/*      thresholdColor*/}
-              {/*        ? {*/}
-              {/*            data: { stroke: thresholdColor },*/}
-              {/*          }*/}
-              {/*        : undefined*/}
-              {/*    }*/}
-              {/*  />*/}
-              {/*)}*/}
-              {/*{minThreshold && (*/}
-              {/*  <ChartThreshold*/}
-              {/*    data={getThresholdData(graphLines, minThreshold)}*/}
-              {/*    //TODO: We should stick to PF variables,*/}
-              {/*    style={*/}
-              {/*      thresholdColor*/}
-              {/*        ? {*/}
-              {/*            data: { stroke: thresholdColor },*/}
-              {/*          }*/}
-              {/*        : undefined*/}
-              {/*    }*/}
-              {/*  />*/}
-              {/*)}*/}
             </Chart>
           ) : (
             <EmptyState>

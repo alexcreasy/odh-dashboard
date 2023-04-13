@@ -15,9 +15,10 @@ const SPDGraph = () => {
       abbreviation="SPD"
       trustyMetricType={InferenceMetricType.TRUSTY_AI_SPD}
       tooltip={<SPDTooltip />}
-      domainCalc={domainCalc}
-      threshold={0.1}
-      minThreshold={-0.1}
+      domain={domainCalc}
+      thresholds={[0.1, -0.1]}
+      // threshold={0.1}
+      // minThreshold={-0.1}
     />
   );
 };

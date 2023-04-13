@@ -15,10 +15,8 @@ type TrustyChartProps = {
   abbreviation: string;
   trustyMetricType: InferenceMetricType;
   tooltip: React.ReactNode;
-  threshold?: number;
-  minThreshold?: number;
-  //TODO: Consider a different parameter name
-  domainCalc: DomainCalculator;
+  thresholds: [number, number];
+  domain: DomainCalculator;
 };
 
 const TrustyChart: React.FC<TrustyChartProps> = ({
@@ -26,17 +24,18 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
   abbreviation,
   trustyMetricType,
   tooltip,
-  threshold,
-  minThreshold,
-  domainCalc,
+  thresholds,
+  domain,
 }) => {
+  const THRESHOLD_COLOR = 'red';
   const { data } = React.useContext(ModelServingMetricsContext);
   const metric = {
     ...data[trustyMetricType],
     data: data[trustyMetricType].data[0]?.values,
   };
-
   const fullPayload = data[trustyMetricType].data;
+
+  // TODO: Subject to change in next iteration.
   const metadata: TrustyMetaData[] = fullPayload.map((payload) => ({
     protectedAttribute: payload.metric.protected,
     protectedValue: payload.metric.privileged,
@@ -53,7 +52,7 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
         name: abbreviation,
         metric: metric,
       }}
-      domain={domainCalc}
+      domain={domain}
       toolbar={
         <Toolbar>
           <ToolbarContent>
@@ -65,9 +64,10 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
           </ToolbarContent>
         </Toolbar>
       }
-      threshold={threshold}
-      minThreshold={minThreshold}
-      thresholdColor="red"
+      thresholds={thresholds.map((t) => ({
+        value: t,
+        color: THRESHOLD_COLOR,
+      }))}
     />
   );
 };
