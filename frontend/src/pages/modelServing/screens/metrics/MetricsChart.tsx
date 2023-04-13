@@ -111,9 +111,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        {
-          //TODO: Only accept React Nodes of type Toolbar Content. Look at table as an example.
-        }
         {toolbar && (
           <CardActions>
             <Toolbar>{toolbar}</Toolbar>
