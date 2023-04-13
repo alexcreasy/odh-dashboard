@@ -62,7 +62,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
   const { currentTimeframe, lastUpdateTime } = React.useContext(ModelServingMetricsContext);
   const metrics = useStableMetrics(unstableMetrics, title);
 
-  //TODO: Add minYValue here and to domainCalc call below.
   const {
     data: graphLines,
     maxYValue,
@@ -72,12 +71,13 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
       metrics.reduce<ProcessedMetrics>(
         (acc, metric) => {
           const lineValues = createGraphMetricLine(metric);
-          const newMaxValue = Math.max(...lineValues.map((v) => Math.abs(v.y)));
+          const newMaxValue = Math.max(...lineValues.map((v) => v.y));
+          const newMinValue = Math.min(...lineValues.map((v) => v.y));
 
           return {
             data: [...acc.data, lineValues],
             maxYValue: Math.max(acc.maxYValue, newMaxValue),
-            minYValue: 0,
+            minYValue: Math.min(acc.minYValue, newMinValue),
           };
         },
         { data: [], maxYValue: 0, minYValue: 0 },
@@ -133,7 +133,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
                   constrainToVisibleArea
                 />
               }
-              domain={domain(maxYValue)}
+              domain={domain(maxYValue, maxYValue)}
               height={400}
               width={chartWidth}
               padding={{ left: 70, right: 50, bottom: 70, top: 50 }}
