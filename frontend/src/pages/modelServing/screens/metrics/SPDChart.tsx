@@ -3,8 +3,16 @@ import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelS
 import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
 import SPDTooltip from '~/pages/modelServing/screens/metrics/SPDTooltip';
 import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
+import { getRoute } from '~/services/routeService';
 
 const SPDChart = () => {
+  React.useEffect(() => {
+    getRoute('trustyai-e2e', 'trustyai').then((route) => {
+      console.log(`Trusty route = ${route.spec.host}`);
+      console.log('Route object = %O', route);
+    });
+  });
+
   const domainCalc: DomainCalculator = (maxYValue) => ({
     y: maxYValue > 0.1 ? [-1 * maxYValue - 0.1, maxYValue + 0.1] : [-0.2, 0.2],
   });
