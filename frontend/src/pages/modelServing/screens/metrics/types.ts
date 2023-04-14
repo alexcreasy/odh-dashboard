@@ -45,3 +45,8 @@ export type TrustyMetaData = {
   favorableOutput: string;
   favorableValue: number;
 };
+
+export enum MetricsChartTypes {
+  AREA,
+  LINE,
+}

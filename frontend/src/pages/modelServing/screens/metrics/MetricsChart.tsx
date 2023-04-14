@@ -17,6 +17,7 @@ import {
   ChartArea,
   ChartAxis,
   ChartGroup,
+  ChartLine,
   ChartThemeColor,
   ChartThreshold,
   ChartVoronoiContainer,
@@ -25,12 +26,18 @@ import {
 import { CubesIcon } from '@patternfly/react-icons';
 import { TimeframeTimeRange } from '~/pages/modelServing/screens/const';
 import { ModelServingMetricsContext } from './ModelServingMetricsContext';
-import { DomainCalculator, MetricChartLine, ProcessedMetrics, MetricChartThreshold } from './types';
+import {
+  DomainCalculator,
+  MetricChartLine,
+  MetricChartThreshold,
+  MetricsChartTypes,
+  ProcessedMetrics,
+} from './types';
 import {
   convertTimestamp,
+  createGraphMetricLine,
   formatToShow,
   getThresholdData,
-  createGraphMetricLine,
   useStableMetrics,
 } from './utils';
 
@@ -45,8 +52,8 @@ type MetricsChartProps = {
   thresholds?: MetricChartThreshold[];
   domain?: DomainCalculator;
   toolbar?: React.ReactElement<typeof ToolbarContent>;
+  type?: MetricsChartTypes;
 };
-
 const MetricsChart: React.FC<MetricsChartProps> = ({
   title,
   color,
@@ -54,6 +61,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
   thresholds = [],
   domain = defaultDomainCalculator,
   toolbar,
+  type = MetricsChartTypes.AREA,
 }) => {
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = React.useState(0);
@@ -148,9 +156,16 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
               />
               <ChartAxis dependentAxis tickCount={10} fixLabelOverlap />
               <ChartGroup>
-                {graphLines.map((line, i) => (
-                  <ChartArea key={i} data={line} />
-                ))}
+                {graphLines.map((line, i) => {
+                  switch (type) {
+                    case MetricsChartTypes.AREA:
+                      return <ChartArea key={i} data={line} />;
+                      break;
+                    case MetricsChartTypes.LINE:
+                      return <ChartLine key={i} data={line} />;
+                      break;
+                  }
+                })}
               </ChartGroup>
               {thresholds.map((t, i) => (
                 <ChartThreshold

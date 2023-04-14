@@ -2,7 +2,7 @@ import React from 'react';
 import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
 import DIRTooltip from '~/pages/modelServing/screens/metrics/DIRTooltip';
-import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
+import { DomainCalculator, MetricsChartTypes } from '~/pages/modelServing/screens/metrics/types';
 
 const DIRChart = () => {
   const domainCalc: DomainCalculator = (maxYValue) => ({
@@ -17,6 +17,7 @@ const DIRChart = () => {
       tooltip={<DIRTooltip />}
       domain={domainCalc}
       thresholds={[1.2, 0.8]}
+      type={MetricsChartTypes.LINE}
     />
   );
 };
