@@ -7,6 +7,7 @@ export enum MetricType {
 }
 
 export enum TimeframeTitle {
+  FIFTEEN_MINUTES = '15 minutes',
   ONE_HOUR = '1 hour',
   ONE_DAY = '24 hours',
   ONE_WEEK = '7 days',
