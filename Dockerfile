@@ -39,6 +39,10 @@ COPY --chown=default:root --from=builder /usr/src/app/data /usr/src/app/data
 
 RUN cd backend && npm ci --omit=dev --omit=optional
 
+USER root
+RUN chown -R default:root "/opt/app-root/src/.npm"
+USER default
+
 WORKDIR /usr/src/app/backend
 
 CMD ["npm", "run", "start"]
