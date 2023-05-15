@@ -26,12 +26,15 @@ const SPDChart = () => {
           </StackItem>
         </Stack>
       }
-      domain={(maxYValue) => ({
-        y:
-          maxYValue > DEFAULT_MAX_THRESHOLD
-            ? [-1 * maxYValue - PADDING, maxYValue + PADDING]
-            : [DEFAULT_MIN_THRESHOLD - PADDING, DEFAULT_MAX_THRESHOLD + PADDING],
-      })}
+      domain={(maxYValue, minYValue) => {
+        const absMax = Math.max(Math.abs(maxYValue), Math.abs(minYValue));
+        return {
+          y:
+            absMax > DEFAULT_MAX_THRESHOLD
+              ? [-1 * absMax - PADDING, absMax + PADDING]
+              : [DEFAULT_MIN_THRESHOLD - PADDING, DEFAULT_MAX_THRESHOLD + PADDING],
+        };
+      }}
       thresholds={[DEFAULT_MAX_THRESHOLD, DEFAULT_MIN_THRESHOLD]}
     />
   );
