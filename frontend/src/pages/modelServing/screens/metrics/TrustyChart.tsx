@@ -1,60 +1,51 @@
 import React from 'react';
-import { Stack, ToolbarContent, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { Stack } from '@patternfly/react-core';
 import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
-import ScheduledMetricSelect from '~/pages/modelServing/screens/metrics/ScheduledMetricSelect';
 import {
   InferenceMetricType,
   ModelServingMetricsContext,
 } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 import { DomainCalculator, MetricsChartTypes } from '~/pages/modelServing/screens/metrics/types';
 
-type TrustyChartProps = {
+export type TrustyChartProps = {
   title: string;
   abbreviation: string;
   metricType: InferenceMetricType.TRUSTY_AI_SPD | InferenceMetricType.TRUSTY_AI_DIR;
   tooltip?: React.ReactElement<typeof Stack>;
   thresholds: [number, number];
   domain: DomainCalculator;
-  type?: MetricsChartTypes;
+  id: string;
 };
 
 const TrustyChart: React.FC<TrustyChartProps> = ({
   title,
   abbreviation,
   metricType,
-  tooltip,
   thresholds,
   domain,
-  type = MetricsChartTypes.AREA,
+  id,
 }) => {
   const THRESHOLD_COLOR = 'red';
   const { data } = React.useContext(ModelServingMetricsContext);
-  const [selectedPayloadName, setSelectedPayloadName] = React.useState<string>();
 
-  const metricData = data[metricType].data;
+  const metric = React.useMemo(() => {
+    const metricData = data[metricType].data;
 
-  //TODO: Fix this. This is a short term hack to add a property that will be provided by TrustyAI by release time.
-  metricData.forEach((x, i) => {
-    if (!x.metric?.requestName) {
-      x.metric.requestName = `Payload ${i}`;
+    const values = metricData.find((x) => x.metric.request === id)?.values;
+
+    // const values = [];
+    return {
+      ...data[metricType],
+      data: values,
+    };
+  }, [data, id, metricType]);
+
+  const type = React.useMemo(() => {
+    if (metricType === InferenceMetricType.TRUSTY_AI_SPD) {
+      return MetricsChartTypes.AREA;
     }
-  });
-
-  React.useEffect(() => {
-    if (!selectedPayloadName) {
-      setSelectedPayloadName(metricData[0]?.metric?.requestName);
-    }
-  }, [selectedPayloadName, metricData]);
-
-  const payloadOptions: string[] = metricData.map((payload) => payload.metric.requestName);
-
-  const selectedPayload = metricData.find((x) => x.metric.requestName === selectedPayloadName);
-
-  const metric = {
-    ...data[metricType],
-    data: selectedPayload?.values,
-  };
+    return MetricsChartTypes.LINE;
+  }, [metricType]);
 
   return (
     <MetricsChart
@@ -64,26 +55,6 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
         metric: metric,
       }}
       domain={domain}
-      toolbar={
-        <ToolbarContent>
-          {tooltip && (
-            <ToolbarItem>
-              <Tooltip removeFindDomNode position="right" content={tooltip}>
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
-            </ToolbarItem>
-          )}
-          {/*<ToolbarItem><button onClick={() => } </ToolbarItem>*/}
-          <ToolbarItem variant="label">Scheduled Metric</ToolbarItem>
-          <ToolbarItem>
-            <ScheduledMetricSelect
-              selected={selectedPayloadName}
-              options={payloadOptions}
-              onSelect={setSelectedPayloadName}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      }
       thresholds={thresholds.map((t) => ({
         value: t,
         color: THRESHOLD_COLOR,

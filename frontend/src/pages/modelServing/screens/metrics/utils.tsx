@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { BreadcrumbItem, SelectOptionObject } from '@patternfly/react-core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { TimeframeTitle } from '~/pages/modelServing/screens/types';
+import { RefreshIntervalTitle, TimeframeTitle } from '~/pages/modelServing/screens/types';
 import { InferenceServiceKind, ServingRuntimeKind } from '~/k8sTypes';
 import { BreadcrumbItemType, DashboardConfig } from '~/types';
 import {
@@ -57,6 +57,11 @@ export const isTimeframeTitle = (
   timeframe: string | SelectOptionObject,
 ): timeframe is TimeframeTitle =>
   Object.values(TimeframeTitle).includes(timeframe as TimeframeTitle);
+
+export const isRefreshIntervalTitle = (
+  refreshInterval: string | SelectOptionObject,
+): refreshInterval is RefreshIntervalTitle =>
+  Object.values(RefreshIntervalTitle).includes(refreshInterval as RefreshIntervalTitle);
 
 export const convertTimestamp = (timestamp: number, show?: 'date' | 'second'): string => {
   const date = new Date(timestamp);
@@ -221,3 +226,21 @@ export const checkConfigurationFieldsValid = (
 
 export const isMetricType = (metricType: string | SelectOptionObject): metricType is MetricTypes =>
   Object.values(MetricTypes).includes(metricType as MetricTypes);
+
+export const byId =
+  <T extends { id: string | number }, U extends T | T['id']>(arg: U) =>
+  (arg2: T) => {
+    if (typeof arg === 'object') {
+      return arg2.id === arg.id;
+    }
+    return arg2.id === arg;
+  };
+
+export const byNotId =
+  <T extends { id: string | number }, U extends T | T['id']>(arg: U) =>
+  (arg2: T) => {
+    if (typeof arg === 'object') {
+      return arg2.id !== arg.id;
+    }
+    return arg2.id !== arg;
+  };
