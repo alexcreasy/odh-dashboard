@@ -12,7 +12,7 @@ import MetricsPageToolbar from '~/pages/modelServing/screens/metrics/MetricsPage
 import BiasMetricConfigSelector from '~/pages/modelServing/screens/metrics/BiasMetricConfigSelector';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { useExplainabilityModelData } from '~/concepts/explainability/useExplainabilityModelData';
-import TrustyChart, { TrustyChartProps } from '~/pages/modelServing/screens/metrics/TrustyChart';
+import TrustyChart from '~/pages/modelServing/screens/metrics/TrustyChart';
 import BiasMetricChartWrapper from '~/pages/modelServing/screens/metrics/BiasMetricChartWrapper';
 import { useBrowserStorage } from '~/components/browserStorage';
 import EmptyBiasConfigurationCard from '~/pages/modelServing/screens/metrics/EmptyBiasConfigurationCard';
@@ -31,8 +31,6 @@ const BiasTab: React.FC = () => {
     true,
     true,
   );
-
-  const charts = React.useMemo(() => selectedBiasConfigs.map(asChartData), [selectedBiasConfigs]);
 
   if (!loaded) {
     return (
@@ -72,13 +70,13 @@ const BiasTab: React.FC = () => {
               </StackItem>
             )) || (
               <>
-                {charts.map((chart) => (
-                  <StackItem key={chart.biasMetricConfig.id}>
+                {biasMetricConfigs.map((x) => (
+                  <StackItem key={x.id}>
                     <BiasMetricChartWrapper
-                      title={chart.biasMetricConfig.name}
-                      storageKey={`${OPEN_WRAPPER_STORAGE_KEY_PREFIX}-${chart.biasMetricConfig.id}`}
+                      title={x.name}
+                      storageKey={`${OPEN_WRAPPER_STORAGE_KEY_PREFIX}-${x.id}`}
                     >
-                      <TrustyChart biasMetricConfig={chart.biasMetricConfig} />
+                      <TrustyChart biasMetricConfig={x} />
                     </BiasMetricChartWrapper>
                   </StackItem>
                 ))}
@@ -89,33 +87,4 @@ const BiasTab: React.FC = () => {
     </Stack>
   );
 };
-
-type ChartData = {
-  biasMetricConfig: BiasMetricConfig;
-} & TrustyChartProps;
-
-//TODO: Add separate domain calcs.
-const asChartData = (biasMetricConfig: BiasMetricConfig): ChartData =>
-  // const { id, name } = biasMetricConfig;
-  // const domain: DomainCalculator = (maxYValue, minYValue) => ({
-  //   y: [maxYValue + BIAS_THRESHOLD_PADDING, minYValue - BIAS_THRESHOLD_PADDING],
-  //   // maxYValue > DEFAULT_MAX_THRESHOLD
-  //   //   ? [-1 * maxYValue - PADDING, maxYValue + PADDING]
-  //   //   : [DEFAULT_MIN_THRESHOLD - PADDING, DEFAULT_MAX_THRESHOLD + PADDING],
-  // });
-
-  // let title = '';
-  // let abbreviation = 'DEFAULT';
-
-  // if (biasMetricConfig.metricType === MetricTypes.SPD) {
-  //   title = 'Statistical Parity Difference';
-  //   abbreviation = 'SPD';
-  // } else if (biasMetricConfig.metricType === MetricTypes.DIR) {
-  //   title = 'Disparate Impact Ratio';
-  //   abbreviation = 'DIR';
-  // }
-
-  ({
-    biasMetricConfig,
-  });
 export default BiasTab;
