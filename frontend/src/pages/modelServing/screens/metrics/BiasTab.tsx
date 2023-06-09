@@ -13,18 +13,13 @@ import BiasMetricConfigSelector from '~/pages/modelServing/screens/metrics/BiasM
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { useExplainabilityModelData } from '~/concepts/explainability/useExplainabilityModelData';
 import TrustyChart, { TrustyChartProps } from '~/pages/modelServing/screens/metrics/TrustyChart';
-import {
-  DEFAULT_MAX_THRESHOLD,
-  DEFAULT_MIN_THRESHOLD,
-  PADDING,
-} from '~/pages/modelServing/screens/metrics/const';
 import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
-import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 import { MetricTypes } from '~/api';
 import BiasMetricChartWrapper from '~/pages/modelServing/screens/metrics/BiasMetricChartWrapper';
 import { useBrowserStorage } from '~/components/browserStorage';
 import EmptyBiasConfigurationCard from '~/pages/modelServing/screens/metrics/EmptyBiasConfigurationCard';
 import EmptyBiasChartSelectionCard from '~/pages/modelServing/screens/metrics/EmptyBiasChartSelectionCard';
+import { BIAS_THRESHOLD_PADDING } from '~/pages/modelServing/screens/metrics/const';
 
 const SELECTED_CHARTS_STORAGE_KEY_PREFIX = 'odh.dashboard.xai.selected_bias_charts';
 const OPEN_WRAPPER_STORAGE_KEY_PREFIX = `odh.dashboard.xai.bias_metric_chart_wrapper_open`;
@@ -91,8 +86,8 @@ const BiasTab: React.FC = () => {
                         title={chart.title}
                         abbreviation={chart.abbreviation}
                         metricType={chart.metricType}
-                        thresholds={chart.thresholds}
                         domain={chart.domain}
+                        biasMetricConfig={chart.biasMetricConfig}
                       />
                     </BiasMetricChartWrapper>
                   </StackItem>
@@ -108,30 +103,27 @@ const BiasTab: React.FC = () => {
 type ChartData = {
   name: string;
   id: string;
+  biasMetricConfig: BiasMetricConfig;
 } & TrustyChartProps;
 
 //TODO: Add separate domain calcs.
 const asChartData = (biasMetricConfig: BiasMetricConfig): ChartData => {
   const { id, name } = biasMetricConfig;
-  const thresholds: [number, number] = [DEFAULT_MAX_THRESHOLD, DEFAULT_MIN_THRESHOLD];
-  const domain: DomainCalculator = (maxYValue) => ({
-    y:
-      maxYValue > DEFAULT_MAX_THRESHOLD
-        ? [-1 * maxYValue - PADDING, maxYValue + PADDING]
-        : [DEFAULT_MIN_THRESHOLD - PADDING, DEFAULT_MAX_THRESHOLD + PADDING],
+  const domain: DomainCalculator = (maxYValue, minYValue) => ({
+    y: [maxYValue + BIAS_THRESHOLD_PADDING, minYValue - BIAS_THRESHOLD_PADDING],
+    // maxYValue > DEFAULT_MAX_THRESHOLD
+    //   ? [-1 * maxYValue - PADDING, maxYValue + PADDING]
+    //   : [DEFAULT_MIN_THRESHOLD - PADDING, DEFAULT_MAX_THRESHOLD + PADDING],
   });
 
   let title = '';
-  let metricType = InferenceMetricType.TRUSTY_AI_DIR;
   let abbreviation = 'DEFAULT';
 
   if (biasMetricConfig.metricType === MetricTypes.SPD) {
     title = 'Statistical Parity Difference';
-    metricType = InferenceMetricType.TRUSTY_AI_SPD;
     abbreviation = 'SPD';
   } else if (biasMetricConfig.metricType === MetricTypes.DIR) {
     title = 'Disparate Impact Ratio';
-    metricType = InferenceMetricType.TRUSTY_AI_DIR;
     abbreviation = 'DIR';
   }
 
@@ -139,10 +131,9 @@ const asChartData = (biasMetricConfig: BiasMetricConfig): ChartData => {
     id,
     name,
     title,
-    metricType,
     abbreviation,
-    thresholds,
     domain,
+    biasMetricConfig,
   };
 };
 export default BiasTab;

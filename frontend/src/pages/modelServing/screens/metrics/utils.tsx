@@ -10,10 +10,17 @@ import {
   GraphMetricLine,
   GraphMetricPoint,
   MetricChartLine,
+  MetricChartThreshold,
   NamedMetricChartLine,
   TranslatePoint,
 } from '~/pages/modelServing/screens/metrics/types';
 import { BaseMetricRequest, MetricTypes } from '~/api';
+import { BiasMetricConfig } from '~/concepts/explainability/types';
+import {
+  BIAS_THRESHOLD_COLOR,
+  BIAS_THRESHOLD_PADDING,
+  DEFAULT_BIAS_THRESHOLD,
+} from '~/pages/modelServing/screens/metrics/const';
 import { InferenceMetricType, RuntimeMetricType } from './ModelServingMetricsContext';
 
 export const isModelMetricsEnabled = (
@@ -244,3 +251,33 @@ export const byNotId =
     }
     return arg2.id !== arg;
   };
+
+export const calculateChartThreshold = (x: BiasMetricConfig): MetricChartThreshold[] => {
+  // let threshold = 0;
+
+  // switch (x.metricType) {
+  //   case MetricTypes.SPD:
+  //     threshold = x.thresholdDelta ?? DEFAULT_SPD_THRESHOLD;
+  //     break;
+  //   case MetricTypes.DIR:
+  //     threshold = x.thresholdDelta ?? DEFAULT_DIR_THRESHOLD;
+  //     break;
+  //   default:
+  //     // Should be unreachable
+  //     throw new Error(`Illegal MetricType: ${x.metricType}`);
+  // }
+
+  const threshold =
+    (x.thresholdDelta ?? DEFAULT_BIAS_THRESHOLD[x.metricType]) + BIAS_THRESHOLD_PADDING;
+
+  return [
+    {
+      value: threshold,
+      color: BIAS_THRESHOLD_COLOR,
+    },
+    {
+      value: threshold * -1,
+      color: BIAS_THRESHOLD_COLOR,
+    },
+  ];
+};
