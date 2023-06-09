@@ -70,7 +70,7 @@ const BiasTab: React.FC = () => {
               </StackItem>
             )) || (
               <>
-                {biasMetricConfigs.map((x) => (
+                {selectedBiasConfigs.map((x) => (
                   <StackItem key={x.id}>
                     <BiasMetricChartWrapper
                       title={x.name}

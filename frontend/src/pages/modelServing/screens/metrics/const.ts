@@ -18,8 +18,8 @@ export const EMPTY_BIAS_CHART_SELECTION_DESC =
 export const BIAS_THRESHOLD_COLOR = 'red';
 export const BIAS_THRESHOLD_PADDING = 0.1;
 export const DEFAULT_BIAS_THRESHOLD: { [key in MetricTypes]: number } = {
-  [MetricTypes.SPD]: 0.2,
-  [MetricTypes.DIR]: 0.1,
+  [MetricTypes.SPD]: 0.1,
+  [MetricTypes.DIR]: 0.2,
 };
 
 export const BIAS_CHART_CONFIGS: BiasChartConfigMap = {
