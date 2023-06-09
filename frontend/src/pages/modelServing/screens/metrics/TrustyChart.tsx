@@ -5,7 +5,7 @@ import {
   InferenceMetricType,
   ModelServingMetricsContext,
 } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
-import { DomainCalculator, MetricsChartTypes } from '~/pages/modelServing/screens/metrics/types';
+import { DomainCalculator } from '~/pages/modelServing/screens/metrics/types';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { calculateChartThreshold } from '~/pages/modelServing/screens/metrics/utils';
 import {
@@ -20,7 +20,7 @@ export type TrustyChartProps = {
   tooltip?: React.ReactElement<typeof Stack>;
   thresholds?: [number, number];
   domain: DomainCalculator;
-  id: string;
+  id?: string;
   biasMetricConfig: BiasMetricConfig;
 };
 
@@ -28,24 +28,24 @@ const TrustyChart: React.FC<TrustyChartProps> = ({
   title,
   abbreviation,
   domain,
-  id,
   biasMetricConfig,
 }) => {
   const { data } = React.useContext(ModelServingMetricsContext);
 
-  const metricType2 = BIAS_INFERENCE_DATA_TYPE[biasMetricConfig.metricType];
+  const metricDataKey = BIAS_INFERENCE_DATA_TYPE[biasMetricConfig.metricType];
+  const { id } = biasMetricConfig;
 
   const metric = React.useMemo(() => {
-    const metricData = data[metricType2].data;
+    const metricData = data[metricDataKey].data;
 
     const values = metricData.find((x) => x.metric.request === id)?.values;
 
     // const values = [];
     return {
-      ...data[metricType2],
+      ...data[metricDataKey],
       data: values,
     };
-  }, [data, id, metricType2]);
+  }, [data, id, metricDataKey]);
 
   // const type = React.useMemo(() => {
   //   if (metricType === InferenceMetricType.TRUSTY_AI_SPD) {
