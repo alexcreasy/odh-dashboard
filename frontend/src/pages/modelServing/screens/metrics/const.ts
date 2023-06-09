@@ -1,5 +1,5 @@
 import { MetricTypes } from '~/api';
-import { MetricsChartTypes } from '~/pages/modelServing/screens/metrics/types';
+import { BiasChartConfigMap, MetricsChartTypes } from '~/pages/modelServing/screens/metrics/types';
 import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 
 export const EMPTY_BIAS_CONFIGURATION_TITLE = 'Bias metrics not configured';
@@ -22,14 +22,41 @@ export const DEFAULT_BIAS_THRESHOLD: { [key in MetricTypes]: number } = {
   [MetricTypes.DIR]: 0.1,
 };
 
-export const BIAS_CHART_TYPES: { [key in MetricTypes]: MetricsChartTypes } = {
-  [MetricTypes.SPD]: MetricsChartTypes.AREA,
-  [MetricTypes.DIR]: MetricsChartTypes.LINE,
-};
+export const BIAS_CHART_CONFIGS: BiasChartConfigMap = {
+  [MetricTypes.SPD]: {
+    title: 'Statistical Parity Difference',
+    abbreviation: 'SPD',
+    inferenceMetricKey: InferenceMetricType.TRUSTY_AI_SPD,
+    chartType: MetricsChartTypes.AREA,
+    domainCalculator: (maxYValue, minYValue) => {
+      const defaultThreshold = DEFAULT_BIAS_THRESHOLD[MetricTypes.SPD];
+      const max = Math.max(Math.abs(maxYValue), Math.abs(minYValue));
 
-export const BIAS_INFERENCE_DATA_TYPE: {
-  [key in MetricTypes]: InferenceMetricType.TRUSTY_AI_SPD | InferenceMetricType.TRUSTY_AI_DIR;
-} = {
-  [MetricTypes.SPD]: InferenceMetricType.TRUSTY_AI_SPD,
-  [MetricTypes.DIR]: InferenceMetricType.TRUSTY_AI_DIR,
+      return {
+        y:
+          max > defaultThreshold
+            ? [-1 * max - BIAS_THRESHOLD_PADDING, max + BIAS_THRESHOLD_PADDING]
+            : [
+                defaultThreshold - BIAS_THRESHOLD_PADDING,
+                defaultThreshold + BIAS_THRESHOLD_PADDING,
+              ],
+      };
+    },
+  },
+  [MetricTypes.DIR]: {
+    title: 'Disparate Impact Ratio',
+    abbreviation: 'DIR',
+    inferenceMetricKey: InferenceMetricType.TRUSTY_AI_DIR,
+    chartType: MetricsChartTypes.LINE,
+    domainCalculator: (maxYValue) => {
+      const defaultThreshold = DEFAULT_BIAS_THRESHOLD[MetricTypes.DIR];
+
+      return {
+        y:
+          maxYValue > defaultThreshold
+            ? [0, maxYValue + BIAS_THRESHOLD_PADDING]
+            : [0, defaultThreshold + BIAS_THRESHOLD_PADDING],
+      };
+    },
+  },
 };

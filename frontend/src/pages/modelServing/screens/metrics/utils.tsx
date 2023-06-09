@@ -252,21 +252,7 @@ export const byNotId =
     return arg2.id !== arg;
   };
 
-export const calculateChartThreshold = (x: BiasMetricConfig): MetricChartThreshold[] => {
-  // let threshold = 0;
-
-  // switch (x.metricType) {
-  //   case MetricTypes.SPD:
-  //     threshold = x.thresholdDelta ?? DEFAULT_SPD_THRESHOLD;
-  //     break;
-  //   case MetricTypes.DIR:
-  //     threshold = x.thresholdDelta ?? DEFAULT_DIR_THRESHOLD;
-  //     break;
-  //   default:
-  //     // Should be unreachable
-  //     throw new Error(`Illegal MetricType: ${x.metricType}`);
-  // }
-
+export const calculateChartThresholds = (x: BiasMetricConfig): MetricChartThreshold[] => {
   const threshold =
     (x.thresholdDelta ?? DEFAULT_BIAS_THRESHOLD[x.metricType]) + BIAS_THRESHOLD_PADDING;
 

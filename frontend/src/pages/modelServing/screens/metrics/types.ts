@@ -1,5 +1,7 @@
 import { DomainTuple, ForAxes } from 'victory-core';
 import { ContextResourceData, PrometheusQueryRangeResultValue } from '~/types';
+import { MetricTypes } from '~/api';
+import { InferenceMetricType } from '~/pages/modelServing/screens/metrics/ModelServingMetricsContext';
 
 export type TranslatePoint = (line: GraphMetricPoint) => GraphMetricPoint;
 
@@ -47,3 +49,12 @@ export enum MetricsTabKeys {
   PERFORMANCE = 'performance',
   BIAS = 'bias',
 }
+
+export type BiasChartConfig = {
+  title: string;
+  abbreviation: string;
+  domainCalculator: DomainCalculator;
+  inferenceMetricKey: InferenceMetricType;
+  chartType: MetricsChartTypes;
+};
+export type BiasChartConfigMap = { [key in MetricTypes]: BiasChartConfig };
