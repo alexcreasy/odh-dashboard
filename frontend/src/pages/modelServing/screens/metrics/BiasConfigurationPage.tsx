@@ -19,7 +19,10 @@ const BiasConfigurationPage: React.FC<BiasConfigurationPageProps> = ({
   breadcrumbItems,
   inferenceService,
 }) => {
-  const { biasMetricConfigs, loaded } = useExplainabilityModelData();
+  const { biasMetricConfigs, biasMetricMetadata, loaded } = useExplainabilityModelData();
+
+  // eslint-disable-next-line no-console
+  console.log('Metric metadata = %O', biasMetricMetadata);
   const navigate = useNavigate();
   return (
     <ApplicationsPage
