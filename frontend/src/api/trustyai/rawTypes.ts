@@ -12,10 +12,12 @@ export enum MetricTypes {
   DIR = 'DIR',
 }
 
-export type TypedValue = {
+export type TypedValue<T extends TypedValueType = string> = {
   type: DataTypes;
-  value: string;
+  value: T;
 };
+
+export type TypedValueType = string | number | boolean;
 
 export type BaseMetric = {
   protectedAttribute: string;
@@ -27,9 +29,9 @@ export type BaseMetric = {
 };
 
 export type BaseMetricRequest = {
-  favorableOutcome: string;
-  privilegedAttribute: string;
-  unprivilegedAttribute: string;
+  favorableOutcome: TypedValue['value'];
+  privilegedAttribute: TypedValue['value'];
+  unprivilegedAttribute: TypedValue['value'];
 } & BaseMetric;
 
 export type BaseMetricResponse = {
@@ -54,3 +56,31 @@ export type BaseMetricCreationResponse = {
 export type BaseMetricDeletionRequest = {
   requestId: string;
 };
+
+export type SchemaItem = {
+  type: DataTypes;
+  name: string;
+  index: number;
+  values: TypedValue['value'][];
+};
+
+export type Schema = {
+  items: Record<string, SchemaItem>;
+};
+
+export type ModelMetaData = {
+  metrics: {
+    scheduledMetadata: {
+      spd: number;
+      dir: number;
+    };
+  };
+  data: {
+    inputSchema: Schema;
+    outputSchema: Schema;
+    observations: number;
+    modelId: string;
+  };
+};
+
+export type GetInfoResponse = ModelMetaData[];

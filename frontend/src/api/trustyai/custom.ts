@@ -1,9 +1,16 @@
 import { proxyCREATE, proxyDELETE, proxyGET } from '~/api/proxyUtils';
 import { K8sAPIOptions } from '~/k8sTypes';
-import { BaseMetricCreationResponse, BaseMetricListResponse, BaseMetricRequest } from './rawTypes';
+import {
+  BaseMetricCreationResponse,
+  BaseMetricListResponse,
+  BaseMetricRequest,
+  GetInfoResponse,
+} from './rawTypes';
 
-export const getInfo = (hostPath: string) => (opts: K8sAPIOptions) =>
-  proxyGET(hostPath, '/info', {}, opts);
+export const getInfo =
+  (hostPath: string) =>
+  (opts: K8sAPIOptions): Promise<GetInfoResponse> =>
+    proxyGET(hostPath, '/info', {}, opts);
 
 export const getAllRequests =
   (hostPath: string) =>

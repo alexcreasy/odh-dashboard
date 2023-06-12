@@ -11,12 +11,14 @@ import useFetchState, {
   FetchStateCallbackPromise,
   NotReadyError,
 } from '~/utilities/useFetchState';
+import { GetInfoResponse } from '~/api';
 
 // TODO create component for ensuring API availability, see pipelines for example.
 
 type ExplainabilityContextData = {
   refresh: () => Promise<void>;
   biasMetricConfigs: BiasMetricConfig[];
+  biasMetricMetadata: GetInfoResponse;
   loaded: boolean;
   error?: Error;
 };
@@ -24,6 +26,7 @@ type ExplainabilityContextData = {
 const defaultExplainabilityContextData: ExplainabilityContextData = {
   refresh: () => Promise.resolve(),
   biasMetricConfigs: [],
+  biasMetricMetadata: [],
   loaded: false,
 };
 
@@ -98,15 +101,23 @@ const useFetchContextData = (apiState: TrustyAPIState): ExplainabilityContextDat
   const [biasMetricConfigs, biasMetricConfigsLoaded, , refreshBiasMetricConfigs] =
     useFetchBiasMetricConfigs(apiState);
 
+  const [biasMetricMetadata, biasMetricMetadataLoaded, , refreshBiasMetricMetadata] =
+    useFetchBiasMetricMetadata(apiState);
+
   const refresh = React.useCallback(
-    () => Promise.all([refreshBiasMetricConfigs()]).then(() => undefined),
-    [refreshBiasMetricConfigs],
+    () =>
+      Promise.all([refreshBiasMetricConfigs(), refreshBiasMetricMetadata()]).then(() => undefined),
+    [refreshBiasMetricMetadata, refreshBiasMetricConfigs],
   );
 
-  const loaded = React.useMemo(() => biasMetricConfigsLoaded, [biasMetricConfigsLoaded]);
+  const loaded = React.useMemo(
+    () => biasMetricConfigsLoaded && biasMetricMetadataLoaded,
+    [biasMetricConfigsLoaded, biasMetricMetadataLoaded],
+  );
 
   return {
     biasMetricConfigs,
+    biasMetricMetadata: biasMetricMetadata,
     refresh,
     loaded,
   };
@@ -124,6 +135,23 @@ const useFetchBiasMetricConfigs = (apiState: TrustyAPIState): FetchState<BiasMet
         .catch((e) => {
           throw e;
         });
+    },
+    [apiState.api, apiState.apiAvailable],
+  );
+
+  return useFetchState(callback, [], { initialPromisePurity: true });
+};
+
+const useFetchBiasMetricMetadata = (apiState: TrustyAPIState): FetchState<GetInfoResponse> => {
+  const callback = React.useCallback<FetchStateCallbackPromise<GetInfoResponse>>(
+    (opts) => {
+      if (!apiState.apiAvailable) {
+        return Promise.reject(new NotReadyError('API not yet available'));
+      }
+
+      return apiState.api.getInfo(opts).catch((e) => {
+        throw e;
+      });
     },
     [apiState.api, apiState.apiAvailable],
   );
