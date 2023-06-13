@@ -26,10 +26,12 @@ export type BaseMetric = {
   batchSize?: number;
 };
 
+export type TypedValueType = string | boolean | number;
+
 export type BaseMetricRequest = {
-  favorableOutcome: string;
-  privilegedAttribute: string;
-  unprivilegedAttribute: string;
+  favorableOutcome: TypedValueType;
+  privilegedAttribute: TypedValueType;
+  unprivilegedAttribute: TypedValueType;
 } & BaseMetric;
 
 export type BaseMetricResponse = {
