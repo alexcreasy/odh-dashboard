@@ -93,6 +93,7 @@ export const TimeframeStep: TimeframeStepType = {
 };
 
 export const RefreshIntervalValue: RefreshIntervalValueType = {
+  [RefreshIntervalTitle.TWENTY_SECONDS]: 20 * 1000,
   [RefreshIntervalTitle.ONE_MINUTE]: 60 * 1000,
   [RefreshIntervalTitle.FIVE_MINUTES]: 5 * 60 * 1000,
 };

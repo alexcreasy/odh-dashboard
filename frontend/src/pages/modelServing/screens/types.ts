@@ -21,6 +21,7 @@ export type TimeframeTimeType = {
 export type TimeframeStepType = TimeframeTimeType;
 
 export enum RefreshIntervalTitle {
+  TWENTY_SECONDS = '20 seconds',
   ONE_MINUTE = '1 minute',
   FIVE_MINUTES = '5 minutes',
 }
