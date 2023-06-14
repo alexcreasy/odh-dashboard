@@ -36,4 +36,26 @@ const usePrometheusQueryRange = <T = PrometheusQueryRangeResultValue>(
   return useFetchState<T[]>(fetchData, []);
 };
 
+export const usePrometheusQueryRangeNow = <T = PrometheusQueryRangeResultValue>(
+  active: boolean,
+  apiPath: string,
+  queryLang: string,
+  span: number,
+  step: number,
+  responsePredicate: ResponsePredicate<T>,
+): FetchState<T[]> => {
+  const fetchData = React.useCallback<FetchStateCallbackPromise<T[]>>(() => {
+    const endInS = Date.now() / 1000;
+    const start = endInS - span;
+
+    return axios
+      .post<{ response: PrometheusQueryRangeResponse }>(apiPath, {
+        query: `query=${queryLang}&start=${start}&end=${endInS}&step=${step}`,
+      })
+
+      .then((response) => responsePredicate(response.data?.response.data));
+  }, [span, apiPath, queryLang, step, responsePredicate]);
+
+  return useFetchState<T[]>(fetchData, []);
+};
 export default usePrometheusQueryRange;
