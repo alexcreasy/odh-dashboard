@@ -11,7 +11,10 @@ import {
   PrometheusQueryRangeResultValue,
 } from '~/types';
 import { useContextResourceData } from '~/utilities/useContextResourceData';
-import usePrometheusQueryRange, { ResponsePredicate } from './usePrometheusQueryRange';
+import usePrometheusQueryRange, {
+  ResponsePredicate,
+  usePrometheusQueryRangeNow,
+} from './usePrometheusQueryRange';
 
 const useQueryRangeResourceData = (
   /** Is the query active -- should we be fetching? */
@@ -54,16 +57,16 @@ export const useQueryRangeResourceDataTrusty = (
     [],
   );
   return useContextResourceData<TrustyData>(
-    usePrometheusQueryRange<TrustyData>(
+    usePrometheusQueryRangeNow<TrustyData>(
       active,
       '/api/prometheus/serving',
       query,
       TimeframeTimeRange[timeframe],
-      end,
       TimeframeStep[timeframe],
       responsePredicate,
     ),
     RefreshIntervalValue[refreshInterval],
   );
 };
+
 export default useQueryRangeResourceData;
