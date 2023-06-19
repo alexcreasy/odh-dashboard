@@ -1,7 +1,7 @@
 import React from 'react';
 
 const usePrometheusQueryInterval = (refreshInterval, callback: () => void) => {
-  const timer = React.useRef<NodeJS.Timer>();
+  const timer = React.useRef<ReturnType<typeof setInterval>>();
 
   React.useEffect(() => {
     timer.current = setInterval(callback, refreshInterval);
