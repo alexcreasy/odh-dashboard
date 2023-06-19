@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import { CubeIcon, UsersIcon } from '@patternfly/react-icons';
+import { CogIcon, CubeIcon, UsersIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 import ApplicationsPage from '~/pages/ApplicationsPage';
 import { ProjectDetailsContext } from '~/pages/projects/ProjectDetailsContext';
@@ -52,6 +52,7 @@ const ProjectDetails: React.FC = () => {
           sections={[
             { title: 'Components', component: <ProjectDetailsComponents />, icon: <CubeIcon /> },
             { title: 'Permissions', component: <ProjectSharing />, icon: <UsersIcon /> },
+            { title: 'Settings', component: <></>, icon: <CogIcon /> },
           ]}
         />
       ) : (
