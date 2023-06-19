@@ -15,6 +15,8 @@ import {
 } from '~/pages/modelServing/screens/types';
 import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
 import { ResponsePredicate } from '~/api/prometheus/usePrometheusQueryRange';
+import usePrometheusQueryInterval from '~/api/prometheus/usePrometheusQueryInterval';
+import { RefreshIntervalValue } from '~/pages/modelServing/screens/const';
 import useQueryRangeResourceData from './useQueryRangeResourceData';
 
 export const useModelServingMetrics = (
@@ -33,6 +35,12 @@ export const useModelServingMetrics = (
 } => {
   const [end, setEnd] = React.useState(lastUpdateTime);
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
+
+  const doRefresh = React.useCallback(() => {
+    setEnd(Date.now());
+  }, []);
+
+  const refreshAll = usePrometheusQueryInterval(RefreshIntervalValue[refreshInterval], doRefresh);
 
   const defaultResponsePredicate = React.useCallback<ResponsePredicate>(
     (data) => data.result?.[0]?.values || [],
@@ -130,9 +138,9 @@ export const useModelServingMetrics = (
     inferenceTrustyAISPD,
   ]);
 
-  const refreshAllMetrics = React.useCallback(() => {
-    setEnd(Date.now());
-  }, []);
+  // const refreshAllMetrics = React.useCallback(() => {
+  //   setEnd(Date.now());
+  // }, []);
 
   return React.useMemo(
     () => ({
@@ -146,7 +154,7 @@ export const useModelServingMetrics = (
         [InferenceMetricType.TRUSTY_AI_SPD]: inferenceTrustyAISPD,
         [InferenceMetricType.TRUSTY_AI_DIR]: inferenceTrustyAIDIR,
       },
-      refresh: refreshAllMetrics,
+      refresh: refreshAll,
     }),
     [
       runtimeRequestCount,
@@ -157,7 +165,7 @@ export const useModelServingMetrics = (
       inferenceRequestFailedCount,
       inferenceTrustyAISPD,
       inferenceTrustyAIDIR,
-      refreshAllMetrics,
+      refreshAll,
     ],
   );
 };
