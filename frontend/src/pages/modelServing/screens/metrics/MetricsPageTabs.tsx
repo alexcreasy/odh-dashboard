@@ -46,7 +46,7 @@ const MetricsPageTabs: React.FC = () => {
     >
       <Tab
         eventKey={MetricsTabKeys.PERFORMANCE}
-        title={<TabTitleText>Endpoint Performance</TabTitleText>}
+        title={<TabTitleText>Endpoint performance</TabTitleText>}
         aria-label="Performance tab"
         className="odh-tabcontent-fix"
       >
@@ -55,7 +55,7 @@ const MetricsPageTabs: React.FC = () => {
       {biasMetricsEnabled && (
         <Tab
           eventKey={MetricsTabKeys.BIAS}
-          title={<TabTitleText>Model Bias</TabTitleText>}
+          title={<TabTitleText>Model bias</TabTitleText>}
           aria-label="Bias tab"
           className="odh-tabcontent-fix"
           actions={
