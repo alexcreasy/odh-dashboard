@@ -56,7 +56,7 @@ export const ExplainabilityProvider: React.FC = () => {
 
   const state = useTrustyAiNamespaceCR(namespace);
   //TODO handle CR loaded error - when TIA operator is ready
-  const [explainabilityNamespaceCR, crLoaded, , refreshCR] = state;
+  const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
   const isCRReady = crLoaded;
   //TODO: needs logic to handle server timeouts - when TIA operator is ready
   const serverTimedOut = false;

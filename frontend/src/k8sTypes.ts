@@ -431,11 +431,29 @@ export type AWSSecretKind = SecretKind & {
   data: Record<AWS_KEYS, string>;
 };
 
-//TODO this type needs fleshing out when the Trusty operator is ready.
 export type TrustyAiKind = K8sResourceCommon & {
   metadata: {
     name: string;
     namespace: string;
+  };
+  spec: {
+    storage: {
+      format: string;
+      folder: string;
+      pv: string;
+      size: string;
+      data: {
+        filename: string;
+        format: string;
+      };
+      metrics: {
+        schedule: string;
+        batchSize?: number;
+      };
+    };
+  };
+  status?: {
+    conditions?: K8sCondition[];
   };
 };
 
