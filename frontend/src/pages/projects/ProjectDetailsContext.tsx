@@ -26,6 +26,7 @@ import useTemplates from '~/pages/modelServing/customServingRuntimes/useTemplate
 import useTemplateOrder from '~/pages/modelServing/customServingRuntimes/useTemplateOrder';
 import { useDashboardNamespace } from '~/redux/selectors';
 import { getTokenNames } from '~/pages/modelServing/utils';
+import { ExplainabilityProvider } from '~/concepts/explainability/ExplainabilityContext';
 import { NotebookState } from './notebook/types';
 import { DataConnection } from './types';
 import useDataConnections from './screens/detail/data-connections/useDataConnections';
@@ -182,7 +183,7 @@ const ProjectDetailsContextProvider: React.FC = () => {
           <Outlet />
         </PipelineContextProvider>
       ) : (
-        <Outlet />
+        <ExplainabilityProvider />
       )}
     </ProjectDetailsContext.Provider>
   );

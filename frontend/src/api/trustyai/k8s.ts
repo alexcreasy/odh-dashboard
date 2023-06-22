@@ -6,14 +6,14 @@ import { applyK8sAPIOptions } from '~/api/apiMergeUtils';
 
 //TODO: find proper home for this
 export const TrustyAIApplicationsModel: K8sModelCommon = {
-  apiVersion: 'v1',
-  apiGroup: 'trustyai.opendatahub.io.trusty.opendatahub.io',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'trustyai.opendatahub.io.trustyai.opendatahub.io',
   kind: 'TrustyAIService',
-  plural: 'trustyai',
+  plural: 'trustyaiservices',
 };
 
 //TODO: find proper home for this
-export const TRUSTYAI_DEFINITION_NAME = 'trustyai-service';
+export const TRUSTYAI_DEFINITION_NAME = 'trustyaiservices';
 
 export const getTrustyAIAPIRoute = async (
   namespace: string,
@@ -27,6 +27,6 @@ export const getTrustyAICR = async (
   k8sGetResource<TrustyAiKind>(
     applyK8sAPIOptions(opts, {
       model: TrustyAIApplicationsModel,
-      queryOptions: { name: TRUSTYAI_DEFINITION_NAME, ns: namespace },
+      queryOptions: { ns: namespace },
     }),
   );

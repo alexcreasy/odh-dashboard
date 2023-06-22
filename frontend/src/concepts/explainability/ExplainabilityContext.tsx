@@ -1,7 +1,10 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import useTrustyAPIRoute from '~/concepts/explainability/useTrustyAPIRoute';
-import useTrustyAiNamespaceCR from '~/concepts/explainability/useTrustyAiNamespaceCR';
+import useTrustyAiNamespaceCR, {
+  taiHasServerTimedOut,
+  taiLoaded,
+} from '~/concepts/explainability/useTrustyAiNamespaceCR';
 import { useDashboardNamespace } from '~/redux/selectors';
 import useTrustyAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAPIState';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
@@ -32,6 +35,7 @@ type ExplainabilityContextProps = {
   hasCR: boolean;
   crInitializing: boolean;
   serverTimedOut: boolean;
+  serviceLoadError?: Error;
   ignoreTimedOut: () => void;
   refreshState: () => Promise<undefined>;
   refreshAPIState: () => void;
@@ -51,19 +55,28 @@ export const ExplainabilityContext = React.createContext<ExplainabilityContextPr
 });
 
 export const ExplainabilityProvider: React.FC = () => {
+  console.log('hello');
   //TODO: when TrustyAI operator is ready, we will need to use the current DSProject namespace instead.
-  const namespace = useDashboardNamespace().dashboardNamespace;
+  //const namespace = useDashboardNamespace().dashboardNamespace;
+  const namespace = 'opendatahub-model';
 
   const state = useTrustyAiNamespaceCR(namespace);
   //TODO handle CR loaded error - when TIA operator is ready
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
-  const isCRReady = crLoaded;
-  //TODO: needs logic to handle server timeouts - when TIA operator is ready
-  const serverTimedOut = false;
-  const ignoreTimedOut = React.useCallback(() => true, []);
+  const isCRReady = taiLoaded(state);
+  const [disableTimeout, setDisableTimeout] = React.useState(false);
+  const serverTimedOut = !disableTimeout && taiHasServerTimedOut(state, isCRReady);
+  const ignoreTimedOut = React.useCallback(() => {
+    setDisableTimeout(true);
+  }, []);
+
+  console.log('CR: %s', explainabilityNamespaceCR?.kind);
 
   //TODO handle routeLoadedError - when TIA operator is ready
-  const [routeHost, routeLoaded, , refreshRoute] = useTrustyAPIRoute(isCRReady, namespace);
+  const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAPIRoute(
+    isCRReady,
+    namespace,
+  );
 
   const hostPath = routeLoaded && routeHost ? routeHost : null;
 
@@ -71,6 +84,9 @@ export const ExplainabilityProvider: React.FC = () => {
     () => Promise.all([refreshCR(), refreshRoute()]).then(() => undefined),
     [refreshRoute, refreshCR],
   );
+
+  const serviceLoadError =
+    crLoadError || routeLoadError ? new Error('TrustyAI load error') : undefined;
 
   const [apiState, refreshAPIState] = useTrustyAPIState(hostPath);
 
@@ -83,6 +99,7 @@ export const ExplainabilityProvider: React.FC = () => {
         crInitializing: !crLoaded,
         serverTimedOut,
         ignoreTimedOut,
+        serviceLoadError,
         refreshState,
         refreshAPIState,
         apiState,

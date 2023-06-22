@@ -33,23 +33,6 @@ export const taiHasServerTimedOut = (
   return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
 };
 
-export const hasServerTimedOut = (
-  [state, loaded]: FetchState<State>,
-  dspaLoaded: boolean,
-): boolean => {
-  if (!state || !loaded || dspaLoaded) {
-    return false;
-  }
-
-  const createTime = state.metadata.creationTimestamp;
-  if (!createTime) {
-    return false;
-  }
-
-  // If we are here, and 5 mins have past, we are having issues
-  return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
-};
-
 const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
   // TODO: the logic needs to be fleshed out once the TrustyAI operator is complete.
@@ -59,13 +42,19 @@ const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
         return Promise.reject(new NotReadyError('Bias metrics is not enabled'));
       }
 
-      return getTrustyAICR(namespace, opts).catch((e) => {
-        if (e.statusObject?.code === 404) {
-          // Not finding is okay, not an error
-          return null;
-        }
-        throw e;
-      });
+      return getTrustyAICR(namespace, opts)
+        .then((x) => {
+          console.log('Found TrustyCR: %O', x);
+          return x;
+        })
+        .catch((e) => {
+          if (e.statusObject?.code === 404) {
+            // Not finding is okay, not an error
+            console.log('TrustyAICR not found: %O', e);
+            return null;
+          }
+          throw e;
+        });
     },
     [namespace, biasMetricsEnabled],
   );
