@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import useTrustyAPIRoute from '~/concepts/explainability/useTrustyAPIRoute';
 import useTrustyAiNamespaceCR, {
   taiHasServerTimedOut,
@@ -55,12 +55,16 @@ export const ExplainabilityContext = React.createContext<ExplainabilityContextPr
 });
 
 export const ExplainabilityProvider: React.FC = () => {
-  console.log('hello');
   //TODO: when TrustyAI operator is ready, we will need to use the current DSProject namespace instead.
   //const namespace = useDashboardNamespace().dashboardNamespace;
-  const namespace = 'opendatahub-model';
+  //const namespace = 'opendatahub-model';
+
+  const { namespace: ns } = useParams<{ namespace: string }>();
+
+  const namespace = ns ?? '';
 
   const state = useTrustyAiNamespaceCR(namespace);
+
   //TODO handle CR loaded error - when TIA operator is ready
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
   const isCRReady = taiLoaded(state);

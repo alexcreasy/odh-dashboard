@@ -12,9 +12,6 @@ export const TrustyAIApplicationsModel: K8sModelCommon = {
   plural: 'trustyaiservices',
 };
 
-//TODO: find proper home for this
-export const TRUSTYAI_DEFINITION_NAME = 'trustyaiservices';
-
 export const getTrustyAIAPIRoute = async (
   namespace: string,
   opts?: K8sAPIOptions,
@@ -29,4 +26,4 @@ export const getTrustyAICR = async (
       model: TrustyAIApplicationsModel,
       queryOptions: { ns: namespace },
     }),
-  );
+  ).then((x) => return x.);
