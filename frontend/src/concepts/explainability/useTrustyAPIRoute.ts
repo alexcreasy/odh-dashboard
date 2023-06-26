@@ -17,13 +17,14 @@ const useTrustyAPIRoute = (hasCR: boolean, namespace: string): FetchState<State>
       if (!biasMetricsEnabled) {
         return Promise.reject(new NotReadyError('Bias metrics is not enabled'));
       }
+
       if (!hasCR) {
         return Promise.reject(new NotReadyError('CR not created'));
       }
 
       //TODO: API URI must use HTTPS before release.
       return getTrustyAIAPIRoute(namespace, opts)
-        .then((result: RouteKind) => `${result.spec.port.targetPort}://${result.spec.host}`)
+        .then((result: RouteKind) => `https://${result.spec.host}`)
         .catch((e) => {
           if (e.statusObject?.code === 404) {
             // Not finding is okay, not an error

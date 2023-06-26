@@ -22,7 +22,7 @@ const useAPIState = <T>(
       // TODO: we need to figure out maybe a stopgap or something
       path = '';
     }
-
+    console.log('hostPath: %s, path: %s', hostPath, path);
     const api = createAPI(path);
 
     return {

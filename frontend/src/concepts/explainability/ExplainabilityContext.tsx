@@ -5,7 +5,6 @@ import useTrustyAiNamespaceCR, {
   taiHasServerTimedOut,
   taiLoaded,
 } from '~/concepts/explainability/useTrustyAiNamespaceCR';
-import { useDashboardNamespace } from '~/redux/selectors';
 import useTrustyAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAPIState';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { formatListResponse } from '~/concepts/explainability/utils';
@@ -14,6 +13,7 @@ import useFetchState, {
   FetchStateCallbackPromise,
   NotReadyError,
 } from '~/utilities/useFetchState';
+import { ProjectDetailsContext } from '~/pages/projects/ProjectDetailsContext';
 import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 
 // TODO create component for ensuring API availability, see pipelines for example.
@@ -59,10 +59,10 @@ export const ExplainabilityProvider: React.FC = () => {
   //const namespace = useDashboardNamespace().dashboardNamespace;
   //const namespace = 'opendatahub-model';
 
-  const { namespace: ns } = useParams<{ namespace: string }>();
+  const { project: ns } = useParams<{ project: string }>();
 
-  const namespace = ns ?? '';
-
+  const namespace = ns ?? 'unknown-namespace'; //?? 'trustyai-e2e-modelmesh';
+  console.log('namespace: %s', namespace);
   const state = useTrustyAiNamespaceCR(namespace);
 
   //TODO handle CR loaded error - when TIA operator is ready
@@ -74,13 +74,17 @@ export const ExplainabilityProvider: React.FC = () => {
     setDisableTimeout(true);
   }, []);
 
-  console.log('CR: %s', explainabilityNamespaceCR?.kind);
+  //console.log('CR: %s', explainabilityNamespaceCR?.kind);
 
   //TODO handle routeLoadedError - when TIA operator is ready
   const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAPIRoute(
     isCRReady,
     namespace,
   );
+
+  if (routeLoadError) {
+    console.log('Route load error: %O', routeLoadError);
+  }
 
   const hostPath = routeLoaded && routeHost ? routeHost : null;
 
@@ -90,7 +94,7 @@ export const ExplainabilityProvider: React.FC = () => {
   );
 
   const serviceLoadError =
-    crLoadError || routeLoadError ? new Error('TrustyAI load error') : undefined;
+    !!crLoadError || routeLoadError ? new Error('TrustyAI load error') : undefined;
 
   const [apiState, refreshAPIState] = useTrustyAPIState(hostPath);
 

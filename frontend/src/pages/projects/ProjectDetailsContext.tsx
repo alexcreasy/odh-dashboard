@@ -183,7 +183,7 @@ const ProjectDetailsContextProvider: React.FC = () => {
           <Outlet />
         </PipelineContextProvider>
       ) : (
-        <ExplainabilityProvider />
+        <Outlet />
       )}
     </ProjectDetailsContext.Provider>
   );

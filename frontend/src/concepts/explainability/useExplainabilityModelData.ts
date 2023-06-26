@@ -3,16 +3,23 @@ import { useParams } from 'react-router-dom';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { ExplainabilityContext } from '~/concepts/explainability/ExplainabilityContext';
 
-export type ExplainabilityModelData = {
+export type UseExplainabilityModelDataProps = {
   biasMetricConfigs: BiasMetricConfig[];
+  serviceStatus: { initializing: boolean; installed: boolean; timedOut: boolean };
   loaded: boolean;
   loadError?: Error;
   refresh: () => Promise<unknown>;
 };
-export const useExplainabilityModelData = (): ExplainabilityModelData => {
+export const useExplainabilityModelData = (): UseExplainabilityModelDataProps => {
   const { inferenceService } = useParams();
 
-  const { data } = React.useContext(ExplainabilityContext);
+  const { data, crInitializing, hasCR, serverTimedOut } = React.useContext(ExplainabilityContext);
+
+  const serviceStatus: UseExplainabilityModelDataProps['serviceStatus'] = {
+    initializing: crInitializing,
+    installed: hasCR,
+    timedOut: serverTimedOut,
+  };
 
   const [biasMetricConfigs] = React.useMemo(() => {
     let configs: BiasMetricConfig[] = [];
@@ -25,6 +32,7 @@ export const useExplainabilityModelData = (): ExplainabilityModelData => {
   }, [data.biasMetricConfigs, data.loaded, inferenceService]);
 
   return {
+    serviceStatus,
     biasMetricConfigs,
     loaded: data.loaded,
     loadError: data.error,

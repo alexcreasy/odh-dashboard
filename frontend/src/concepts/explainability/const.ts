@@ -1,1 +1,1 @@
-export const TRUSTYAI_ROUTE_NAME = 'trustyai';
+export const TRUSTYAI_ROUTE_NAME = 'trustyai-service';

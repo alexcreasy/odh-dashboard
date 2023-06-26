@@ -454,6 +454,9 @@ export type TrustyAiKind = K8sResourceCommon & {
   };
   status?: {
     conditions?: K8sCondition[];
+    phase?: string;
+    ready?: string;
+    replicas?: number;
   };
 };
 

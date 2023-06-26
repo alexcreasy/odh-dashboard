@@ -6,6 +6,7 @@ import { BreadcrumbItemType } from '~/types';
 import ApplicationsPage from '~/pages/ApplicationsPage';
 import MetricsPageTabs from '~/pages/modelServing/screens/metrics/MetricsPageTabs';
 import { MetricsTabKeys } from '~/pages/modelServing/screens/metrics/types';
+import { ExplainabilityContext } from '~/concepts/explainability/ExplainabilityContext';
 import { getBreadcrumbItemComponents } from './utils';
 
 type MetricsPageProps = {
@@ -16,6 +17,19 @@ type MetricsPageProps = {
 const MetricsPage: React.FC<MetricsPageProps> = ({ title, breadcrumbItems }) => {
   const { tab } = useParams();
   const navigate = useNavigate();
+
+  const { hasCR, apiState, data, serverTimedOut, serviceLoadError, crInitializing } =
+    React.useContext(ExplainabilityContext);
+
+  console.log(
+    'apiAvailable: %s | hasCR: %s | data: %O | serverTimedOut: %s | serviceLoadError: %s | crInitializing: %s |',
+    apiState.apiAvailable,
+    hasCR,
+    data,
+    serverTimedOut,
+    serviceLoadError,
+    crInitializing,
+  );
 
   return (
     <ApplicationsPage

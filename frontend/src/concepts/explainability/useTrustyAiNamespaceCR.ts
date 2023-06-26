@@ -14,28 +14,36 @@ type State = TrustyAiKind | null;
 export const taiLoaded = ([state, loaded]: FetchState<State>): boolean =>
   loaded &&
   !!state &&
-  !!state.status?.conditions?.find((c) => c.type === 'APIServerReady' && c.status === 'True');
+  //!!state.status?.conditions?.find((c) => c.type === 'APIServerReady' && c.status === 'True');
+  state.status?.ready === 'True';
 
 export const taiHasServerTimedOut = (
   [state, loaded]: FetchState<State>,
-  dspaLoaded: boolean,
+  isLoaded: boolean,
 ): boolean => {
-  if (!state || !loaded || dspaLoaded) {
+  console.log(
+    'enter timeoutcheck: !state=%s | !loaded=%s | isLoaded=%s',
+    !state,
+    !loaded,
+    isLoaded,
+  );
+  if (!state || !loaded || isLoaded) {
     return false;
   }
+  console.log('checking for timeout');
 
   const createTime = state.metadata.creationTimestamp;
   if (!createTime) {
     return false;
   }
-
+  console.log('create time: %s', createTime);
   // If we are here, and 5 mins have past, we are having issues
-  return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
+  // return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
+  return Date.now() - new Date(createTime).getTime() > 20 * 1000;
 };
 
 const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
-  // TODO: the logic needs to be fleshed out once the TrustyAI operator is complete.
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
       if (!biasMetricsEnabled) {
@@ -43,14 +51,13 @@ const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
       }
 
       return getTrustyAICR(namespace, opts)
-        .then((x) => {
-          console.log('Found TrustyCR: %O', x);
-          return x;
+        .then((r) => {
+          console.log('CR: %O', r);
+          return r;
         })
         .catch((e) => {
           if (e.statusObject?.code === 404) {
             // Not finding is okay, not an error
-            console.log('TrustyAICR not found: %O', e);
             return null;
           }
           throw e;
