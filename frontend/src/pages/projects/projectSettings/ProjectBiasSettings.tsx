@@ -1,58 +1,67 @@
 import {
-  Bullseye,
-  Button,
   Card,
   CardBody,
   CardTitle,
   Checkbox,
   Split,
   SplitItem,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
 import React from 'react';
 import _ from 'lodash';
-import { useParams } from 'react-router-dom';
 import TrustyServiceError from '~/concepts/explainability/TrustyServiceError';
-import useNotification from '~/utilities/useNotification';
-import { createTrustyAICR, deleteTrustyAICR } from '~/api';
+import InstallTrustyAICheckbox from '~/concepts/explainability/content/InstallTrustyAICheckbox';
+import { ProjectDetailsContext } from '~/pages/projects/ProjectDetailsContext';
 
 const ProjectBiasSettings = () => {
-  const { namespace } = useParams<{ namespace: string }>();
-  const notify = useNotification();
+  const { currentProject } = React.useContext(ProjectDetailsContext);
+  const namespace = currentProject.metadata.name;
+  // const notify = useNotification();
 
-  const installTrusty = React.useCallback(
-    (namespace: string) => {
-      createTrustyAICR(namespace)
-        .then((cr) => {
-          notify.info('Intalling TrustyAI', 'Installation in progress');
-          console.log('installing XAI: CR: %O', cr);
-        })
-        .catch((e) => {
-          notify.error('TrustyAI install failed', e?.message);
-        });
-    },
-    [notify],
-  );
-
-  const deleteTrusty = React.useCallback(
-    (namespace: string) => {
-      deleteTrustyAICR(namespace)
-        .then((status) => {
-          notify.info('TrustyAI deleted', 'hello');
-          console.log('deleting trusty CR: %O', status);
-        })
-        .catch((e) => {
-          notify.error('Trusty AI deletion failed', e?.message);
-        });
-    },
-    [notify],
-  );
-
-  if (!namespace) {
-    return <Bullseye>No namespace</Bullseye>;
-  }
+  // const installTrusty = React.useCallback(
+  //   (namespace: string) => {
+  //     createTrustyAICR(namespace)
+  //       .then((cr) => {
+  //         notify.info('Intalling TrustyAI', 'Installation in progress');
+  //         console.log('installing XAI: CR: %O', cr);
+  //       })
+  //       .catch((e) => {
+  //         notify.error('TrustyAI install failed', e?.message);
+  //       });
+  //   },
+  //   [notify],
+  // );
+  //
+  // const deleteTrusty = React.useCallback(
+  //   (namespace: string) => {
+  //     deleteTrustyAICR(namespace)
+  //       .then((status) => {
+  //         notify.info('TrustyAI deleted', 'hello');
+  //         console.log('deleting trusty CR: %O', status);
+  //       })
+  //       .catch((e) => {
+  //         notify.error('Trusty AI deletion failed', e?.message);
+  //       });
+  //   },
+  //   [notify],
+  // );
+  //
+  // if (!namespace) {
+  //   return <Bullseye>No namespace</Bullseye>;
+  // }
 
   return (
     <>
+      <Card>
+        <CardBody>
+          <Stack>
+            <StackItem>
+              <InstallTrustyAICheckbox namespace={namespace} />
+            </StackItem>
+          </Stack>
+        </CardBody>
+      </Card>
       <Card>
         <CardTitle>Explainability</CardTitle>
         <CardBody>
@@ -60,8 +69,8 @@ const ProjectBiasSettings = () => {
             <SplitItem>TrustyAI Service</SplitItem>
             <SplitItem>
               <Checkbox isChecked={false} onChange={_.noop} id="controlled-check-1" name="check1" />
-              <Button onClick={() => installTrusty(namespace)}>Install</Button>
-              <Button onClick={() => deleteTrusty(namespace)}>Delete</Button>
+              {/*<Button onClick={() => installTrusty(namespace)}>Install</Button>*/}
+              {/*<Button onClick={() => deleteTrusty(namespace)}>Delete</Button>*/}
             </SplitItem>
           </Split>
         </CardBody>
