@@ -93,8 +93,7 @@ export const ExplainabilityProvider: React.FC = () => {
     [refreshRoute, refreshCR],
   );
 
-  const serviceLoadError =
-    !!crLoadError || routeLoadError ? new Error('TrustyAI load error') : undefined;
+  const serviceLoadError = crLoadError || routeLoadError;
 
   const [apiState, refreshAPIState] = useTrustyAPIState(hostPath);
 

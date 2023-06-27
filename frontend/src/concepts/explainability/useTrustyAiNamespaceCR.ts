@@ -21,25 +21,16 @@ export const taiHasServerTimedOut = (
   [state, loaded]: FetchState<State>,
   isLoaded: boolean,
 ): boolean => {
-  console.log(
-    'enter timeoutcheck: !state=%s | !loaded=%s | isLoaded=%s',
-    !state,
-    !loaded,
-    isLoaded,
-  );
   if (!state || !loaded || isLoaded) {
     return false;
   }
-  console.log('checking for timeout');
 
   const createTime = state.metadata.creationTimestamp;
   if (!createTime) {
     return false;
   }
-  console.log('create time: %s', createTime);
   // If we are here, and 5 mins have past, we are having issues
-  // return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
-  return Date.now() - new Date(createTime).getTime() > 20 * 1000;
+  return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
 };
 
 const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
@@ -51,10 +42,7 @@ const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
       }
 
       return getTrustyAICR(namespace, opts)
-        .then((r) => {
-          console.log('CR: %O', r);
-          return r;
-        })
+        .then((r) => r)
         .catch((e) => {
           if (e.statusObject?.code === 404) {
             // Not finding is okay, not an error

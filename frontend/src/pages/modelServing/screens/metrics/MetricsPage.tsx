@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Breadcrumb, Button } from '@patternfly/react-core';
+import { Breadcrumb, Bullseye, Button } from '@patternfly/react-core';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CogIcon } from '@patternfly/react-icons';
 import { BreadcrumbItemType } from '~/types';
@@ -18,12 +18,18 @@ const MetricsPage: React.FC<MetricsPageProps> = ({ title, breadcrumbItems }) => 
   const { tab } = useParams();
   const navigate = useNavigate();
 
-  const { hasCR, apiState, data, serverTimedOut, serviceLoadError, crInitializing } =
-    React.useContext(ExplainabilityContext);
+  const {
+    hasCR,
+    apiState: { apiAvailable },
+    data,
+    serverTimedOut,
+    serviceLoadError,
+    crInitializing,
+  } = React.useContext(ExplainabilityContext);
 
   console.log(
     'apiAvailable: %s | hasCR: %s | data: %O | serverTimedOut: %s | serviceLoadError: %s | crInitializing: %s |',
-    apiState.apiAvailable,
+    apiAvailable,
     hasCR,
     data,
     serverTimedOut,
@@ -42,6 +48,7 @@ const MetricsPage: React.FC<MetricsPageProps> = ({ title, breadcrumbItems }) => 
       headerAction={
         tab === MetricsTabKeys.BIAS && (
           <Button
+            isDisabled={!hasCR || !apiAvailable}
             variant="link"
             icon={<CogIcon />}
             onClick={() => navigate('../configure', { replace: true })}

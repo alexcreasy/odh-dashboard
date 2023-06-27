@@ -14,7 +14,11 @@ import './MetricsPageTabs.scss';
 
 const MetricsPageTabs: React.FC = () => {
   const enabledTabs = useMetricsPageEnabledTabs();
-  const { biasMetricConfigs, loaded } = useExplainabilityModelData();
+  const {
+    biasMetricConfigs,
+    loaded,
+    serviceStatus: { installed },
+  } = useExplainabilityModelData();
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
   const { tab } = useParams<{ tab: MetricsTabKeys }>();
   const navigate = useNavigate();
@@ -52,7 +56,7 @@ const MetricsPageTabs: React.FC = () => {
       >
         <PerformanceTab />
       </Tab>
-      {biasMetricsEnabled && (
+      {biasMetricsEnabled && installed && (
         <Tab
           eventKey={MetricsTabKeys.BIAS}
           title={<TabTitleText>Model Bias</TabTitleText>}
@@ -60,6 +64,7 @@ const MetricsPageTabs: React.FC = () => {
           className="odh-tabcontent-fix"
           actions={
             loaded &&
+            installed &&
             biasMetricConfigs.length === 0 && (
               <TabAction>
                 <BiasConfigurationAlertPopover

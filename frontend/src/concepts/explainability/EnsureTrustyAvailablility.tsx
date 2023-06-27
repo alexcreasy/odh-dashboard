@@ -7,7 +7,13 @@ type EnsureTrustyAvailabilityProps = {
 };
 
 const EnsureTrustyAvailability: React.FC<EnsureTrustyAvailabilityProps> = ({ children }) => {
-  const { apiState } = React.useContext(ExplainabilityContext);
+  const { apiState, hasCR, crInitializing, serverTimedOut, serviceLoadError } =
+    React.useContext(ExplainabilityContext);
+
+  if (!hasCR && !crInitializing && !serverTimedOut && !serviceLoadError) {
+    // Trusty AI service is not installed
+    return <Bullseye>TrustyAI not installed</Bullseye>;
+  }
 
   if (!apiState.apiAvailable) {
     return (
