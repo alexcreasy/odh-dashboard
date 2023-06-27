@@ -8,7 +8,7 @@ type InstallTrustyAICheckboxProps = {
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({ namespace }) => {
   const notify = useNotification();
-  const { hasCR, installCR } = useManageTrustyAICR(namespace);
+  const { hasCR, installCR, deleteCR, refresh } = useManageTrustyAICR(namespace);
 
   return (
     <>
@@ -17,11 +17,19 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({ names
         isChecked={hasCR}
         onChange={(checked) => {
           if (checked) {
-            installCR().then(() =>
-              notify.info('Installing', 'The TrustyAI service is being installed'),
-            );
+            installCR()
+              .then(() => notify.info('Installing', 'The TrustyAI service is being installed'))
+              .catch((e) => {
+                notify.error('TrustyAI installation failed', e?.message);
+              })
+              .finally(refresh);
           } else {
-            console.log('Deleting.... yes');
+            deleteCR()
+              .then(() => notify.info('Deleting', 'The TrustyAI service is being deleted'))
+              .catch((e) => {
+                notify.error('TrustyAI deletion failed', e?.message);
+              })
+              .finally(refresh);
           }
         }}
         id="bias-service-installation"

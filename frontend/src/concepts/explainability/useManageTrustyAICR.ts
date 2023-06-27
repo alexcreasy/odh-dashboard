@@ -3,7 +3,7 @@ import useTrustyAINamespaceCR from '~/concepts/explainability/useTrustyAINamespa
 import { createTrustyAICR, deleteTrustyAICR } from '~/api';
 
 const useManageTrustyAICR = (namespace: string) => {
-  const [trustyCR, crLoaded, arg2, arg3] = useTrustyAINamespaceCR(namespace);
+  const [trustyCR, , error, refresh] = useTrustyAINamespaceCR(namespace);
 
   const hasCR = !!trustyCR;
 
@@ -29,6 +29,8 @@ const useManageTrustyAICR = (namespace: string) => {
 
   return {
     hasCR,
+    error,
+    refresh,
     installCR,
     deleteCR,
   };
