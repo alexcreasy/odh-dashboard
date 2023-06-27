@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate, Outlet, Route } from 'react-router-dom';
 import ProjectInferenceMetricsWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsWrapper';
 import ProjectRuntimeMetricsWrapper from '~/pages/modelServing/screens/projects/ProjectRuntimeMetricsWrapper';
 import useModelMetricsEnabled from '~/pages/modelServing/useModelMetricsEnabled';
@@ -9,10 +9,11 @@ import PipelineDetails from '~/concepts/pipelines/content/pipelinesDetails/pipel
 import PipelineRunDetails from '~/concepts/pipelines/content/pipelinesDetails/pipelineRun/PipelineRunDetails';
 import CreateRunPage from '~/concepts/pipelines/content/createRun/CreateRunPage';
 import CloneRunPage from '~/concepts/pipelines/content/createRun/CloneRunPage';
-import { ExplainabilityProvider } from '~/concepts/explainability/ExplainabilityContext';
+import { ExplainabilityContextProvider } from '~/concepts/explainability/ExplainabilityContext';
 import ProjectInferenceMetricsConfigurationPage from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsConfigurationPage';
 import ProjectInferenceMetricsPage from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsPage';
 import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
+import ProjectInferenceExplainabilityWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceExplainabilityWrapper';
 import ProjectDetails from './screens/detail/ProjectDetails';
 import ProjectView from './screens/projects/ProjectView';
 import ProjectDetailsContextProvider from './ProjectDetailsContext';
@@ -32,7 +33,7 @@ const ProjectViewRoutes: React.FC = () => {
         <Route path="spawner/:notebookName" element={<EditSpawnerPage />} />
         {modelMetricsEnabled && (
           <>
-            <Route path="metrics/model" element={<ExplainabilityProvider />}>
+            <Route path="metrics/model" element={<ProjectInferenceExplainabilityWrapper />}>
               <Route index element={<Navigate to=".." />} />
               <Route path=":inferenceService" element={<ProjectInferenceMetricsWrapper />}>
                 <Route path=":tab?" element={<ProjectInferenceMetricsPage />} />

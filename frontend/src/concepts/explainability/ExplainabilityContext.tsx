@@ -1,5 +1,4 @@
 import React from 'react';
-import { Outlet, useParams } from 'react-router-dom';
 import useTrustyAPIRoute from '~/concepts/explainability/useTrustyAPIRoute';
 import useTrustyAINamespaceCR, {
   taiHasServerTimedOut,
@@ -13,7 +12,6 @@ import useFetchState, {
   FetchStateCallbackPromise,
   NotReadyError,
 } from '~/utilities/useFetchState';
-import { ProjectDetailsContext } from '~/pages/projects/ProjectDetailsContext';
 import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 
 // TODO create component for ensuring API availability, see pipelines for example.
@@ -32,6 +30,7 @@ const defaultExplainabilityContextData: ExplainabilityContextData = {
 };
 
 type ExplainabilityContextProps = {
+  namespace: string;
   hasCR: boolean;
   crInitializing: boolean;
   serverTimedOut: boolean;
@@ -44,6 +43,7 @@ type ExplainabilityContextProps = {
 };
 
 export const ExplainabilityContext = React.createContext<ExplainabilityContextProps>({
+  namespace: '',
   hasCR: false,
   crInitializing: false,
   serverTimedOut: false,
@@ -54,14 +54,21 @@ export const ExplainabilityContext = React.createContext<ExplainabilityContextPr
   apiState: { apiAvailable: false, api: null as unknown as TrustyAPIState['api'] },
 });
 
-export const ExplainabilityProvider: React.FC = () => {
+type ExplainabilityContextProviderProps = {
+  children: React.ReactNode;
+  namespace: string;
+};
+export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProviderProps> = ({
+  children,
+  namespace,
+}) => {
   //TODO: when TrustyAI operator is ready, we will need to use the current DSProject namespace instead.
   //const namespace = useDashboardNamespace().dashboardNamespace;
   //const namespace = 'opendatahub-model';
 
-  const { project: ns } = useParams<{ project: string }>();
-
-  const namespace = ns ?? 'unknown-namespace'; //?? 'trustyai-e2e-modelmesh';
+  // const { project: ns } = useParams<{ project: string }>();
+  //
+  // const namespace2 = ns ?? 'unknown-namespace'; //?? 'trustyai-e2e-modelmesh';
   console.log('namespace: %s', namespace);
   const state = useTrustyAINamespaceCR(namespace);
 
@@ -95,6 +102,7 @@ export const ExplainabilityProvider: React.FC = () => {
   return (
     <ExplainabilityContext.Provider
       value={{
+        namespace,
         hasCR: !!explainabilityNamespaceCR,
         crInitializing: !crLoaded,
         serverTimedOut,
@@ -106,7 +114,7 @@ export const ExplainabilityProvider: React.FC = () => {
         data,
       }}
     >
-      <Outlet />
+      {children}
     </ExplainabilityContext.Provider>
   );
 };
