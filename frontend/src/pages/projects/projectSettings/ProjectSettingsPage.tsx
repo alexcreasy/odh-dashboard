@@ -1,9 +1,9 @@
 import React from 'react';
 import { PageSection, Stack, StackItem } from '@patternfly/react-core';
-import ProjectBiasSettings from '~/pages/projects/projectSettings/ProjectBiasSettings';
+import ModelBiasSettingsCard from '~/pages/projects/projectSettings/ModelBiasSettingsCard';
 import { ProjectDetailsContext } from '~/pages/projects/ProjectDetailsContext';
 
-const ProjectSettings = () => {
+const ProjectSettingsPage = () => {
   const { currentProject } = React.useContext(ProjectDetailsContext);
   const namespace = currentProject.metadata.name;
 
@@ -11,11 +11,11 @@ const ProjectSettings = () => {
     <PageSection isFilled aria-label="project-settings-page-section" variant="light">
       <Stack hasGutter>
         <StackItem>
-          <ProjectBiasSettings namespace={namespace} />
+          <ModelBiasSettingsCard namespace={namespace} />
         </StackItem>
       </Stack>
     </PageSection>
   );
 };
 
-export default ProjectSettings;
+export default ProjectSettingsPage;

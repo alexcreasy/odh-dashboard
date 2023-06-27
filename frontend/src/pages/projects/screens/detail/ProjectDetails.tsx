@@ -11,7 +11,7 @@ import { useAppContext } from '~/app/AppContext';
 import { useAccessReview } from '~/api';
 import { isProjectSharingEnabled } from '~/pages/projects/projectSharing/utils';
 import { AccessReviewResourceAttributes } from '~/k8sTypes';
-import ProjectSettings from '~/pages/projects/projectSettings/ProjectSettings';
+import ProjectSettingsPage from '~/pages/projects/projectSettings/ProjectSettingsPage';
 import useCheckLogoutParams from './useCheckLogoutParams';
 import ProjectDetailsComponents from './ProjectDetailsComponents';
 
@@ -53,7 +53,7 @@ const ProjectDetails: React.FC = () => {
           sections={[
             { title: 'Components', component: <ProjectDetailsComponents />, icon: <CubeIcon /> },
             { title: 'Permissions', component: <ProjectSharing />, icon: <UsersIcon /> },
-            { title: 'Settings', component: <ProjectSettings />, icon: <CogIcon /> },
+            { title: 'Settings', component: <ProjectSettingsPage />, icon: <CogIcon /> },
           ]}
         />
       ) : (

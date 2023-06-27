@@ -2,11 +2,11 @@ import { Card, CardBody, CardHeader, CardTitle, Stack, StackItem } from '@patter
 import React from 'react';
 import InstallTrustyAICheckbox from '~/concepts/explainability/content/InstallTrustyAICheckbox';
 
-type ProjectBiasSettingsProps = {
+type ModelBiasSettingsCardProps = {
   namespace: string;
 };
-const ProjectBiasSettings: React.FC<ProjectBiasSettingsProps> = ({ namespace }) => (
-  <Card>
+const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace }) => (
+  <Card isFlat>
     <CardHeader>
       <CardTitle>Model Bias</CardTitle>
     </CardHeader>
@@ -20,4 +20,4 @@ const ProjectBiasSettings: React.FC<ProjectBiasSettingsProps> = ({ namespace }) 
   </Card>
 );
 
-export default ProjectBiasSettings;
+export default ModelBiasSettingsCard;
