@@ -2,6 +2,8 @@ import React from 'react';
 import { Checkbox } from '@patternfly/react-core';
 import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
 import useNotification from '~/utilities/useNotification';
+import DashboardHelpTooltip from '~/concepts/dashboard/DashboardHelpTooltip';
+import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 
 type InstallTrustyAICheckboxProps = {
   namespace: string;
@@ -13,7 +15,11 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({ names
   return (
     <>
       <Checkbox
-        label="Bias Service"
+        label={
+          <>
+            Enable TrustyAI <DashboardHelpTooltip content={TRUSTYAI_TOOLTIP_TEXT} />
+          </>
+        }
         isChecked={hasCR}
         onChange={(checked) => {
           if (checked) {
