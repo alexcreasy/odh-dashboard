@@ -74,17 +74,10 @@ export const ExplainabilityProvider: React.FC = () => {
     setDisableTimeout(true);
   }, []);
 
-  //console.log('CR: %s', explainabilityNamespaceCR?.kind);
-
-  //TODO handle routeLoadedError - when TIA operator is ready
   const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAPIRoute(
     isCRReady,
     namespace,
   );
-
-  if (routeLoadError) {
-    console.log('Route load error: %O', routeLoadError);
-  }
 
   const hostPath = routeLoaded && routeHost ? routeHost : null;
 
