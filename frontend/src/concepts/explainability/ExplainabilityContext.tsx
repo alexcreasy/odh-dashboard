@@ -1,10 +1,10 @@
 import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import useTrustyAPIRoute from '~/concepts/explainability/useTrustyAPIRoute';
-import useTrustyAiNamespaceCR, {
+import useTrustyAINamespaceCR, {
   taiHasServerTimedOut,
   taiLoaded,
-} from '~/concepts/explainability/useTrustyAiNamespaceCR';
+} from '~/concepts/explainability/useTrustyAINamespaceCR';
 import useTrustyAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAPIState';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { formatListResponse } from '~/concepts/explainability/utils';
@@ -63,7 +63,7 @@ export const ExplainabilityProvider: React.FC = () => {
 
   const namespace = ns ?? 'unknown-namespace'; //?? 'trustyai-e2e-modelmesh';
   console.log('namespace: %s', namespace);
-  const state = useTrustyAiNamespaceCR(namespace);
+  const state = useTrustyAINamespaceCR(namespace);
 
   //TODO handle CR loaded error - when TIA operator is ready
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;

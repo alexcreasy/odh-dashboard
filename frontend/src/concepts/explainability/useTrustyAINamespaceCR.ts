@@ -4,12 +4,12 @@ import useFetchState, {
   FetchStateCallbackPromise,
   NotReadyError,
 } from '~/utilities/useFetchState';
-import { TrustyAiKind } from '~/k8sTypes';
+import { TrustyAIKind } from '~/k8sTypes';
 import { getTrustyAICR } from '~/api';
 import { FAST_POLL_INTERVAL } from '~/utilities/const';
 import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 
-type State = TrustyAiKind | null;
+type State = TrustyAIKind | null;
 
 export const taiLoaded = ([state, loaded]: FetchState<State>): boolean =>
   loaded &&
@@ -33,7 +33,7 @@ export const taiHasServerTimedOut = (
   return Date.now() - new Date(createTime).getTime() > 60 * 5 * 1000;
 };
 
-const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
+const useTrustyAINamespaceCR = (namespace: string): FetchState<State> => {
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
@@ -70,4 +70,4 @@ const useTrustyAiNamespaceCR = (namespace: string): FetchState<State> => {
   return state;
 };
 
-export default useTrustyAiNamespaceCR;
+export default useTrustyAINamespaceCR;

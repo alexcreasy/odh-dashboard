@@ -431,7 +431,7 @@ export type AWSSecretKind = SecretKind & {
   data: Record<AWS_KEYS, string>;
 };
 
-export type TrustyAiKind = K8sResourceCommon & {
+export type TrustyAIKind = K8sResourceCommon & {
   metadata: {
     name: string;
     namespace: string;
@@ -440,16 +440,15 @@ export type TrustyAiKind = K8sResourceCommon & {
     storage: {
       format: string;
       folder: string;
-      pv: string;
       size: string;
-      data: {
-        filename: string;
-        format: string;
-      };
-      metrics: {
-        schedule: string;
-        batchSize?: number;
-      };
+    };
+    data: {
+      filename: string;
+      format: string;
+    };
+    metrics: {
+      schedule: string;
+      batchSize?: number;
     };
   };
   status?: {
