@@ -14,8 +14,6 @@ import useFetchState, {
 } from '~/utilities/useFetchState';
 import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 
-// TODO create component for ensuring API availability, see pipelines for example.
-
 type ExplainabilityContextData = {
   refresh: () => Promise<void>;
   biasMetricConfigs: BiasMetricConfig[];
@@ -62,17 +60,7 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
   children,
   namespace,
 }) => {
-  //TODO: when TrustyAI operator is ready, we will need to use the current DSProject namespace instead.
-  //const namespace = useDashboardNamespace().dashboardNamespace;
-  //const namespace = 'opendatahub-model';
-
-  // const { project: ns } = useParams<{ project: string }>();
-  //
-  // const namespace2 = ns ?? 'unknown-namespace'; //?? 'trustyai-e2e-modelmesh';
-  console.log('namespace: %s', namespace);
   const state = useTrustyAINamespaceCR(namespace);
-
-  //TODO handle CR loaded error - when TIA operator is ready
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
   const isCRReady = taiLoaded(state);
   const [disableTimeout, setDisableTimeout] = React.useState(false);

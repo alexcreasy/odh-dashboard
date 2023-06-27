@@ -33,12 +33,6 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({ names
               })
               .finally(refresh);
           } else {
-            // deleteCR()
-            //   .then(() => notify.info('Deleting', 'The TrustyAI service is being deleted'))
-            //   .catch((e) => {
-            //     notify.error('TrustyAI deletion failed', e?.message);
-            //   })
-            //   .finally(refresh);
             setOpen(true);
           }
         }}

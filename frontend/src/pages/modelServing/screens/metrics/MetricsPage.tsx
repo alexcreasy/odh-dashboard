@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Breadcrumb, Bullseye, Button } from '@patternfly/react-core';
+import { Breadcrumb, Button } from '@patternfly/react-core';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CogIcon } from '@patternfly/react-icons';
 import { BreadcrumbItemType } from '~/types';
@@ -21,21 +21,7 @@ const MetricsPage: React.FC<MetricsPageProps> = ({ title, breadcrumbItems }) => 
   const {
     hasCR,
     apiState: { apiAvailable },
-    data,
-    serverTimedOut,
-    serviceLoadError,
-    crInitializing,
   } = React.useContext(ExplainabilityContext);
-
-  console.log(
-    'apiAvailable: %s | hasCR: %s | data: %O | serverTimedOut: %s | serviceLoadError: %s | crInitializing: %s |',
-    apiAvailable,
-    hasCR,
-    data,
-    serverTimedOut,
-    serviceLoadError,
-    crInitializing,
-  );
 
   return (
     <ApplicationsPage

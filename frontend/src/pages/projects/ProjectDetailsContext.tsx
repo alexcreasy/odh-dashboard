@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 import {
-  ServingRuntimeKind,
+  GroupKind,
+  InferenceServiceKind,
   PersistentVolumeClaimKind,
   ProjectKind,
-  InferenceServiceKind,
-  SecretKind,
   RoleBindingKind,
-  GroupKind,
+  SecretKind,
+  ServingRuntimeKind,
   TemplateKind,
 } from '~/k8sTypes';
 import { DEFAULT_CONTEXT_DATA } from '~/utilities/const';
@@ -26,7 +26,6 @@ import useTemplates from '~/pages/modelServing/customServingRuntimes/useTemplate
 import useTemplateOrder from '~/pages/modelServing/customServingRuntimes/useTemplateOrder';
 import { useDashboardNamespace } from '~/redux/selectors';
 import { getTokenNames } from '~/pages/modelServing/utils';
-import { ExplainabilityContextProvider } from '~/concepts/explainability/ExplainabilityContext';
 import { NotebookState } from './notebook/types';
 import { DataConnection } from './types';
 import useDataConnections from './screens/detail/data-connections/useDataConnections';

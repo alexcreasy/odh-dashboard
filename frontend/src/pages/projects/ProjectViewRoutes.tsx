@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navigate, Outlet, Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import ProjectInferenceMetricsWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsWrapper';
 import ProjectRuntimeMetricsWrapper from '~/pages/modelServing/screens/projects/ProjectRuntimeMetricsWrapper';
 import useModelMetricsEnabled from '~/pages/modelServing/useModelMetricsEnabled';
@@ -9,7 +9,6 @@ import PipelineDetails from '~/concepts/pipelines/content/pipelinesDetails/pipel
 import PipelineRunDetails from '~/concepts/pipelines/content/pipelinesDetails/pipelineRun/PipelineRunDetails';
 import CreateRunPage from '~/concepts/pipelines/content/createRun/CreateRunPage';
 import CloneRunPage from '~/concepts/pipelines/content/createRun/CloneRunPage';
-import { ExplainabilityContextProvider } from '~/concepts/explainability/ExplainabilityContext';
 import ProjectInferenceMetricsConfigurationPage from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsConfigurationPage';
 import ProjectInferenceMetricsPage from '~/pages/modelServing/screens/projects/ProjectInferenceMetricsPage';
 import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';

@@ -16,7 +16,6 @@ import EmptyBiasConfigurationCard from '~/pages/modelServing/screens/metrics/Emp
 import EmptyBiasChartSelectionCard from '~/pages/modelServing/screens/metrics/EmptyBiasChartSelectionCard';
 import DashboardExpandableSection from '~/concepts/dashboard/DashboardExpandableSection';
 import useBiasChartsBrowserStorage from '~/pages/modelServing/screens/metrics/useBiasChartsBrowserStorage';
-import EnsureTrustyAvailablility from '~/concepts/explainability/EnsureTrustyAvailablility';
 
 const OPEN_WRAPPER_STORAGE_KEY_PREFIX = `odh.dashboard.xai.bias_metric_chart_wrapper_open`;
 const BiasTab: React.FC = () => {
@@ -42,59 +41,65 @@ const BiasTab: React.FC = () => {
     }
   }, [loaded, biasMetricConfigs, setSelectedBiasConfigs, selectedBiasConfigs, loadError]);
 
+  if (!loaded) {
+    return (
+      <Bullseye>
+        <Spinner />
+      </Bullseye>
+    );
+  }
+
   return (
-    <EnsureTrustyAvailablility>
-      <Stack>
-        <StackItem>
-          <MetricsPageToolbar
-            leftToolbarItem={
-              <ToolbarGroup>
-                <Stack>
-                  <StackItem>
-                    <ToolbarItem variant="label">Metrics to display</ToolbarItem>
-                  </StackItem>
-                  <StackItem>
-                    <ToolbarItem>
-                      <BiasMetricConfigSelector
-                        onChange={setSelectedBiasConfigs}
-                        initialSelections={selectedBiasConfigs}
-                      />
-                    </ToolbarItem>
-                  </StackItem>
-                </Stack>
-              </ToolbarGroup>
-            }
-          />
-        </StackItem>
-        <PageSection isFilled>
-          <Stack hasGutter>
-            {(biasMetricConfigs.length === 0 && (
-              <StackItem>
-                <EmptyBiasConfigurationCard />
-              </StackItem>
-            )) ||
-              (selectedBiasConfigs.length === 0 && (
+    <Stack>
+      <StackItem>
+        <MetricsPageToolbar
+          leftToolbarItem={
+            <ToolbarGroup>
+              <Stack>
                 <StackItem>
-                  <EmptyBiasChartSelectionCard />
+                  <ToolbarItem variant="label">Metrics to display</ToolbarItem>
                 </StackItem>
-              )) || (
-                <>
-                  {selectedBiasConfigs.map((x) => (
-                    <StackItem key={x.id}>
-                      <DashboardExpandableSection
-                        title={x.name}
-                        storageKey={`${OPEN_WRAPPER_STORAGE_KEY_PREFIX}-${x.id}`}
-                      >
-                        <TrustyChart biasMetricConfig={x} />
-                      </DashboardExpandableSection>
-                    </StackItem>
-                  ))}
-                </>
-              )}
-          </Stack>
-        </PageSection>
-      </Stack>
-    </EnsureTrustyAvailablility>
+                <StackItem>
+                  <ToolbarItem>
+                    <BiasMetricConfigSelector
+                      onChange={setSelectedBiasConfigs}
+                      initialSelections={selectedBiasConfigs}
+                    />
+                  </ToolbarItem>
+                </StackItem>
+              </Stack>
+            </ToolbarGroup>
+          }
+        />
+      </StackItem>
+      <PageSection isFilled>
+        <Stack hasGutter>
+          {(biasMetricConfigs.length === 0 && (
+            <StackItem>
+              <EmptyBiasConfigurationCard />
+            </StackItem>
+          )) ||
+            (selectedBiasConfigs.length === 0 && (
+              <StackItem>
+                <EmptyBiasChartSelectionCard />
+              </StackItem>
+            )) || (
+              <>
+                {selectedBiasConfigs.map((x) => (
+                  <StackItem key={x.id}>
+                    <DashboardExpandableSection
+                      title={x.name}
+                      storageKey={`${OPEN_WRAPPER_STORAGE_KEY_PREFIX}-${x.id}`}
+                    >
+                      <TrustyChart biasMetricConfig={x} />
+                    </DashboardExpandableSection>
+                  </StackItem>
+                ))}
+              </>
+            )}
+        </Stack>
+      </PageSection>
+    </Stack>
   );
 };
 export default BiasTab;
