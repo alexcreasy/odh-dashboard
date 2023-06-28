@@ -1,10 +1,10 @@
 import React from 'react';
-import useTrustyAPIRoute from '~/concepts/explainability/useTrustyAPIRoute';
+import useTrustyAIAPIRoute from '~/concepts/explainability/useTrustyAIAPIRoute';
 import useTrustyAINamespaceCR, {
   taiHasServerTimedOut,
   taiLoaded,
 } from '~/concepts/explainability/useTrustyAINamespaceCR';
-import useTrustyAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAPIState';
+import useTrustyAIAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAIAPIState';
 import { BiasMetricConfig } from '~/concepts/explainability/types';
 import { formatListResponse } from '~/concepts/explainability/utils';
 import useFetchState, {
@@ -69,7 +69,7 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
     setDisableTimeout(true);
   }, []);
 
-  const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAPIRoute(
+  const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAIAPIRoute(
     isCRReady,
     namespace,
   );
@@ -83,7 +83,7 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
 
   const serviceLoadError = crLoadError || routeLoadError;
 
-  const [apiState, refreshAPIState] = useTrustyAPIState(hostPath);
+  const [apiState, refreshAPIState] = useTrustyAIAPIState(hostPath);
 
   const data = useFetchContextData(apiState);
 
@@ -107,9 +107,8 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
   );
 };
 
-//TODO handle errors.
 const useFetchContextData = (apiState: TrustyAPIState): ExplainabilityContextData => {
-  const [biasMetricConfigs, biasMetricConfigsLoaded, , refreshBiasMetricConfigs] =
+  const [biasMetricConfigs, biasMetricConfigsLoaded, error, refreshBiasMetricConfigs] =
     useFetchBiasMetricConfigs(apiState);
 
   const refresh = React.useCallback(
@@ -123,6 +122,7 @@ const useFetchContextData = (apiState: TrustyAPIState): ExplainabilityContextDat
     biasMetricConfigs,
     refresh,
     loaded,
+    error,
   };
 };
 

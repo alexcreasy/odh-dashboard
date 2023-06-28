@@ -12,10 +12,7 @@ import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 type State = TrustyAIKind | null;
 
 export const taiLoaded = ([state, loaded]: FetchState<State>): boolean =>
-  loaded &&
-  !!state &&
-  //!!state.status?.conditions?.find((c) => c.type === 'APIServerReady' && c.status === 'True');
-  state.status?.ready === 'True';
+  loaded && !!state && state.status?.ready === 'True';
 
 export const taiHasServerTimedOut = (
   [state, loaded]: FetchState<State>,

@@ -10,7 +10,7 @@ import { FAST_POLL_INTERVAL } from '~/utilities/const';
 import useBiasMetricsEnabled from './useBiasMetricsEnabled';
 
 type State = string | null;
-const useTrustyAPIRoute = (hasCR: boolean, namespace: string): FetchState<State> => {
+const useTrustyAIAPIRoute = (hasCR: boolean, namespace: string): FetchState<State> => {
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
@@ -56,4 +56,4 @@ const useTrustyAPIRoute = (hasCR: boolean, namespace: string): FetchState<State>
   return state;
 };
 
-export default useTrustyAPIRoute;
+export default useTrustyAIAPIRoute;
