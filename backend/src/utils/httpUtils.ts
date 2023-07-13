@@ -89,8 +89,13 @@ export const proxyCall = (
                 data += chunk;
               })
               .on('end', () => {
-                if (fastify.log.level === 'debug' && res.statusCode >= 400) {
-                  fastify.log.debug(
+                // if (fastify.log.level === 'debug' && res.statusCode >= 400) {
+                //   fastify.log.debug(
+                //     `Proxied request: ${method} ${url} returned: ${res.statusCode} ${res.statusMessage}`,
+                //   );
+                // }
+                if (res.statusCode >= 400) {
+                  fastify.log.warn(
                     `Proxied request: ${method} ${url} returned: ${res.statusCode} ${res.statusMessage}`,
                   );
                 }
