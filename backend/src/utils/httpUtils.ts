@@ -96,7 +96,7 @@ export const proxyCall = (
                 // }
                 if (res.statusCode >= 400) {
                   fastify.log.warn(
-                    `Proxied request: ${method} ${url} returned: ${res.statusCode} ${res.statusMessage}`,
+                    `Proxied request ${request.id}: ${method} ${url} returned: ${res.statusCode} ${res.statusMessage}`,
                   );
                 }
                 resolve(data);

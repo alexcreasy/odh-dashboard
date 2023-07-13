@@ -1,4 +1,5 @@
 import {
+  K8sStatus,
   KubeFastifyInstance,
   OauthFastifyRequest,
   PrometheusQueryRangeResponse,
@@ -9,6 +10,9 @@ import { getNamespaces } from './notebookUtils';
 import { getDashboardConfig } from './resourceUtils';
 import { createCustomError } from './requestUtils';
 import { proxyCall, ProxyError, ProxyErrorType } from './httpUtils';
+import _ from 'lodash';
+import { V1SelfSubjectAccessReview } from '@kubernetes/client-node';
+import { safeURLPassThrough } from '../routes/api/k8s/pass-through';
 
 const callPrometheus = async <T>(
   fastify: KubeFastifyInstance,
@@ -131,4 +135,88 @@ export const callPrometheusServing = (
     'Service Prometheus is down or misconfigured',
     503,
   );
+};
+
+const invalidInputError = createCustomError(
+  'Bad Request',
+  'One or more supplied request parameters are invalid',
+  400,
+);
+const forbiddenError = createCustomError(
+  'Forbidden',
+  'The user does not have permission to access this resource',
+  403,
+);
+
+export const callPrometheusBiasSPD = (
+  fastify: KubeFastifyInstance,
+  request: OauthFastifyRequest,
+  namespace: string,
+  model: string,
+  start: string,
+  end: string,
+  step: string,
+): Promise<{ code: number; response: PrometheusQueryRangeResponse | undefined }> => {
+  if (_.isEmpty(namespace)) {
+    return Promise.reject(invalidInputError);
+  }
+
+  if (_.isEmpty(model)) {
+    return Promise.reject(invalidInputError);
+  }
+
+  if (!isValidNumber(start)) {
+    return Promise.reject(invalidInputError);
+  }
+
+  if (!isValidNumber(end)) {
+    return Promise.reject(invalidInputError);
+  }
+
+  if (!isValidNumber(step)) {
+    return Promise.reject(invalidInputError);
+  }
+
+  //trustyai_spd{model="${name}"}
+
+  const query = `trustyai_spd{namespace=\\"${namespace}\\",model=\\"${model}\\"}&start=${start}&end=${end}&step=${step}`;
+
+  //request.headers.authorization = `Bearer ${fastify.kube.currentToken}`;
+
+  return callPrometheusServing(fastify, request, query);
+
+  //return Promise.resolve({ code: 200, response: undefined });
+};
+
+const isValidNumber = (value: any): boolean => {
+  return Number.isFinite(parseFloat(value));
+};
+
+export const checkInferenceServicePermission = (
+  fastify: KubeFastifyInstance,
+  request: OauthFastifyRequest,
+  namespace: string,
+  name: string,
+): Promise<V1SelfSubjectAccessReview | K8sStatus> => {
+  const kc = fastify.kube.config;
+  const cluster = kc.getCurrentCluster();
+  const selfSubjectAccessReviewObject: V1SelfSubjectAccessReview = {
+    apiVersion: 'authorization.k8s.io/v1',
+    kind: 'SelfSubjectAccessReview',
+    spec: {
+      resourceAttributes: {
+        group: 'serving.kserve.io',
+        resource: 'inferenceservices',
+        subresource: '',
+        verb: 'get',
+        name,
+        namespace,
+      },
+    },
+  };
+  return safeURLPassThrough<V1SelfSubjectAccessReview>(fastify, request, {
+    url: `${cluster.server}/apis/authorization.k8s.io/v1/selfsubjectaccessreviews`,
+    method: 'POST',
+    requestData: JSON.stringify(selfSubjectAccessReviewObject),
+  });
 };
