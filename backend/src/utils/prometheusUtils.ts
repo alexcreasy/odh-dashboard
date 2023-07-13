@@ -41,11 +41,11 @@ const callPrometheus = async <T>(
         return { code: 200, response: parsedData };
       } catch (e) {
         const errorMessage = e.message || e.toString();
-        fastify.log.error(`Failure parsing the response from Prometheus. ${errorMessage}`);
+        fastify.log.error(`Failure parsing the response from Prometheus: ${errorMessage}`);
+        fastify.log.error(`Unparsed Prometheus data: ${rawData}`);
         if (errorMessage.includes('Unexpected token < in JSON')) {
           throw { code: 422, response: 'Unprocessable prometheus response' };
         }
-        fastify.log.error(`Unparsed Prometheus data. ${rawData}`);
         throw { code: 500, response: rawData };
       }
     })
