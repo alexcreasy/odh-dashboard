@@ -48,6 +48,7 @@ export enum StackComponent {
   DASHBOARD = 'odh-dashboard',
   RAY = 'ray',
   WORKBENCHES = 'workbenches',
+  TRUSTY_AI = 'trustyai',
 }
 
 // TODO: Support extra operators, like the pipelines operator -- maybe as a "external dependency need?"
