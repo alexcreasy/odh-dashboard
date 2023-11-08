@@ -51,7 +51,7 @@ spec:
                       type: boolean
                     disablePipelines:
                       type: boolean
-                    disableBiasMetrics:
+                    disableTrustyAI:
                       type: boolean
                     disablePerformanceMetrics:
                       type: boolean

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Navigate, Route } from 'react-router-dom';
 import ProjectsRoutes from '~/concepts/projects/ProjectsRoutes';
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from '~/concepts/explainability/useIsTrustyAIAvailable';
 import ModelServingExplainabilityWrapper from '~/pages/modelServing/screens/metrics/ModelServingExplainabilityWrapper';
 import BiasConfigurationBreadcrumbPage from './screens/metrics/BiasConfigurationBreadcrumbPage';
 import GlobalModelMetricsPage from './screens/metrics/GlobalModelMetricsPage';
@@ -12,7 +12,7 @@ import useModelMetricsEnabled from './useModelMetricsEnabled';
 
 const ModelServingRoutes: React.FC = () => {
   const [modelMetricsEnabled] = useModelMetricsEnabled();
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
 
   //TODO: Split route to project and mount provider here. This will allow you to load data when model switching is later implemented.
   return (

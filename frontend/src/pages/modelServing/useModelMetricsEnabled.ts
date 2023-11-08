@@ -1,9 +1,9 @@
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from '~/concepts/explainability/useIsTrustyAIAvailable';
 import usePerformanceMetricsEnabled from './screens/metrics/usePerformanceMetricsEnabled';
 
 const useModelMetricsEnabled = (): [modelMetricsEnabled: boolean] => {
   const [performanceMetricsEnabled] = usePerformanceMetricsEnabled();
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
 
   const checkModelMetricsEnabled = () => performanceMetricsEnabled || biasMetricsEnabled;
 

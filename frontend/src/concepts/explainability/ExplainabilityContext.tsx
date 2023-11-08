@@ -12,7 +12,7 @@ import useFetchState, {
   FetchStateCallbackPromise,
   NotReadyError,
 } from '~/utilities/useFetchState';
-import useBiasMetricsEnabled from './useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from './useIsTrustyAIAvailable';
 
 type ExplainabilityContextData = {
   refresh: () => Promise<void>;
@@ -127,7 +127,7 @@ const useFetchContextData = (apiState: TrustyAPIState): ExplainabilityContextDat
 };
 
 const useFetchBiasMetricConfigs = (apiState: TrustyAPIState): FetchState<BiasMetricConfig[]> => {
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
   const callback = React.useCallback<FetchStateCallbackPromise<BiasMetricConfig[]>>(
     (opts) => {
       if (!biasMetricsEnabled) {

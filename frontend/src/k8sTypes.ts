@@ -768,7 +768,7 @@ export type DashboardCommonConfig = {
   disableProjectSharing: boolean;
   disableCustomServingRuntimes: boolean;
   disablePipelines: boolean;
-  disableBiasMetrics: boolean;
+  disableTrustyAI: boolean;
   disablePerformanceMetrics: boolean;
 };
 

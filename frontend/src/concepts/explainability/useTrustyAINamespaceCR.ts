@@ -7,7 +7,7 @@ import useFetchState, {
 import { TrustyAIKind } from '~/k8sTypes';
 import { getTrustyAICR } from '~/api';
 import { FAST_POLL_INTERVAL } from '~/utilities/const';
-import useBiasMetricsEnabled from './useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from './useIsTrustyAIAvailable';
 
 type State = TrustyAIKind | null;
 
@@ -31,7 +31,7 @@ export const taiHasServerTimedOut = (
 };
 
 const useTrustyAINamespaceCR = (namespace: string): FetchState<State> => {
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
       if (!biasMetricsEnabled) {

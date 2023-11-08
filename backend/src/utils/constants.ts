@@ -51,7 +51,7 @@ export const blankDashboardCR: DashboardConfig = {
       disableModelServing: false,
       disableProjectSharing: false,
       disableCustomServingRuntimes: false,
-      disableBiasMetrics: false,
+      disableTrustyAI: false,
       disablePerformanceMetrics: false,
       disablePipelines: false,
     },

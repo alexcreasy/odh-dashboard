@@ -18,7 +18,7 @@ spec:
     disableModelServing: true
     disableProjectSharing: true
     disableCustomServingRuntimes: true
-    disableBiasMetrics: true
+    disableTrustyAI: true
     disablePerformanceMetrics: true
   notebookController:
     enabled: true

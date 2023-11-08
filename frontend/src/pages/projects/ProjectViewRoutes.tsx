@@ -11,7 +11,7 @@ import CreateRunPage from '~/concepts/pipelines/content/createRun/CreateRunPage'
 import CloneRunPage from '~/concepts/pipelines/content/createRun/CloneRunPage';
 import ProjectModelMetricsConfigurationPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsConfigurationPage';
 import ProjectModelMetricsPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsPage';
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from '~/concepts/explainability/useIsTrustyAIAvailable';
 import usePerformanceMetricsEnabled from '~/pages/modelServing/screens/metrics/usePerformanceMetricsEnabled';
 import ProjectInferenceExplainabilityWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceExplainabilityWrapper';
 import ProjectDetails from './screens/detail/ProjectDetails';
@@ -22,7 +22,7 @@ import EditSpawnerPage from './screens/spawner/EditSpawnerPage';
 
 const ProjectViewRoutes: React.FC = () => {
   const [modelMetricsEnabled] = useModelMetricsEnabled();
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
   const [performanceMetricsEnabled] = usePerformanceMetricsEnabled();
 
   return (

@@ -24,8 +24,7 @@ The following are a list of features that are supported, along with there defaul
 | disableModelServing          | false   | Disables Model Serving from the dashboard and from Data Science Projects.                            |
 | disableProjectSharing        | false   | Disables Project Sharing from Data Science Projects.                                                 |
 | disableCustomServingRuntimes | false   | Disables Custom Serving Runtimes from the Admin Panel.                                               |
-| modelMetricsNamespace        | false   | Enables the namespace in which the Model Serving Metrics' Prometheus Operator is installed.          |
-| disableBiasMetrics           | false   | Disables Model Bias tab from Model Serving metrics.                                                  |
+| disableTrustyAI              | false   | Disables TrustyAI related features, such as bias from the dashboard.                                 |
 | disablePerformanceMetrics    | false   | Disables Endpoint Performance tab from Model Serving metrics.                                        |
 
 ## Defaults
@@ -49,8 +48,7 @@ spec:
     disableModelServing: false
     disableProjectSharing: false
     disableCustomServingRuntimes: false
-    modelMetricsNamespace: ''
-    disableBiasMetrics: false
+    disableTrustyAI: false
     disablePerformanceMetrics: false
 ```
 
@@ -140,8 +138,7 @@ spec:
     disableModelServing: true
     disableProjectSharing: true
     disableCustomServingRuntimes: false
-    modelMetricsNamespace: ''
-    disableBiasMetrics: false
+    disableTrustyAI: false
     disablePerformanceMetrics: false
   notebookController:
     enabled: true

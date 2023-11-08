@@ -10,7 +10,7 @@ import ProjectSharing from '~/pages/projects/projectSharing/ProjectSharing';
 import { useAccessReview } from '~/api';
 import { AccessReviewResourceAttributes } from '~/k8sTypes';
 import ProjectSettingsPage from '~/pages/projects/projectSettings/ProjectSettingsPage';
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from '~/concepts/explainability/useIsTrustyAIAvailable';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import useCheckLogoutParams from './useCheckLogoutParams';
 import ProjectDetailsComponents from './ProjectDetailsComponents';
@@ -25,7 +25,7 @@ const ProjectDetails: React.FC = () => {
   const { currentProject } = React.useContext(ProjectDetailsContext);
   const displayName = getProjectDisplayName(currentProject);
   const description = getProjectDescription(currentProject);
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
   const projectSharingEnabled = useIsAreaAvailable(SupportedArea.DS_PROJECTS_PERMISSIONS).status;
   const { state } = useLocation();
   const [allowCreate, rbacLoaded] = useAccessReview({

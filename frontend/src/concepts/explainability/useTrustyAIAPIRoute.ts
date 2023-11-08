@@ -7,11 +7,11 @@ import useFetchState, {
 import { getTrustyAIAPIRoute } from '~/api/';
 import { RouteKind } from '~/k8sTypes';
 import { FAST_POLL_INTERVAL } from '~/utilities/const';
-import useBiasMetricsEnabled from './useBiasMetricsEnabled';
+import useIsTrustyAIAvailable from './useIsTrustyAIAvailable';
 
 type State = string | null;
 const useTrustyAIAPIRoute = (hasCR: boolean, namespace: string): FetchState<State> => {
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const [biasMetricsEnabled] = useIsTrustyAIAvailable();
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
       if (!biasMetricsEnabled) {
