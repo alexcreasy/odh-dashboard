@@ -36,7 +36,7 @@ export const useModelServingMetrics = (
   refresh: () => void;
 } => {
   const [end, setEnd] = React.useState(lastUpdateTime);
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const biasMetricsEnabled = useBiasMetricsEnabled();
   const performanceMetricsAreaEnabled = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;

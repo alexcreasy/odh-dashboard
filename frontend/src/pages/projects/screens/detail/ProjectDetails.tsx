@@ -25,7 +25,7 @@ const ProjectDetails: React.FC = () => {
   const { currentProject } = React.useContext(ProjectDetailsContext);
   const displayName = getProjectDisplayName(currentProject);
   const description = getProjectDescription(currentProject);
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const biasMetricsEnabled = useBiasMetricsEnabled();
   const projectSharingEnabled = useIsAreaAvailable(SupportedArea.DS_PROJECTS_PERMISSIONS).status;
   const { state } = useLocation();
   const [allowCreate, rbacLoaded] = useAccessReview({

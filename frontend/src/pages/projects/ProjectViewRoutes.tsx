@@ -22,7 +22,7 @@ import EditSpawnerPage from './screens/spawner/EditSpawnerPage';
 
 const ProjectViewRoutes: React.FC = () => {
   const [modelMetricsEnabled] = useModelMetricsEnabled();
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const biasMetricsEnabled = useBiasMetricsEnabled();
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;

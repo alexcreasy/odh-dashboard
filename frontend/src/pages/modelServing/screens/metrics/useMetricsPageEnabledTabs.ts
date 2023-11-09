@@ -4,7 +4,7 @@ import { MetricsTabKeys } from './types';
 
 const useMetricsPageEnabledTabs = () => {
   const enabledTabs: MetricsTabKeys[] = [];
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const biasMetricsEnabled = useBiasMetricsEnabled();
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;

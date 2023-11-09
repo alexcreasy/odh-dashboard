@@ -5,7 +5,7 @@ const useModelMetricsEnabled = (): [modelMetricsEnabled: boolean] => {
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;
-  const [biasMetricsEnabled] = useBiasMetricsEnabled();
+  const biasMetricsEnabled = useBiasMetricsEnabled();
 
   const checkModelMetricsEnabled = () => performanceMetricsAreaAvailable || biasMetricsEnabled;
 
