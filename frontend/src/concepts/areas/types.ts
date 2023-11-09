@@ -36,8 +36,9 @@ export enum SupportedArea {
   CUSTOM_RUNTIMES = 'custom-serving-runtimes',
   K_SERVE = 'kserve',
   MODEL_MESH = 'model-mesh',
-  TRUSTY_AI = 'trustyai',
+  BIAS_METRICS = 'bias-metrics',
   PERFORMANCE_METRICS = 'performance-metrics',
+  TRUSTY_AI = 'trusty-ai',
 }
 
 /** Components deployed by the Operator. Part of the DSC Status. */

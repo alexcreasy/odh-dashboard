@@ -11,7 +11,6 @@ import CreateRunPage from '~/concepts/pipelines/content/createRun/CreateRunPage'
 import CloneRunPage from '~/concepts/pipelines/content/createRun/CloneRunPage';
 import ProjectModelMetricsConfigurationPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsConfigurationPage';
 import ProjectModelMetricsPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsPage';
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
 import ProjectInferenceExplainabilityWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceExplainabilityWrapper';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import ProjectDetails from './screens/detail/ProjectDetails';
@@ -22,7 +21,7 @@ import EditSpawnerPage from './screens/spawner/EditSpawnerPage';
 
 const ProjectViewRoutes: React.FC = () => {
   const [modelMetricsEnabled] = useModelMetricsEnabled();
-  const biasMetricsEnabled = useBiasMetricsEnabled();
+  const biasMetricsAreaAvailable = useIsAreaAvailable(SupportedArea.BIAS_METRICS).status;
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;
@@ -40,7 +39,7 @@ const ProjectViewRoutes: React.FC = () => {
               <Route index element={<Navigate to=".." />} />
               <Route path=":inferenceService" element={<ProjectModelMetricsWrapper />}>
                 <Route path=":tab?" element={<ProjectModelMetricsPage />} />
-                {biasMetricsEnabled && (
+                {biasMetricsAreaAvailable && (
                   <Route path="configure" element={<ProjectModelMetricsConfigurationPage />} />
                 )}
               </Route>

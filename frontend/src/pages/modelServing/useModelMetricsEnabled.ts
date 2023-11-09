@@ -1,13 +1,13 @@
-import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 
 const useModelMetricsEnabled = (): [modelMetricsEnabled: boolean] => {
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;
-  const biasMetricsEnabled = useBiasMetricsEnabled();
+  const biasMetricsAreaAvailable = useIsAreaAvailable(SupportedArea.BIAS_METRICS).status;
 
-  const checkModelMetricsEnabled = () => performanceMetricsAreaAvailable || biasMetricsEnabled;
+  const checkModelMetricsEnabled = () =>
+    performanceMetricsAreaAvailable || biasMetricsAreaAvailable;
 
   return [checkModelMetricsEnabled()];
 };

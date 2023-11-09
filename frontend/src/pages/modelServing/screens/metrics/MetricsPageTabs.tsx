@@ -4,7 +4,7 @@ import { Tab, TabAction, Tabs, TabTitleText } from '@patternfly/react-core';
 import { MetricsTabKeys } from '~/pages/modelServing/screens/metrics/types';
 import { useExplainabilityModelData } from '~/concepts/explainability/useExplainabilityModelData';
 import NotFound from '~/pages/NotFound';
-import useBiasMetricsInstalled from '~/concepts/explainability/useBiasMetricsInstalled';
+import useDoesTrustyAICRExist from '~/concepts/explainability/useDoesTrustyAICRExist';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import PerformanceTab from './PerformanceTab';
 import BiasTab from './BiasTab';
@@ -16,7 +16,7 @@ import './MetricsPageTabs.scss';
 const MetricsPageTabs: React.FC = () => {
   const enabledTabs = useMetricsPageEnabledTabs();
   const { biasMetricConfigs, loaded } = useExplainabilityModelData();
-  const [biasMetricsInstalled] = useBiasMetricsInstalled();
+  const [biasMetricsInstalled] = useDoesTrustyAICRExist();
   const performanceMetricsAreaAvailable = useIsAreaAvailable(
     SupportedArea.PERFORMANCE_METRICS,
   ).status;
