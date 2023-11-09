@@ -1,16 +1,5 @@
-import { useAppContext } from '~/app/AppContext';
-import { featureFlagEnabled } from '~/utilities/utils';
+import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 
-const useBiasMetricsEnabled = () => {
-  const {
-    dashboardConfig: {
-      spec: {
-        dashboardConfig: { disableBiasMetrics },
-      },
-    },
-  } = useAppContext();
-
-  return [featureFlagEnabled(disableBiasMetrics)];
-};
+const useBiasMetricsEnabled = () => [useIsAreaAvailable(SupportedArea.TRUSTY_AI).status];
 
 export default useBiasMetricsEnabled;

@@ -42,4 +42,14 @@ export const SupportedAreasStateMap: SupportedAreasState = {
     requiredComponents: [StackComponent.WORKBENCHES],
     reliantAreas: [SupportedArea.DS_PROJECTS_VIEW],
   },
+  [SupportedArea.TRUSTY_AI]: {
+    featureFlags: ['disableBiasMetrics'],
+    requiredComponents: [StackComponent.TRUSTY_AI],
+    reliantAreas: [SupportedArea.MODEL_SERVING],
+  },
+  [SupportedArea.PERFORMANCE_METRICS]: {
+    featureFlags: ['disablePerformanceMetrics'],
+    requiredComponents: [StackComponent.MODEL_MESH], // TODO: remove when KServe support is added
+    reliantAreas: [SupportedArea.MODEL_SERVING],
+  },
 };
