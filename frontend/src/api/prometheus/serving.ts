@@ -17,7 +17,7 @@ import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabl
 import { ResponsePredicate } from '~/api/prometheus/usePrometheusQueryRange';
 import useRefreshInterval from '~/utilities/useRefreshInterval';
 import { QueryTimeframeStep, RefreshIntervalValue } from '~/pages/modelServing/screens/const';
-import usePerformanceMetricsEnabled from '~/pages/modelServing/screens/metrics/usePerformanceMetricsEnabled';
+import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import useQueryRangeResourceData from './useQueryRangeResourceData';
 
 export const useModelServingMetrics = (
@@ -37,7 +37,9 @@ export const useModelServingMetrics = (
 } => {
   const [end, setEnd] = React.useState(lastUpdateTime);
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
-  const [performanceMetricsEnabled] = usePerformanceMetricsEnabled();
+  const performanceMetricsAreaEnabled = useIsAreaAvailable(
+    SupportedArea.PERFORMANCE_METRICS,
+  ).status;
 
   const defaultResponsePredicate = React.useCallback<ResponsePredicate>(
     (data) => data.result?.[0]?.values || [],
@@ -49,7 +51,7 @@ export const useModelServingMetrics = (
   >((data) => data.result || [], []);
 
   const serverRequestCount = useQueryRangeResourceData(
-    performanceMetricsEnabled && type === PerformanceMetricType.SERVER,
+    performanceMetricsAreaEnabled && type === PerformanceMetricType.SERVER,
     (queries as { [key in ServerMetricType]: string })[ServerMetricType.REQUEST_COUNT],
     end,
     timeframe,
@@ -60,7 +62,7 @@ export const useModelServingMetrics = (
 
   const serverAverageResponseTime =
     useQueryRangeResourceData<PrometheusQueryRangeResponseDataResult>(
-      performanceMetricsEnabled && type === PerformanceMetricType.SERVER,
+      performanceMetricsAreaEnabled && type === PerformanceMetricType.SERVER,
       (queries as { [key in ServerMetricType]: string })[ServerMetricType.AVG_RESPONSE_TIME],
       end,
       timeframe,
@@ -70,7 +72,7 @@ export const useModelServingMetrics = (
     );
 
   const serverCPUUtilization = useQueryRangeResourceData(
-    performanceMetricsEnabled && type === PerformanceMetricType.SERVER,
+    performanceMetricsAreaEnabled && type === PerformanceMetricType.SERVER,
     (queries as { [key in ServerMetricType]: string })[ServerMetricType.CPU_UTILIZATION],
     end,
     timeframe,
@@ -80,7 +82,7 @@ export const useModelServingMetrics = (
   );
 
   const serverMemoryUtilization = useQueryRangeResourceData(
-    performanceMetricsEnabled && type === PerformanceMetricType.SERVER,
+    performanceMetricsAreaEnabled && type === PerformanceMetricType.SERVER,
     (queries as { [key in ServerMetricType]: string })[ServerMetricType.MEMORY_UTILIZATION],
     end,
     timeframe,
@@ -90,7 +92,7 @@ export const useModelServingMetrics = (
   );
 
   const modelRequestSuccessCount = useQueryRangeResourceData(
-    performanceMetricsEnabled && type === PerformanceMetricType.MODEL,
+    performanceMetricsAreaEnabled && type === PerformanceMetricType.MODEL,
     (queries as { [key in ModelMetricType]: string })[ModelMetricType.REQUEST_COUNT_SUCCESS],
     end,
     timeframe,
@@ -100,7 +102,7 @@ export const useModelServingMetrics = (
   );
 
   const modelRequestFailedCount = useQueryRangeResourceData(
-    performanceMetricsEnabled && type === PerformanceMetricType.MODEL,
+    performanceMetricsAreaEnabled && type === PerformanceMetricType.MODEL,
     (queries as { [key in ModelMetricType]: string })[ModelMetricType.REQUEST_COUNT_FAILED],
     end,
     timeframe,

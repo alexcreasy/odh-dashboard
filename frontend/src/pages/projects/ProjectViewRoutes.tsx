@@ -12,8 +12,8 @@ import CloneRunPage from '~/concepts/pipelines/content/createRun/CloneRunPage';
 import ProjectModelMetricsConfigurationPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsConfigurationPage';
 import ProjectModelMetricsPage from '~/pages/modelServing/screens/projects/ProjectModelMetricsPage';
 import useBiasMetricsEnabled from '~/concepts/explainability/useBiasMetricsEnabled';
-import usePerformanceMetricsEnabled from '~/pages/modelServing/screens/metrics/usePerformanceMetricsEnabled';
 import ProjectInferenceExplainabilityWrapper from '~/pages/modelServing/screens/projects/ProjectInferenceExplainabilityWrapper';
+import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import ProjectDetails from './screens/detail/ProjectDetails';
 import ProjectView from './screens/projects/ProjectView';
 import ProjectDetailsContextProvider from './ProjectDetailsContext';
@@ -23,7 +23,9 @@ import EditSpawnerPage from './screens/spawner/EditSpawnerPage';
 const ProjectViewRoutes: React.FC = () => {
   const [modelMetricsEnabled] = useModelMetricsEnabled();
   const [biasMetricsEnabled] = useBiasMetricsEnabled();
-  const [performanceMetricsEnabled] = usePerformanceMetricsEnabled();
+  const performanceMetricsAreaAvailable = useIsAreaAvailable(
+    SupportedArea.PERFORMANCE_METRICS,
+  ).status;
 
   return (
     <ProjectsRoutes>
@@ -44,7 +46,7 @@ const ProjectViewRoutes: React.FC = () => {
               </Route>
               <Route path="*" element={<Navigate to="." />} />
             </Route>
-            {performanceMetricsEnabled && (
+            {performanceMetricsAreaAvailable && (
               <Route
                 path="metrics/server/:servingRuntime"
                 element={<ProjectServerMetricsWrapper />}
