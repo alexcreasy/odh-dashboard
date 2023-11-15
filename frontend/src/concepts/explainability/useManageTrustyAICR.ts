@@ -3,7 +3,8 @@ import useTrustyAINamespaceCR from '~/concepts/explainability/useTrustyAINamespa
 import { createTrustyAICR, deleteTrustyAICR } from '~/api';
 
 const useManageTrustyAICR = (namespace: string) => {
-  const [trustyCR, , error, refresh] = useTrustyAINamespaceCR(namespace);
+  const { state } = useTrustyAINamespaceCR(namespace);
+  const [trustyCR, , error, refresh] = state;
 
   const installCR = React.useCallback(() => {
     if (trustyCR) {

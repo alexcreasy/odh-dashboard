@@ -154,3 +154,5 @@ export const relativeTime = (current: number, previous: number): string => {
 
   return `${date.getDate()} ${monthAsString} ${date.getFullYear()}`;
 };
+
+export const FIVE_MINUTES_MS = 300000;

@@ -60,7 +60,7 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
   children,
   namespace,
 }) => {
-  const state = useTrustyAINamespaceCR(namespace);
+  const { state } = useTrustyAINamespaceCR(namespace);
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
   const isCRReady = taiLoaded(state);
   const [disableTimeout, setDisableTimeout] = React.useState(false);
