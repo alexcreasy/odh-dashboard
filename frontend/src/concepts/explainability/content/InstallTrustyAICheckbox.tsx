@@ -1,8 +1,8 @@
 import React from 'react';
 import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
-import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 import TrustyAIDeleteModal from '~/concepts/explainability/content/TrustyAIDeleteModal';
+import { TrustyAIKind } from '~/k8sTypes';
 
 export enum TrustyAICRActions {
   CREATE = 'CREATE',
@@ -11,25 +11,29 @@ export enum TrustyAICRActions {
 
 type InstallTrustyAICheckboxProps = {
   namespace: string;
+  isAvailable: boolean;
+  isProgressing: boolean;
+  installCR: () => Promise<TrustyAIKind>;
   onAction: (action: TrustyAICRActions, success: boolean, error?: Error) => void;
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   namespace,
+  isAvailable,
+  isProgressing,
+  installCR,
   onAction,
 }) => {
-  const { isAvailable, isProgressing, installCR, refresh } = useManageTrustyAICR(namespace);
-
   const [open, setOpen] = React.useState(false);
 
   const onCloseDeleteModal = React.useCallback(
     (deleted: boolean) => {
       setOpen(false);
-      refresh();
+      //refresh();
       if (deleted) {
         onAction(TrustyAICRActions.DELETE, true);
       }
     },
-    [onAction, refresh],
+    [onAction],
   );
 
   return (
@@ -49,8 +53,7 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
               .then(() => onAction(TrustyAICRActions.CREATE, true))
               .catch((e) => {
                 onAction(TrustyAICRActions.CREATE, false, e);
-              })
-              .finally(refresh);
+              });
           } else {
             setOpen(true);
           }

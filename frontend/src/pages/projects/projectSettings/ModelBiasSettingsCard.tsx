@@ -6,8 +6,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Stack,
-  StackItem,
 } from '@patternfly/react-core';
 import React from 'react';
 import InstallTrustyAICheckbox, {
@@ -19,7 +17,7 @@ type ModelBiasSettingsCardProps = {
   namespace: string;
 };
 const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace }) => {
-  const { isAvailable, isProgressing } = useManageTrustyAICR(namespace);
+  const { isAvailable, isProgressing, installCR } = useManageTrustyAICR(namespace);
 
   const [notifyAction, setNotifyAction] = React.useState<TrustyAICRActions | undefined>(undefined);
   const [success, setSuccess] = React.useState(false);
@@ -101,18 +99,17 @@ const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace
         <CardTitle>Model Bias</CardTitle>
       </CardHeader>
       <CardBody>
-        <Stack>
-          <StackItem>
-            <InstallTrustyAICheckbox
-              namespace={namespace}
-              onAction={(action, success, error) => {
-                setNotifyAction(action);
-                setSuccess(success);
-                setError(error);
-              }}
-            />
-          </StackItem>
-        </Stack>
+        <InstallTrustyAICheckbox
+          namespace={namespace}
+          isAvailable={isAvailable}
+          isProgressing={isProgressing}
+          installCR={installCR}
+          onAction={(action, success, error) => {
+            setNotifyAction(action);
+            setSuccess(success);
+            setError(error);
+          }}
+        />
       </CardBody>
       <CardFooter>{renderNotification()}</CardFooter>
     </Card>

@@ -21,7 +21,7 @@ export type TrustyAINamespaceStatus = {
 export const isTrustyCRStatusAvailable = (cr: TrustyAIKind): boolean =>
   !!cr.status?.conditions?.find((c) => c.type === 'Available' && c.status === 'True');
 
-export const taiLoaded = ([state, loaded]: FetchState<State>): boolean =>
+export const isTrustyAIAvailable = ([state, loaded]: FetchState<State>): boolean =>
   loaded && !!state && isTrustyCRStatusAvailable(state);
 
 export const taiHasServerTimedOut = (
@@ -41,6 +41,7 @@ export const taiHasServerTimedOut = (
 };
 
 const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
+  // TODO: Testing: mock useIsAreaAvailable to control testing
   const trustyAIAreaAvailable = useIsAreaAvailable(SupportedArea.TRUSTY_AI).status;
 
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
@@ -60,20 +61,42 @@ const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
     [namespace, trustyAIAreaAvailable],
   );
 
-  const [isStarting, setIsStarting] = React.useState(false);
-  const [isAvailable, setIsAvailable] = React.useState(false);
+  // const [isStarting, setIsStarting] = React.useState(false);
+  // const [isAvailable, setIsAvailable] = React.useState(false);
+
+  const [doRefresh, setDoRefresh] = React.useState(true);
 
   const state = useFetchState<State>(callback, null, {
     initialPromisePurity: true,
-    refreshRate: isStarting ? FAST_POLL_INTERVAL : undefined,
+    refreshRate: doRefresh ? FAST_POLL_INTERVAL : undefined,
   });
 
   // const resourceLoaded = state[1] && !!state[0];
   // const hasStatus = taiLoaded(state);
+  // React.useEffect(() => {
+  //   setIsAvailable(taiLoaded(state));
+  //   setIsStarting(state[1] && !!state[0] && !isAvailable);
+  //   // eslint-disable-next-line no-console
+  //   console.log(
+  //     'TrustyAI Service Status: isProgressing: %s isAvailable: %s',
+  //     isStarting,
+  //     isAvailable,
+  //   );
+  // }, [isAvailable, isStarting, state]);
+
+  // setIsAvailable(taiLoaded(state));
+  // setIsStarting(state[1] && !!state[0] && !isAvailable);
+
+  const isAvailable = isTrustyAIAvailable(state);
+  const isStarting = state[1] && !!state[0] && !isAvailable;
   React.useEffect(() => {
-    setIsAvailable(taiLoaded(state));
-    setIsStarting(state[1] && !!state[0] && !isAvailable);
-  }, [isAvailable, state]);
+    setDoRefresh(!isAvailable);
+  }, [isAvailable]);
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `TrustyAI Service Status - isProgressing: ${isStarting} isAvailable: ${isAvailable} doRefresh: ${doRefresh}`,
+  );
 
   return { isProgressing: isStarting, isAvailable: isAvailable, crState: state };
 };
