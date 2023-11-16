@@ -17,7 +17,7 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   namespace,
   onAction,
 }) => {
-  const { hasCR, installCR, refresh } = useManageTrustyAICR(namespace);
+  const { isAvailable, isProgressing, installCR, refresh } = useManageTrustyAICR(namespace);
 
   const [open, setOpen] = React.useState(false);
 
@@ -41,7 +41,8 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
             <HelperTextItem>{TRUSTYAI_TOOLTIP_TEXT}</HelperTextItem>
           </HelperText>
         }
-        isChecked={hasCR}
+        isChecked={isAvailable}
+        isDisabled={isProgressing}
         onChange={(checked) => {
           if (checked) {
             installCR()

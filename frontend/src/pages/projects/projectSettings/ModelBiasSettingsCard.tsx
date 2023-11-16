@@ -13,11 +13,14 @@ import React from 'react';
 import InstallTrustyAICheckbox, {
   TrustyAICRActions,
 } from '~/concepts/explainability/content/InstallTrustyAICheckbox';
+import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
 
 type ModelBiasSettingsCardProps = {
   namespace: string;
 };
 const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace }) => {
+  const { isAvailable, isProgressing } = useManageTrustyAICR(namespace);
+
   const [notifyAction, setNotifyAction] = React.useState<TrustyAICRActions | undefined>(undefined);
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState<Error | undefined>(undefined);
@@ -28,7 +31,7 @@ const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace
   }, []);
 
   const renderNotification = () => {
-    if (success && notifyAction === TrustyAICRActions.CREATE) {
+    if (success && notifyAction === TrustyAICRActions.CREATE && isAvailable) {
       return (
         <Alert
           variant="success"

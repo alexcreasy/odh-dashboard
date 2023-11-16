@@ -60,11 +60,11 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
   children,
   namespace,
 }) => {
-  const { state } = useTrustyAINamespaceCR(namespace);
-  const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = state;
-  const isCRReady = taiLoaded(state);
+  const { crState } = useTrustyAINamespaceCR(namespace);
+  const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = crState;
+  const isCRReady = taiLoaded(crState);
   const [disableTimeout, setDisableTimeout] = React.useState(false);
-  const serverTimedOut = !disableTimeout && taiHasServerTimedOut(state, isCRReady);
+  const serverTimedOut = !disableTimeout && taiHasServerTimedOut(crState, isCRReady);
   const ignoreTimedOut = React.useCallback(() => {
     setDisableTimeout(true);
   }, []);

@@ -13,7 +13,9 @@ import { FIVE_MINUTES_MS } from '~/utilities/time';
 type State = TrustyAIKind | null;
 
 export type TrustyAINamespaceStatus = {
-  state: FetchState<State>;
+  isProgressing: boolean;
+  isAvailable: boolean;
+  crState: FetchState<State>;
 };
 
 export const isTrustyCRStatusAvailable = (cr: TrustyAIKind): boolean =>
@@ -40,39 +42,40 @@ export const taiHasServerTimedOut = (
 
 const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
   const trustyAIAreaAvailable = useIsAreaAvailable(SupportedArea.TRUSTY_AI).status;
+
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
     (opts) => {
       if (!trustyAIAreaAvailable) {
         return Promise.reject(new NotReadyError('Bias metrics is not enabled'));
       }
 
-      return getTrustyAICR(namespace, opts)
-        .then((r) => r)
-        .catch((e) => {
-          if (e.statusObject?.code === 404) {
-            // Not finding is okay, not an error
-            return null;
-          }
-          throw e;
-        });
+      return getTrustyAICR(namespace, opts).catch((e) => {
+        if (e.statusObject?.code === 404) {
+          // Not finding is okay, not an error
+          return null;
+        }
+        throw e;
+      });
     },
     [namespace, trustyAIAreaAvailable],
   );
 
   const [isStarting, setIsStarting] = React.useState(false);
+  const [isAvailable, setIsAvailable] = React.useState(false);
 
   const state = useFetchState<State>(callback, null, {
     initialPromisePurity: true,
     refreshRate: isStarting ? FAST_POLL_INTERVAL : undefined,
   });
 
-  const resourceLoaded = state[1] && !!state[0];
-  const hasStatus = taiLoaded(state);
+  // const resourceLoaded = state[1] && !!state[0];
+  // const hasStatus = taiLoaded(state);
   React.useEffect(() => {
-    setIsStarting(!resourceLoaded && !hasStatus);
-  }, [hasStatus, resourceLoaded]);
+    setIsAvailable(taiLoaded(state));
+    setIsStarting(state[1] && !!state[0] && !isAvailable);
+  }, [isAvailable, state]);
 
-  return { state };
+  return { isProgressing: isStarting, isAvailable: isAvailable, crState: state };
 };
 
 export default useTrustyAINamespaceCR;
