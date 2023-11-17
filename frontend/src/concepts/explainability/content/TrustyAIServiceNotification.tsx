@@ -1,4 +1,4 @@
-import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
+import { Alert, AlertActionCloseButton, Bullseye, Spinner } from '@patternfly/react-core';
 import React from 'react';
 import { TrustyAICRActions } from '~/concepts/explainability/content/const';
 
@@ -8,6 +8,7 @@ type TrustyAIServiceNotificationProps = {
   error?: Error;
   isAvailable: boolean;
   clearNotification: () => void;
+  loading: boolean;
 };
 
 const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = ({
@@ -16,7 +17,16 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
   error,
   isAvailable,
   clearNotification,
+  loading,
 }) => {
+  if (loading) {
+    return (
+      <Bullseye>
+        <Spinner />
+      </Bullseye>
+    );
+  }
+
   if (success && notifyAction === TrustyAICRActions.CREATE && isAvailable) {
     return (
       <Alert
@@ -40,12 +50,7 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
         isLiveRegion
         isInline
       >
-        {/* This is a temporary fix, this should be updated to incorporate work from
-          https://github.com/opendatahub-io/odh-dashboard/pull/2032 in the future to provide a
-          better experience.*/}
-        {error?.message.includes('404')
-          ? 'The TrustyAI operator is not installed on this cluster.'
-          : error?.message}
+        {error?.message}
       </Alert>
     );
   }

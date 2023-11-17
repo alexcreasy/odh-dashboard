@@ -15,14 +15,9 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
   const [notifyAction, setNotifyAction] = React.useState<TrustyAICRActions | undefined>(undefined);
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState<Error | undefined>(undefined);
-  const clearNotification = React.useCallback(() => {
-    setNotifyAction(undefined);
-    setSuccess(false);
-    setError(undefined);
-  }, []);
 
   return (
-    <Stack>
+    <Stack hasGutter>
       <StackItem>
         <InstallTrustyAICheckbox
           isAvailable={isAvailable}
@@ -52,11 +47,16 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
       </StackItem>
       <StackItem>
         <TrustyAIServiceNotification
+          loading={isProgressing}
           notifyAction={notifyAction}
           success={success}
           isAvailable={isAvailable}
           error={error}
-          clearNotification={clearNotification}
+          clearNotification={() => {
+            setNotifyAction(undefined);
+            setSuccess(false);
+            setError(undefined);
+          }}
         />
       </StackItem>
     </Stack>

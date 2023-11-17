@@ -17,7 +17,6 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   isAvailable,
   isProgressing,
   onInstall,
-  onPostInstall = noop,
   onDelete,
   onPostDelete = noop,
 }) => {
@@ -37,12 +36,6 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         onChange={(checked) => {
           if (checked) {
             onInstall();
-            // onInstall()
-            //   .then(() => onAction(TrustyAICRActions.CREATE, true))
-            //   .catch((e) => {
-            //     onAction(TrustyAICRActions.CREATE, false, e);
-            //   });
-            onPostInstall();
           } else {
             setOpen(true);
           }
