@@ -1,8 +1,9 @@
 import React from 'react';
 import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
+import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 import TrustyAIDeleteModal from '~/concepts/explainability/content/TrustyAIDeleteModal';
-import { TrustyAIKind } from '~/k8sTypes';
+import { K8sStatus, TrustyAIKind } from '~/k8sTypes';
 
 export enum TrustyAICRActions {
   CREATE = 'CREATE',
@@ -10,32 +11,33 @@ export enum TrustyAICRActions {
 }
 
 type InstallTrustyAICheckboxProps = {
-  namespace: string;
   isAvailable: boolean;
   isProgressing: boolean;
   installCR: () => Promise<TrustyAIKind>;
   onAction: (action: TrustyAICRActions, success: boolean, error?: Error) => void;
+  onDelete: () => Promise<K8sStatus>;
+  onPostDelete?: () => void;
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
-  namespace,
   isAvailable,
   isProgressing,
   installCR,
   onAction,
+  onDelete,
+  onPostDelete = noop,
 }) => {
   const [open, setOpen] = React.useState(false);
 
-  const onCloseDeleteModal = React.useCallback(
-    (deleted: boolean) => {
-      setOpen(false);
-      //refresh();
-      if (deleted) {
-        onAction(TrustyAICRActions.DELETE, true);
-      }
-    },
-    [onAction],
-  );
-
+  // const onCloseDeleteModal = React.useCallback(
+  //   (deleted: boolean) => {
+  //     setOpen(false);
+  //     if (deleted) {
+  //       onAction(TrustyAICRActions.DELETE, true);
+  //     }
+  //
+  //   },
+  //   [onAction],
+  // );
   return (
     <>
       <Checkbox
@@ -61,7 +63,14 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         id="bias-service-installation"
         name="bias-service"
       />
-      <TrustyAIDeleteModal namespace={namespace} isOpen={open} onClose={onCloseDeleteModal} />
+      <TrustyAIDeleteModal
+        isOpen={open}
+        onDelete={onDelete}
+        onClose={() => {
+          setOpen(false);
+          onPostDelete();
+        }}
+      />
     </>
   );
 };

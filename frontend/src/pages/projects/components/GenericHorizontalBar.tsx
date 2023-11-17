@@ -26,13 +26,6 @@ const GenericHorizontalBar: React.FC<GenericHorizontalBarProps> = ({ activeKey, 
     activeKey || sections[0].title || undefined,
   );
 
-  const section = sections.find((s) => s.title === activeTabKey);
-
-  if (!section) {
-    // This shouldn't happen.
-    throw new Error('Invalid tab selected');
-  }
-
   return (
     <>
       <PageSection
@@ -67,26 +60,18 @@ const GenericHorizontalBar: React.FC<GenericHorizontalBarProps> = ({ activeKey, 
         aria-label="horizontal-bar-content-section"
         padding={{ default: 'noPadding' }}
       >
-        <TabContent
-          id={section.title}
-          activeKey={activeTabKey}
-          eventKey={section.title}
-          key={section.title}
-        >
-          <TabContentBody>{section.component}</TabContentBody>
-        </TabContent>
-        {/*{sections*/}
-        {/*  .filter((section) => section.title === activeTabKey)*/}
-        {/*  .map((section) => (*/}
-        {/*    <TabContent*/}
-        {/*      id={section.title}*/}
-        {/*      activeKey={activeTabKey}*/}
-        {/*      eventKey={section.title}*/}
-        {/*      key={section.title}*/}
-        {/*    >*/}
-        {/*      <TabContentBody>{section.component}</TabContentBody>*/}
-        {/*    </TabContent>*/}
-        {/*  ))}*/}
+        {sections
+          .filter((section) => section.title === activeTabKey)
+          .map((section) => (
+            <TabContent
+              id={section.title}
+              activeKey={activeTabKey}
+              eventKey={section.title}
+              key={section.title}
+            >
+              <TabContentBody>{section.component}</TabContentBody>
+            </TabContent>
+          ))}
       </PageSection>
     </>
   );

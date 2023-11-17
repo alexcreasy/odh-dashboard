@@ -17,7 +17,8 @@ type ModelBiasSettingsCardProps = {
   namespace: string;
 };
 const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace }) => {
-  const { isAvailable, isProgressing, installCR } = useManageTrustyAICR(namespace);
+  const { isAvailable, isProgressing, installCR, deleteCR, refresh } =
+    useManageTrustyAICR(namespace);
 
   const [notifyAction, setNotifyAction] = React.useState<TrustyAICRActions | undefined>(undefined);
   const [success, setSuccess] = React.useState(false);
@@ -100,7 +101,6 @@ const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace
       </CardHeader>
       <CardBody>
         <InstallTrustyAICheckbox
-          namespace={namespace}
           isAvailable={isAvailable}
           isProgressing={isProgressing}
           installCR={installCR}
@@ -108,6 +108,14 @@ const ModelBiasSettingsCard: React.FC<ModelBiasSettingsCardProps> = ({ namespace
             setNotifyAction(action);
             setSuccess(success);
             setError(error);
+          }}
+          onDelete={deleteCR}
+          onPostDelete={() => {
+            refresh().then(() => {
+              setNotifyAction(TrustyAICRActions.DELETE);
+              setSuccess(true);
+              setError(undefined);
+            });
           }}
         />
       </CardBody>
