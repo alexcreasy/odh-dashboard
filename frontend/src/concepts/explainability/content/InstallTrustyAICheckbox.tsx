@@ -2,13 +2,9 @@ import React from 'react';
 import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
-import TrustyAIDeleteModal from '~/concepts/explainability/content/TrustyAIDeleteModal';
+import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyAIModal';
 import { K8sStatus, TrustyAIKind } from '~/k8sTypes';
-
-export enum TrustyAICRActions {
-  CREATE = 'CREATE',
-  DELETE = 'DELETE',
-}
+import { TrustyAICRActions } from '~/concepts/explainability/content/const';
 
 type InstallTrustyAICheckboxProps = {
   isAvailable: boolean;
@@ -56,7 +52,7 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         id="bias-service-installation"
         name="bias-service"
       />
-      <TrustyAIDeleteModal
+      <DeleteTrustyAIModal
         isOpen={open}
         onDelete={onDelete}
         onClose={() => {

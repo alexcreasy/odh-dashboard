@@ -1,9 +1,9 @@
-import { Alert, AlertActionCloseButton, Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import React from 'react';
-import InstallTrustyAICheckbox, {
-  TrustyAICRActions,
-} from '~/concepts/explainability/content/InstallTrustyAICheckbox';
 import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
+import TrustyAIServiceNotification from '~/concepts/explainability/content/TrustyAIServiceNotification';
+import { TrustyAICRActions } from './const';
+import InstallTrustyAICheckbox from './InstallTrustyAICheckbox';
 
 type TrustyAIServiceControlProps = {
   namespace: string;
@@ -20,71 +20,6 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
     setSuccess(false);
     setError(undefined);
   }, []);
-
-  const renderNotification = () => {
-    if (success && notifyAction === TrustyAICRActions.CREATE && isAvailable) {
-      return (
-        <Alert
-          variant="success"
-          title="TrustyAI installed"
-          actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-          isLiveRegion
-          isInline
-        >
-          The TrustyAI service was successfully installed
-        </Alert>
-      );
-    }
-
-    if (!success && notifyAction === TrustyAICRActions.CREATE) {
-      return (
-        <Alert
-          variant="danger"
-          title="TrustyAI installation error"
-          actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-          isLiveRegion
-          isInline
-        >
-          {/* This is a temporary fix, this should be updated to incorporate work from
-          https://github.com/opendatahub-io/odh-dashboard/pull/2032 in the future to provide a
-          better experience.*/}
-          {error?.message.includes('404')
-            ? 'The TrustyAI operator is not installed on this cluster.'
-            : error?.message}
-        </Alert>
-      );
-    }
-
-    if (success && notifyAction === TrustyAICRActions.DELETE) {
-      return (
-        <Alert
-          variant="success"
-          title="TrustyAI uninstalled"
-          actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-          isLiveRegion
-          isInline
-        >
-          The TrustyAI service was successfully uninstalled
-        </Alert>
-      );
-    }
-
-    if (!success && notifyAction === TrustyAICRActions.DELETE) {
-      return (
-        <Alert
-          variant="danger"
-          title="TrustyAI uninstallation error"
-          actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-          isLiveRegion
-          isInline
-        >
-          {error?.message}
-        </Alert>
-      );
-    }
-
-    return null;
-  };
 
   return (
     <Stack>
@@ -108,7 +43,15 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
           }}
         />
       </StackItem>
-      <StackItem>{renderNotification()}</StackItem>
+      <StackItem>
+        <TrustyAIServiceNotification
+          notifyAction={notifyAction}
+          success={success}
+          isAvailable={isAvailable}
+          error={error}
+          clearNotification={clearNotification}
+        />
+      </StackItem>
     </Stack>
   );
 };

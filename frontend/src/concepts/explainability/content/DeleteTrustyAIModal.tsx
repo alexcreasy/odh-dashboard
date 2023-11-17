@@ -2,13 +2,13 @@ import React from 'react';
 import DeleteModal from '~/pages/projects/components/DeleteModal';
 import { K8sStatus } from '~/k8sTypes';
 
-type TrustyAIDeleteModalProps = {
+type DeleteTrustyAIModalProps = {
   isOpen: boolean;
   onDelete: () => Promise<K8sStatus>;
   onClose: (deleted: boolean) => void;
 };
 
-const TrustyAIDeleteModal: React.FC<TrustyAIDeleteModalProps> = ({ isOpen, onDelete, onClose }) => {
+const DeleteTrustyAIModal: React.FC<DeleteTrustyAIModalProps> = ({ isOpen, onDelete, onClose }) => {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [error, setError] = React.useState<Error>();
 
@@ -39,4 +39,4 @@ const TrustyAIDeleteModal: React.FC<TrustyAIDeleteModalProps> = ({ isOpen, onDel
   );
 };
 
-export default TrustyAIDeleteModal;
+export default DeleteTrustyAIModal;
