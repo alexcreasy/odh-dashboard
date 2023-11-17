@@ -13,7 +13,8 @@ export enum TrustyAICRActions {
 type InstallTrustyAICheckboxProps = {
   isAvailable: boolean;
   isProgressing: boolean;
-  installCR: () => Promise<TrustyAIKind>;
+  onInstall: () => Promise<TrustyAIKind>;
+  onPostInstall?: () => void;
   onAction: (action: TrustyAICRActions, success: boolean, error?: Error) => void;
   onDelete: () => Promise<K8sStatus>;
   onPostDelete?: () => void;
@@ -21,23 +22,14 @@ type InstallTrustyAICheckboxProps = {
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   isAvailable,
   isProgressing,
-  installCR,
+  onInstall,
+  onPostInstall = noop,
   onAction,
   onDelete,
   onPostDelete = noop,
 }) => {
   const [open, setOpen] = React.useState(false);
 
-  // const onCloseDeleteModal = React.useCallback(
-  //   (deleted: boolean) => {
-  //     setOpen(false);
-  //     if (deleted) {
-  //       onAction(TrustyAICRActions.DELETE, true);
-  //     }
-  //
-  //   },
-  //   [onAction],
-  // );
   return (
     <>
       <Checkbox
@@ -51,11 +43,12 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         isDisabled={isProgressing}
         onChange={(checked) => {
           if (checked) {
-            installCR()
+            onInstall()
               .then(() => onAction(TrustyAICRActions.CREATE, true))
               .catch((e) => {
                 onAction(TrustyAICRActions.CREATE, false, e);
               });
+            onPostInstall();
           } else {
             setOpen(true);
           }
