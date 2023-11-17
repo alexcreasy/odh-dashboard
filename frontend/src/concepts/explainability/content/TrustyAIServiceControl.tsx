@@ -27,11 +27,18 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
         <InstallTrustyAICheckbox
           isAvailable={isAvailable}
           isProgressing={isProgressing}
-          onInstall={installCR}
-          onAction={(action, success, error) => {
-            setNotifyAction(action);
-            setSuccess(success);
-            setError(error);
+          onInstall={() => {
+            installCR()
+              .then(() => {
+                setNotifyAction(TrustyAICRActions.CREATE);
+                setSuccess(true);
+                setError(undefined);
+              })
+              .catch((e) => {
+                setNotifyAction(TrustyAICRActions.CREATE);
+                setSuccess(false);
+                setError(e);
+              });
           }}
           onDelete={deleteCR}
           onPostDelete={() => {

@@ -3,15 +3,13 @@ import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyAIModal';
-import { K8sStatus, TrustyAIKind } from '~/k8sTypes';
-import { TrustyAICRActions } from '~/concepts/explainability/content/const';
+import { K8sStatus } from '~/k8sTypes';
 
 type InstallTrustyAICheckboxProps = {
   isAvailable: boolean;
   isProgressing: boolean;
-  onInstall: () => Promise<TrustyAIKind>;
+  onInstall: () => void;
   onPostInstall?: () => void;
-  onAction: (action: TrustyAICRActions, success: boolean, error?: Error) => void;
   onDelete: () => Promise<K8sStatus>;
   onPostDelete?: () => void;
 };
@@ -20,7 +18,6 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   isProgressing,
   onInstall,
   onPostInstall = noop,
-  onAction,
   onDelete,
   onPostDelete = noop,
 }) => {
@@ -39,11 +36,12 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         isDisabled={isProgressing}
         onChange={(checked) => {
           if (checked) {
-            onInstall()
-              .then(() => onAction(TrustyAICRActions.CREATE, true))
-              .catch((e) => {
-                onAction(TrustyAICRActions.CREATE, false, e);
-              });
+            onInstall();
+            // onInstall()
+            //   .then(() => onAction(TrustyAICRActions.CREATE, true))
+            //   .catch((e) => {
+            //     onAction(TrustyAICRActions.CREATE, false, e);
+            //   });
             onPostInstall();
           } else {
             setOpen(true);
