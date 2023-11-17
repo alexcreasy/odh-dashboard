@@ -1,36 +1,27 @@
 import React from 'react';
 import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
-import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
+import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
-import TrustyAIDeleteModal from '~/concepts/explainability/content/TrustyAIDeleteModal';
-
-export enum TrustyAICRActions {
-  CREATE = 'CREATE',
-  DELETE = 'DELETE',
-}
+import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyAIModal';
+import { K8sStatus } from '~/k8sTypes';
 
 type InstallTrustyAICheckboxProps = {
-  namespace: string;
-  onAction: (action: TrustyAICRActions, success: boolean, error?: Error) => void;
+  isAvailable: boolean;
+  isProgressing: boolean;
+  onInstall: () => void;
+  onDelete: () => Promise<K8sStatus>;
+  onPostDelete?: () => void;
+  onBeforeChange?: () => void;
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
-  namespace,
-  onAction,
+  isAvailable,
+  isProgressing,
+  onInstall,
+  onDelete,
+  onPostDelete = noop,
+  onBeforeChange = noop,
 }) => {
-  const { hasCR, installCR, refresh } = useManageTrustyAICR(namespace);
-
   const [open, setOpen] = React.useState(false);
-
-  const onCloseDeleteModal = React.useCallback(
-    (deleted: boolean) => {
-      setOpen(false);
-      refresh();
-      if (deleted) {
-        onAction(TrustyAICRActions.DELETE, true);
-      }
-    },
-    [onAction, refresh],
-  );
 
   return (
     <>
@@ -41,15 +32,12 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
             <HelperTextItem>{TRUSTYAI_TOOLTIP_TEXT}</HelperTextItem>
           </HelperText>
         }
-        isChecked={hasCR}
+        isChecked={isAvailable}
+        isDisabled={isProgressing}
         onChange={(checked) => {
+          onBeforeChange();
           if (checked) {
-            installCR()
-              .then(() => onAction(TrustyAICRActions.CREATE, true))
-              .catch((e) => {
-                onAction(TrustyAICRActions.CREATE, false, e);
-              })
-              .finally(refresh);
+            onInstall();
           } else {
             setOpen(true);
           }
@@ -57,7 +45,16 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         id="bias-service-installation"
         name="bias-service"
       />
-      <TrustyAIDeleteModal namespace={namespace} isOpen={open} onClose={onCloseDeleteModal} />
+      <DeleteTrustyAIModal
+        isOpen={open}
+        onDelete={onDelete}
+        onClose={(deleted) => {
+          setOpen(false);
+          if (deleted) {
+            onPostDelete();
+          }
+        }}
+      />
     </>
   );
 };
