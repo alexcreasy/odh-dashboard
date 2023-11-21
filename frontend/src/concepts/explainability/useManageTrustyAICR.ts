@@ -11,6 +11,12 @@ const useManageTrustyAICR = (namespace: string) => {
   const isAvailable = isTrustyAIAvailable(state);
   const isProgressing = loaded && !!cr && !isAvailable;
 
+  const showSuccess = React.useRef(false);
+
+  if (isProgressing) {
+    showSuccess.current = true;
+  }
+
   const installCR = React.useCallback(
     () => createTrustyAICR(namespace).then(refresh),
     [namespace, refresh],
@@ -23,10 +29,11 @@ const useManageTrustyAICR = (namespace: string) => {
 
   return {
     hasCR: !!cr,
-    isProgressing,
-    isAvailable,
     error,
     refresh,
+    isProgressing,
+    isAvailable,
+    showSuccess: showSuccess.current,
     installCR,
     deleteCR,
     crState: state,

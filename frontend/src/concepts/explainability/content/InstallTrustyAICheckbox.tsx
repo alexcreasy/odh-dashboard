@@ -1,6 +1,5 @@
 import React from 'react';
 import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
-import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyAIModal';
 
@@ -9,16 +8,12 @@ type InstallTrustyAICheckboxProps = {
   isProgressing: boolean;
   onInstall: () => void;
   onDelete: () => Promise<unknown>;
-  onPostDelete?: () => void;
-  onBeforeChange?: () => void;
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   isAvailable,
   isProgressing,
   onInstall,
   onDelete,
-  onPostDelete = noop,
-  onBeforeChange = noop,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -34,24 +29,20 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
         isChecked={isAvailable}
         isDisabled={isProgressing}
         onChange={(checked) => {
-          onBeforeChange();
           if (checked) {
             onInstall();
           } else {
             setOpen(true);
           }
         }}
-        id="bias-service-installation"
-        name="bias-service"
+        id="trustyai-service-installation"
+        name="TrustyAI service installation status"
       />
       <DeleteTrustyAIModal
         isOpen={open}
         onDelete={onDelete}
-        onClose={(deleted) => {
+        onClose={() => {
           setOpen(false);
-          if (deleted) {
-            onPostDelete();
-          }
         }}
       />
     </>

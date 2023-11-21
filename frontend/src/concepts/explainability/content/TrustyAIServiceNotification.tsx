@@ -1,21 +1,18 @@
 import { Alert, AlertActionCloseButton, Bullseye, Spinner } from '@patternfly/react-core';
 import React from 'react';
-import { TrustyAICRActions } from '~/concepts/explainability/content/const';
 
 type TrustyAIServiceNotificationProps = {
-  notifyAction?: TrustyAICRActions;
-  success: boolean;
   error?: Error;
   isAvailable: boolean;
+  showSuccess: boolean;
   clearNotification: () => void;
   loading: boolean;
 };
 
 const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = ({
-  notifyAction,
-  success,
   error,
   isAvailable,
+  showSuccess,
   clearNotification,
   loading,
 }) => {
@@ -27,7 +24,7 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
     );
   }
 
-  if (success && notifyAction === TrustyAICRActions.CREATE && isAvailable) {
+  if (showSuccess && isAvailable) {
     return (
       <Alert
         variant="success"
@@ -41,43 +38,9 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
     );
   }
 
-  if (!success && notifyAction === TrustyAICRActions.CREATE) {
+  if (error) {
     return (
-      <Alert
-        variant="danger"
-        title="TrustyAI installation error"
-        actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-        isLiveRegion
-        isInline
-      >
-        {error?.message}
-      </Alert>
-    );
-  }
-
-  if (success && notifyAction === TrustyAICRActions.DELETE) {
-    return (
-      <Alert
-        variant="success"
-        title="TrustyAI uninstalled"
-        actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-        isLiveRegion
-        isInline
-      >
-        The TrustyAI service was successfully uninstalled
-      </Alert>
-    );
-  }
-
-  if (!success && notifyAction === TrustyAICRActions.DELETE) {
-    return (
-      <Alert
-        variant="danger"
-        title="TrustyAI uninstallation error"
-        actionClose={<AlertActionCloseButton onClose={clearNotification} />}
-        isLiveRegion
-        isInline
-      >
+      <Alert variant="danger" title="TrustyAI service error" isLiveRegion isInline>
         {error?.message}
       </Alert>
     );
