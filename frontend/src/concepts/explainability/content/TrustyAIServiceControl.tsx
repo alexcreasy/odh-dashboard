@@ -1,4 +1,4 @@
-import { Stack, StackItem } from '@patternfly/react-core';
+import { Bullseye, Spinner, Stack, StackItem } from '@patternfly/react-core';
 import React from 'react';
 import useManageTrustyAICR from '~/concepts/explainability/useManageTrustyAICR';
 import TrustyAIServiceNotification from '~/concepts/explainability/content/TrustyAIServiceNotification';
@@ -15,6 +15,7 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
     installCR,
     deleteCR,
     error: trustyInstallError,
+    crState: [, loaded],
   } = useManageTrustyAICR(namespace);
 
   const [notifyAction, setNotifyAction] = React.useState<TrustyAICRActions | undefined>(undefined);
@@ -35,6 +36,14 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
       setUserHasChecked(false);
     }
   }, [error, isAvailable]);
+
+  if (!loaded) {
+    return (
+      <Bullseye>
+        <Spinner />
+      </Bullseye>
+    );
+  }
 
   return (
     <Stack hasGutter>
