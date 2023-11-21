@@ -1,13 +1,15 @@
 import React from 'react';
-import useTrustyAINamespaceCR from '~/concepts/explainability/useTrustyAINamespaceCR';
+import useTrustyAINamespaceCR, {
+  isTrustyAIAvailable,
+} from '~/concepts/explainability/useTrustyAINamespaceCR';
 import { createTrustyAICR, deleteTrustyAICR } from '~/api';
 
 const useManageTrustyAICR = (namespace: string) => {
-  const {
-    isProgressing,
-    isAvailable,
-    crState: [trustyCR, , error, refresh],
-  } = useTrustyAINamespaceCR(namespace);
+  const state = useTrustyAINamespaceCR(namespace);
+  const [cr, loaded, error, refresh] = state;
+
+  const isAvailable = isTrustyAIAvailable(state);
+  const isProgressing = loaded && !!cr && !isAvailable;
 
   const installCR = React.useCallback(
     () => createTrustyAICR(namespace).then(refresh),
@@ -20,13 +22,14 @@ const useManageTrustyAICR = (namespace: string) => {
   );
 
   return {
-    hasCR: !!trustyCR,
+    hasCR: !!cr,
     isProgressing,
     isAvailable,
     error,
     refresh,
     installCR,
     deleteCR,
+    crState: state,
   };
 };
 

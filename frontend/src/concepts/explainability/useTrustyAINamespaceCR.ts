@@ -11,12 +11,6 @@ import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 
 type State = TrustyAIKind | null;
 
-export type TrustyAINamespaceStatus = {
-  isProgressing: boolean;
-  isAvailable: boolean;
-  crState: FetchState<State>;
-};
-
 export const isTrustyCRStatusAvailable = (cr: TrustyAIKind): boolean =>
   !!cr.status?.conditions?.find((c) => c.type === 'Available' && c.status === 'True');
 
@@ -39,7 +33,7 @@ export const taiHasServerTimedOut = (
   return Date.now() - new Date(createTime).getTime() > SERVER_TIMEOUT;
 };
 
-const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
+const useTrustyAINamespaceCR = (namespace: string): FetchState<State> => {
   const trustyAIAreaAvailable = useIsAreaAvailable(SupportedArea.TRUSTY_AI).status;
 
   const callback = React.useCallback<FetchStateCallbackPromise<State>>(
@@ -72,11 +66,12 @@ const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
     setIsStarting(resourceLoaded && !hasStatus);
   }, [hasStatus, resourceLoaded]);
 
-  return {
-    isAvailable: hasStatus,
-    isProgressing: resourceLoaded && !hasStatus,
-    crState: state,
-  };
+  return state;
+  // return {
+  //   isAvailable: hasStatus,
+  //   isProgressing: resourceLoaded && !hasStatus,
+  //   crState: state,
+  // };
 };
 
 export default useTrustyAINamespaceCR;
