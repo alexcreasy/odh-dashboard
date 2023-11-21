@@ -1,7 +1,6 @@
 import React from 'react';
 import useTrustyAIAPIRoute from '~/concepts/explainability/useTrustyAIAPIRoute';
 import useTrustyAINamespaceCR, {
-  taiHasServerTimedOut,
   isTrustyAIAvailable,
 } from '~/concepts/explainability/useTrustyAINamespaceCR';
 import useTrustyAIAPIState, { TrustyAPIState } from '~/concepts/explainability/useTrustyAIAPIState';
@@ -31,9 +30,7 @@ type ExplainabilityContextProps = {
   namespace: string;
   hasCR: boolean;
   crInitializing: boolean;
-  serverTimedOut: boolean;
   serviceLoadError?: Error;
-  ignoreTimedOut: () => void;
   refreshState: () => Promise<undefined>;
   refreshAPIState: () => void;
   apiState: TrustyAPIState;
@@ -44,8 +41,6 @@ export const ExplainabilityContext = React.createContext<ExplainabilityContextPr
   namespace: '',
   hasCR: false,
   crInitializing: false,
-  serverTimedOut: false,
-  ignoreTimedOut: () => undefined,
   data: defaultExplainabilityContextData,
   refreshState: async () => undefined,
   refreshAPIState: () => undefined,
@@ -63,11 +58,6 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
   const crState = useTrustyAINamespaceCR(namespace);
   const [explainabilityNamespaceCR, crLoaded, crLoadError, refreshCR] = crState;
   const isCRReady = isTrustyAIAvailable(crState);
-  const [disableTimeout, setDisableTimeout] = React.useState(false);
-  const serverTimedOut = !disableTimeout && taiHasServerTimedOut(crState, isCRReady);
-  const ignoreTimedOut = React.useCallback(() => {
-    setDisableTimeout(true);
-  }, []);
 
   const [routeHost, routeLoaded, routeLoadError, refreshRoute] = useTrustyAIAPIRoute(
     isCRReady,
@@ -93,8 +83,6 @@ export const ExplainabilityContextProvider: React.FC<ExplainabilityContextProvid
         namespace,
         hasCR: !!explainabilityNamespaceCR,
         crInitializing: !crLoaded,
-        serverTimedOut,
-        ignoreTimedOut,
         serviceLoadError,
         refreshState,
         refreshAPIState,
