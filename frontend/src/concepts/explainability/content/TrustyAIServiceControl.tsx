@@ -53,7 +53,6 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
           showSuccess={showSuccess}
           isAvailable={isAvailable}
           error={error}
-          clearNotification={() => {}}
         />
       </StackItem>
     </Stack>

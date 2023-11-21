@@ -5,7 +5,6 @@ type TrustyAIServiceNotificationProps = {
   error?: Error;
   isAvailable: boolean;
   showSuccess: boolean;
-  clearNotification: () => void;
   loading: boolean;
 };
 
@@ -13,9 +12,10 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
   error,
   isAvailable,
   showSuccess,
-  clearNotification,
   loading,
 }) => {
+  const [dismissSuccess, setDismissSuccess] = React.useState(false);
+
   if (loading) {
     return (
       <Bullseye>
@@ -24,12 +24,12 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
     );
   }
 
-  if (showSuccess && isAvailable) {
+  if (!dismissSuccess && showSuccess && isAvailable) {
     return (
       <Alert
         variant="success"
         title="TrustyAI installed"
-        actionClose={<AlertActionCloseButton onClose={clearNotification} />}
+        actionClose={<AlertActionCloseButton onClose={() => setDismissSuccess(true)} />}
         isLiveRegion
         isInline
       >
