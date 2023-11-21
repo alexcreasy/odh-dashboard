@@ -18,13 +18,7 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
     crState: [, loaded],
   } = useManageTrustyAICR(namespace);
 
-  // const [userHasChecked, setUserHasChecked] = React.useState(false);
-  //
-  // React.useEffect(() => {
-  //   if (isAvailable || error) {
-  //     setUserHasChecked(false);
-  //   }
-  // }, [error, isAvailable]);
+  const [userStartedInstall, setUserStartedInstall] = React.useState(false);
 
   if (!loaded) {
     return (
@@ -40,13 +34,16 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
         <InstallTrustyAICheckbox
           isAvailable={isAvailable}
           isProgressing={isProgressing}
-          onInstall={installCR}
+          onInstall={() => {
+            setUserStartedInstall(true);
+            return installCR().finally(() => setUserStartedInstall(false));
+          }}
           onDelete={deleteCR}
         />
       </StackItem>
       <StackItem>
         <TrustyAIServiceNotification
-          loading={isProgressing}
+          loading={userStartedInstall || isProgressing}
           showSuccess={showSuccess}
           isAvailable={isAvailable}
           error={error}
