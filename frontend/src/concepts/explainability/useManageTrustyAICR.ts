@@ -6,19 +6,24 @@ import { createTrustyAICR, deleteTrustyAICR } from '~/api';
 
 const useManageTrustyAICR = (namespace: string) => {
   const state = useTrustyAINamespaceCR(namespace);
-  const [cr, loaded, error, refresh] = state;
+  const [cr, loaded, serviceError, refresh] = state;
+
+  const [installReqError, setInstallReqError] = React.useState<Error | undefined>();
+  const showSuccess = React.useRef(false);
 
   const isAvailable = isTrustyAIAvailable(state);
   const isProgressing = loaded && !!cr && !isAvailable;
-
-  const showSuccess = React.useRef(false);
+  const error = installReqError || serviceError;
 
   if (isProgressing) {
     showSuccess.current = true;
   }
 
   const installCR = React.useCallback(
-    () => createTrustyAICR(namespace).then(refresh),
+    () =>
+      createTrustyAICR(namespace)
+        .then(refresh)
+        .catch((e) => setInstallReqError(e)),
     [namespace, refresh],
   );
 
@@ -28,15 +33,13 @@ const useManageTrustyAICR = (namespace: string) => {
   );
 
   return {
-    hasCR: !!cr,
     error,
-    refresh,
     isProgressing,
     isAvailable,
     showSuccess: showSuccess.current,
+    isSettled: loaded,
     installCR,
     deleteCR,
-    crState: state,
   };
 };
 
