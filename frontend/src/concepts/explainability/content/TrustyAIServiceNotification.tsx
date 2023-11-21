@@ -17,6 +17,9 @@ const TrustyAIServiceNotification: React.FC<TrustyAIServiceNotificationProps> = 
   const [dismissSuccess, setDismissSuccess] = React.useState(false);
 
   if (loading) {
+    if (dismissSuccess) {
+      setDismissSuccess(false);
+    }
     return (
       <Bullseye>
         <Spinner />

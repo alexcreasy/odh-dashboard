@@ -6,7 +6,7 @@ import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyA
 type InstallTrustyAICheckboxProps = {
   isAvailable: boolean;
   isProgressing: boolean;
-  onInstall: () => void;
+  onInstall: () => Promise<unknown>;
   onDelete: () => Promise<unknown>;
 };
 const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
@@ -16,6 +16,7 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
   onDelete,
 }) => {
   const [open, setOpen] = React.useState(false);
+  const [userHasChecked, setUserHasChecked] = React.useState(false);
 
   return (
     <>
@@ -27,10 +28,11 @@ const InstallTrustyAICheckbox: React.FC<InstallTrustyAICheckboxProps> = ({
           </HelperText>
         }
         isChecked={isAvailable}
-        isDisabled={isProgressing}
+        isDisabled={userHasChecked || isProgressing}
         onChange={(checked) => {
           if (checked) {
-            onInstall();
+            setUserHasChecked(true);
+            onInstall().finally(() => setUserHasChecked(false));
           } else {
             setOpen(true);
           }
