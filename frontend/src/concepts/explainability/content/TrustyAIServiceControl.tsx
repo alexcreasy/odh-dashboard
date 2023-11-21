@@ -14,7 +14,6 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
     isProgressing,
     installCR,
     deleteCR,
-    refresh,
     error: trustyInstallError,
   } = useManageTrustyAICR(namespace);
 
@@ -57,10 +56,8 @@ const TrustyAIServiceControl: React.FC<TrustyAIServiceControlProps> = ({ namespa
           }}
           onDelete={deleteCR}
           onPostDelete={() => {
-            refresh().then(() => {
-              setNotifyAction(TrustyAICRActions.DELETE);
-              setSuccess(true);
-            });
+            setNotifyAction(TrustyAICRActions.DELETE);
+            setSuccess(true);
           }}
           onBeforeChange={clearNotification}
         />

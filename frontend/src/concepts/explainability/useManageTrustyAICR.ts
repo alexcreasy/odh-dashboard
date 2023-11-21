@@ -9,9 +9,15 @@ const useManageTrustyAICR = (namespace: string) => {
     crState: [trustyCR, , error, refresh],
   } = useTrustyAINamespaceCR(namespace);
 
-  const installCR = React.useCallback(() => createTrustyAICR(namespace), [namespace]);
+  const installCR = React.useCallback(
+    () => createTrustyAICR(namespace).then(refresh),
+    [namespace, refresh],
+  );
 
-  const deleteCR = React.useCallback(() => deleteTrustyAICR(namespace), [namespace]);
+  const deleteCR = React.useCallback(
+    () => deleteTrustyAICR(namespace).then(refresh),
+    [namespace, refresh],
+  );
 
   return {
     hasCR: !!trustyCR,

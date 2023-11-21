@@ -3,13 +3,12 @@ import { Checkbox, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { noop } from 'lodash-es';
 import { TRUSTYAI_TOOLTIP_TEXT } from '~/pages/projects/projectSettings/const';
 import DeleteTrustyAIModal from '~/concepts/explainability/content/DeleteTrustyAIModal';
-import { K8sStatus } from '~/k8sTypes';
 
 type InstallTrustyAICheckboxProps = {
   isAvailable: boolean;
   isProgressing: boolean;
   onInstall: () => void;
-  onDelete: () => Promise<K8sStatus>;
+  onDelete: () => Promise<unknown>;
   onPostDelete?: () => void;
   onBeforeChange?: () => void;
 };

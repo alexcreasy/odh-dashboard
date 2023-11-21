@@ -1,10 +1,9 @@
 import React from 'react';
 import DeleteModal from '~/pages/projects/components/DeleteModal';
-import { K8sStatus } from '~/k8sTypes';
 
 type DeleteTrustyAIModalProps = {
   isOpen: boolean;
-  onDelete: () => Promise<K8sStatus>;
+  onDelete: () => Promise<unknown>;
   onClose: (deleted: boolean) => void;
 };
 
