@@ -6,9 +6,8 @@ import useFetchState, {
 } from '~/utilities/useFetchState';
 import { TrustyAIKind } from '~/k8sTypes';
 import { getTrustyAICR } from '~/api';
-import { FAST_POLL_INTERVAL } from '~/utilities/const';
+import { FAST_POLL_INTERVAL, SERVER_TIMEOUT } from '~/utilities/const';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
-import { FIVE_MINUTES_MS } from '~/utilities/time';
 
 type State = TrustyAIKind | null;
 
@@ -37,7 +36,7 @@ export const taiHasServerTimedOut = (
     return false;
   }
   // If we are here, and 5 mins have past, we are having issues
-  return Date.now() - new Date(createTime).getTime() > FIVE_MINUTES_MS;
+  return Date.now() - new Date(createTime).getTime() > SERVER_TIMEOUT;
 };
 
 const useTrustyAINamespaceCR = (namespace: string): TrustyAINamespaceStatus => {
