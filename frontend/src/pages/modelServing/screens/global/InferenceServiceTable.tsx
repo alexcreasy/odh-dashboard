@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ManageInferenceServiceModal from '~/pages/modelServing/screens/projects/InferenceServiceModal/ManageInferenceServiceModal';
 import { Table } from '~/components/table';
-import { InferenceServiceKind, ServingRuntimeKind } from '~/k8sTypes';
+import { InferenceServiceKind, ProjectKind, ServingRuntimeKind } from '~/k8sTypes';
 import { ProjectsContext } from '~/concepts/projects/ProjectsContext';
 import DashboardEmptyTableView from '~/concepts/dashboard/DashboardEmptyTableView';
 import InferenceServiceTableRow from './InferenceServiceTableRow';
@@ -13,6 +13,7 @@ type InferenceServiceTableProps = {
   inferenceServices: InferenceServiceKind[];
   servingRuntimes: ServingRuntimeKind[];
   refresh: () => void;
+  currentProject: ProjectKind;
 } & Partial<Pick<React.ComponentProps<typeof Table>, 'enablePagination' | 'toolbarContent'>>;
 
 const InferenceServiceTable: React.FC<InferenceServiceTableProps> = ({
@@ -22,6 +23,7 @@ const InferenceServiceTable: React.FC<InferenceServiceTableProps> = ({
   refresh,
   enablePagination,
   toolbarContent,
+  currentProject,
 }) => {
   const { modelServingProjects: projects } = React.useContext(ProjectsContext);
   const [deleteInferenceService, setDeleteInferenceService] =
@@ -52,6 +54,7 @@ const InferenceServiceTable: React.FC<InferenceServiceTableProps> = ({
             isGlobal={isGlobal}
             onDeleteInferenceService={setDeleteInferenceService}
             onEditInferenceService={setEditInferenceService}
+            currentProject={currentProject}
           />
         )}
       />

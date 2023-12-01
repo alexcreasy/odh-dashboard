@@ -4,7 +4,7 @@ import { ActionsColumn, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 import ResourceNameTooltip from '~/components/ResourceNameTooltip';
 import useModelMetricsEnabled from '~/pages/modelServing/useModelMetricsEnabled';
-import { InferenceServiceKind, ServingRuntimeKind } from '~/k8sTypes';
+import { InferenceServiceKind, ProjectKind, ServingRuntimeKind } from '~/k8sTypes';
 import { getInferenceServiceDisplayName } from './utils';
 import InferenceServiceEndpoint from './InferenceServiceEndpoint';
 import InferenceServiceProject from './InferenceServiceProject';
@@ -17,6 +17,7 @@ type InferenceServiceTableRowProps = {
   servingRuntime?: ServingRuntimeKind;
   onDeleteInferenceService: (obj: InferenceServiceKind) => void;
   onEditInferenceService: (obj: InferenceServiceKind) => void;
+  currentProject: ProjectKind;
 };
 
 const InferenceServiceTableRow: React.FC<InferenceServiceTableRowProps> = ({
@@ -25,8 +26,9 @@ const InferenceServiceTableRow: React.FC<InferenceServiceTableRowProps> = ({
   onDeleteInferenceService,
   onEditInferenceService,
   isGlobal,
+  currentProject,
 }) => {
-  const [modelMetricsEnabled] = useModelMetricsEnabled();
+  const [modelMetricsEnabled] = useModelMetricsEnabled(currentProject);
 
   return (
     <Tr>
