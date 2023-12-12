@@ -28,8 +28,43 @@ const mockBiasMetricConfigs: BiasMetricConfig[] = [
   },
 ];
 
+const inferenceService: InferenceServiceKind = {
+  data: {},
+  apiGroup: '',
+  apiVersion: '',
+  kind: '',
+  metadata: {
+    annotations: undefined,
+    clusterName: '',
+    creationTimestamp: '',
+    deletionGracePeriodSeconds: 0,
+    deletionTimestamp: '',
+    finalizers: [],
+    generateName: '',
+    generation: 0,
+    labels: undefined,
+    managedFields: [],
+    name: '',
+    namespace: '',
+    ownerReferences: [],
+    resourceVersion: '',
+    uid: '',
+  },
+  spec: { predictor: { model: { modelFormat: { name: '' } } } },
+  status: {
+    components: {},
+    conditions: [],
+    modelStatus: {
+      copies: { failedCopies: 0, totalCopies: 0 },
+      states: { activeModelState: '', targetModelState: '' },
+      transitionStatus: '',
+    },
+    url: '',
+  },
+};
+
 const defaultArgs: BiasConfigurationTableProps = {
-  inferenceService: mockInferenceServiceK8sResource as unknown as InferenceServiceKind,
+  inferenceService,
   onConfigure: () => {
     // do something
     console.log('onConfigure was called');
