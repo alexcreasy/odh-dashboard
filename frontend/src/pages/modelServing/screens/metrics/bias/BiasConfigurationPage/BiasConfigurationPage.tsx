@@ -71,6 +71,8 @@ const BiasConfigurationPage: React.FC<BiasConfigurationPageProps> = ({
         <BiasConfigurationTable
           inferenceService={inferenceService}
           onConfigure={() => setOpen(true)}
+          biasMetricConfigs={biasMetricConfigs}
+          refresh={refresh}
         />
       </ApplicationsPage>
       <ManageBiasConfigurationModal

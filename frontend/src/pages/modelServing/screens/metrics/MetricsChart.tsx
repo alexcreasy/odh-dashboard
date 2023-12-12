@@ -45,7 +45,7 @@ import {
   useStableMetrics,
 } from './utils';
 
-type MetricsChartProps = {
+export type MetricsChartProps = {
   title: string;
   color?: string;
   metrics: MetricChartLine;

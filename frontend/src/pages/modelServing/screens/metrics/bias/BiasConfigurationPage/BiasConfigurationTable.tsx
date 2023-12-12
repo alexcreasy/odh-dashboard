@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import DashboardSearchField, { SearchType } from '~/concepts/dashboard/DashboardSearchField';
 import { BiasMetricConfig } from '~/concepts/trustyai/types';
-import { useModelBiasData } from '~/concepts/trustyai/context/useModelBiasData';
 import { InferenceServiceKind } from '~/k8sTypes';
 import DeleteBiasConfigurationModal from '~/pages/modelServing/screens/metrics/bias/BiasConfigurationPage/BiasConfigurationModal/DeleteBiasConfigurationModal';
 import DashboardEmptyTableView from '~/concepts/dashboard/DashboardEmptyTableView';
@@ -11,16 +10,19 @@ import ManageBiasConfigurationModal from '~/pages/modelServing/screens/metrics/b
 import BiasConfigurationTableRow from './BiasConfigurationTableRow';
 import { columns } from './tableData';
 
-type BiasConfigurationTableProps = {
+export type BiasConfigurationTableProps = {
   inferenceService: InferenceServiceKind;
   onConfigure: () => void;
+  biasMetricConfigs: BiasMetricConfig[];
+  refresh: () => void;
 };
 
 const BiasConfigurationTable: React.FC<BiasConfigurationTableProps> = ({
   inferenceService,
   onConfigure,
+  biasMetricConfigs,
+  refresh,
 }) => {
-  const { biasMetricConfigs, refresh } = useModelBiasData();
   const [searchType, setSearchType] = React.useState<SearchType>(SearchType.NAME);
   const [search, setSearch] = React.useState('');
   const [cloneConfiguration, setCloneConfiguration] = React.useState<BiasMetricConfig>();
