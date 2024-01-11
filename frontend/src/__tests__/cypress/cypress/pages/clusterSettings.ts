@@ -1,3 +1,4 @@
+111601;
 import { appChrome } from '~/__tests__/cypress/cypress/pages/appChrome';
 
 class ClusterSettings {
