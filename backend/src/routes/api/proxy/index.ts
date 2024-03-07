@@ -66,6 +66,7 @@ export default async (fastify: KubeFastifyInstance): Promise<void> => {
         .then(([rawData]) => rawData)
         .catch((error) => {
           if (error.code && error.response) {
+            fastify.log.error(`proxyCall to: ${url} error: ${JSON.stringify(error)}`);
             const { code, response } = error;
             reply.code(code);
             reply.send(response);
