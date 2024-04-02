@@ -27,7 +27,7 @@ const ProjectServerMetricsWrapper: React.FC = () => (
                 { label: 'Data science projects', link: '/projects' },
                 {
                   label: projectDisplayName,
-                  link: `/projects/${currentProject.metadata.name}`,
+                  link: `/projects/${currentProject.metadata.namespace}`,
                 },
                 {
                   label: serverName,
