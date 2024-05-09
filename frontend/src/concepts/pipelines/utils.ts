@@ -3,9 +3,9 @@ import { ExternalDatabaseSecret } from '~/concepts/pipelines/content/configurePi
 import { ELYRA_SECRET_NAME } from '~/concepts/pipelines/elyra/const';
 import { allSettledPromises } from '~/utilities/allSettledPromises';
 
-export const deleteServer = (namespace: string): Promise<void> =>
+export const deleteServer = (namespace: string, crName: string): Promise<void> =>
   allSettledPromises([
     deleteSecret(namespace, ExternalDatabaseSecret.NAME),
     deleteSecret(namespace, ELYRA_SECRET_NAME),
-    deletePipelineCR(namespace),
+    deletePipelineCR(namespace, crName),
   ]).then(() => undefined);
