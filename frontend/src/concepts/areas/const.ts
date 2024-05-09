@@ -37,6 +37,9 @@ export const SupportedAreasStateMap: SupportedAreasState = {
     reliantAreas: [SupportedArea.K_SERVE],
     requiredCapabilities: [StackCapability.SERVICE_MESH, StackCapability.SERVICE_MESH_AUTHZ],
   },
+  [SupportedArea.K_SERVE_METRICS]: {
+    featureFlags: ['disableKServeMetrics'],
+  },
   [SupportedArea.MODEL_MESH]: {
     featureFlags: ['disableModelMesh'],
     requiredComponents: [StackComponent.MODEL_MESH],
