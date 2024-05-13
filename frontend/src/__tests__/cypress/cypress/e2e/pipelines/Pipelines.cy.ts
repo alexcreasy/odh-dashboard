@@ -26,7 +26,7 @@ const initialMockPipelineVersion = buildMockDefaultPipelineVersion(initialMockPi
 const pipelineYamlPath = './cypress/e2e/pipelines/mock-upload-pipeline.yaml';
 
 describe('Pipelines', () => {
-  it.only('renders the page with pipelines table data', () => {
+  it('renders the page with pipelines table data', () => {
     initIntercepts();
     initPipelineIntercepts();
     pipelinesGlobal.visit(projectName);
@@ -224,14 +224,14 @@ describe('Pipelines', () => {
     initIntercepts();
     cy.intercept(
       {
-        method: 'POST',
+        method: 'GET',
         pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipelines`,
       },
       buildMockPipelines([mockPipeline1, mockPipeline2]),
     );
     cy.intercept(
       {
-        method: 'POST',
+        method: 'GET',
         pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipeline_versions`,
       },
       (req) => {
@@ -263,14 +263,14 @@ describe('Pipelines', () => {
     deleteModal.findInput().type('Delete 1 pipeline and 1 version');
     cy.intercept(
       {
-        method: 'POST',
+        method: 'GET',
         pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipelines`,
       },
       buildMockPipelines([mockPipeline2]),
     ).as('refreshPipelines');
     cy.intercept(
       {
-        method: 'POST',
+        method: 'GET',
         pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipeline_versions`,
       },
       (req) => {
