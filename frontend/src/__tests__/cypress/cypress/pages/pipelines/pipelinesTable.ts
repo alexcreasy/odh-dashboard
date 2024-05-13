@@ -26,20 +26,20 @@ class PipelinesTable {
     };
   }
 
-  mockGetPipelines(pipelines: PipelineKF[]) {
+  mockGetPipelines(pipelines: PipelineKF[], projectName: string) {
     return cy.intercept(
       {
-        pathname: '/api/proxy/apis/v1beta1/pipelines',
+        pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipelines`,
       },
       buildMockPipelines(pipelines),
     );
   }
 
-  mockGetPipelineVersions(versions: PipelineVersionKF[]) {
+  mockGetPipelineVersions(versions: PipelineVersionKF[], projectName: string) {
     return cy.intercept(
       {
-        method: 'POST',
-        pathname: '/api/proxy/apis/v1beta1/pipeline_versions',
+        method: 'GET',
+        pathname: `/api/service/pipelines/${projectName}/dspa/apis/v1beta1/pipeline_versions`,
       },
       buildMockPipelineVersions(versions),
     );
