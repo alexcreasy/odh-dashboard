@@ -9,15 +9,16 @@ export default proxyService<DSPipelineKind>(
     plural: 'datasciencepipelinesapplications',
   },
   {
-    port: 8443,
+    port: 8888,
     prefix: 'ds-pipeline-',
   },
   {
     // Use port forwarding for local development:
-    // kubectl port-forward -n <namespace> svc/ds-pipeline-dspa 8443:8443
+    // kubectl port-forward -n <namespace> svc/ds-pipeline-pipelines-definition 8888:8888
     host: process.env.DS_PIPELINE_DSPA_SERVICE_HOST,
     port: process.env.DS_PIPELINE_DSPA_SERVICE_PORT,
   },
   (resource) =>
     !!resource.status?.conditions?.find((c) => c.type === 'APIServerReady' && c.status === 'True'),
+  false,
 );
