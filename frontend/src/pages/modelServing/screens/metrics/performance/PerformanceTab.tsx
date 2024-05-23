@@ -18,7 +18,7 @@ const PerformanceTab: React.FC<PerformanceTabsProps> = ({ model }) => {
   const kserveMetricsEnabled = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
 
   if (kserve && kserveMetricsEnabled) {
-    return <KServeMetricsGraphs />;
+    return <KServeMetricsGraphs modelName={model.metadata.name} />;
   }
 
   return (
