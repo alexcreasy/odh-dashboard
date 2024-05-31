@@ -1,20 +1,24 @@
 import { ConfigMapKind } from '~/k8sTypes';
-import { KSERVE_METRICS_GRAPH_TYPES } from '~/concepts/metrics/kserve/const';
+import { KserveMetricsGraphTypes } from '~/concepts/metrics/kserve/const';
 
 export type KserveMetricsConfigMapKind = ConfigMapKind & {
   data: {
     supported: 'true' | 'false';
-    config: string;
+    metrics: string;
   };
 };
 
 export type KserveMetricGraphDefinition = {
   title: string;
-  type: KSERVE_METRICS_GRAPH_TYPES;
+  type: KserveMetricsGraphTypes;
   queries: [
     {
       title: string;
       query: string;
     },
   ];
+};
+
+export type KserveMetricsDataObject = {
+  data: KserveMetricGraphDefinition[];
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   KserveMetricGraphDefinition,
   KserveMetricsConfigMapKind,
+  KserveMetricsDataObject,
 } from '~/concepts/metrics/kserve/types';
 
 const useKserveMetricsGraphDefinitions = (
@@ -17,7 +18,8 @@ const useKserveMetricsGraphDefinitions = (
 
   React.useMemo(() => {
     if (kserveMetricsConfigMap && kserveMetricsConfigMap.data.supported === 'true') {
-      return JSON.parse(kserveMetricsConfigMap.data.config);
+      const data: KserveMetricsDataObject = JSON.parse(kserveMetricsConfigMap.data.metrics);
+      return data.data;
     }
     return [];
   }, [kserveMetricsConfigMap]);
