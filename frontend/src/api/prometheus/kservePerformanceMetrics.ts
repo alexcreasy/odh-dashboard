@@ -135,6 +135,40 @@ export const useFetchKserveCpuUsageData = (
   return useAllSettledContextResourceData(data);
 };
 
+type MemoryUsageData = {
+  data: {
+    memoryUsage: PendingContextResourceData<PrometheusQueryRangeResultValue>;
+  };
+  refreshAll: () => void;
+};
+
+export const useFetchKserveMemoryUsageData = (
+  metricsDef: KserveMetricGraphDefinition,
+  timeframe: TimeframeTitle,
+  endInMs: number,
+  namespace: string,
+): MemoryUsageData => {
+  const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
+
+  const memoryUsage = useQueryRangeResourceData(
+    active,
+    metricsDef.queries[0].query,
+    endInMs,
+    timeframe,
+    defaultResponsePredicate,
+    namespace,
+  );
+
+  const data = React.useMemo(
+    () => ({
+      memoryUsage,
+    }),
+    [memoryUsage],
+  );
+
+  return useAllSettledContextResourceData(data);
+};
+
 const useAllSettledContextResourceData = <
   T,
   U extends Record<string, ReturnType<typeof useRestructureContextResourceData<T>>>,
