@@ -11,14 +11,14 @@ export type KserveMetricsConfigMapKind = ConfigMapKind & {
 export type KserveMetricGraphDefinition = {
   title: string;
   type: KserveMetricsGraphTypes;
-  queries: [
-    {
-      title: string;
-      query: string;
-    },
-  ];
+  queries: KserveMetricQueryDefinition[];
+};
+
+export type KserveMetricQueryDefinition = {
+  title: string;
+  query: string;
 };
 
 export type KserveMetricsDataObject = {
-  data: KserveMetricGraphDefinition[];
+  config: KserveMetricGraphDefinition[];
 };
