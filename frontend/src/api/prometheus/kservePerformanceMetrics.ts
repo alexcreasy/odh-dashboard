@@ -5,16 +5,12 @@ import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import { TimeframeTitle } from '~/concepts/metrics/types';
 import useRestructureContextResourceData from '~/utilities/useRestructureContextResourceData';
 import useQueryRangeResourceData from '~/api/prometheus/useQueryRangeResourceData';
-import { PrometheusQueryRangeResultValue } from '~/types';
+import { PendingContextResourceData, PrometheusQueryRangeResultValue } from '~/types';
 
 type RequestCountData = {
   data: {
-    successCount: ReturnType<
-      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
-    >;
-    failedCount: ReturnType<
-      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
-    >;
+    successCount: PendingContextResourceData<PrometheusQueryRangeResultValue>;
+    failedCount: PendingContextResourceData<PrometheusQueryRangeResultValue>;
   };
   refreshAll: () => void;
 };
@@ -62,12 +58,8 @@ export const useFetchKserveRequestCountData = (
 
 type MeanLatencyData = {
   data: {
-    inferenceLatency: ReturnType<
-      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
-    >;
-    requestLatency: ReturnType<
-      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
-    >;
+    inferenceLatency: PendingContextResourceData<PrometheusQueryRangeResultValue>;
+    requestLatency: PendingContextResourceData<PrometheusQueryRangeResultValue>;
   };
   refreshAll: () => void;
 };
