@@ -7,8 +7,7 @@ import useRestructureContextResourceData from '~/utilities/useRestructureContext
 import useQueryRangeResourceData from '~/api/prometheus/useQueryRangeResourceData';
 import { PrometheusQueryRangeResultValue } from '~/types';
 
-//TODO: find a better name for this type
-type Pending = {
+type RequestCountData = {
   data: {
     successCount: ReturnType<
       typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
@@ -22,9 +21,10 @@ type Pending = {
 
 export const useFetchKserveRequestCountData = (
   metricsDef: KserveMetricGraphDefinition,
+  timeframe: TimeframeTitle,
   endInMs: number,
   namespace: string,
-): Pending => {
+): RequestCountData => {
   const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
 
   //TODO: Necessary due to bug on backend - must be removed before release.
@@ -35,7 +35,7 @@ export const useFetchKserveRequestCountData = (
     active,
     successQuery,
     endInMs,
-    TimeframeTitle.ONE_HOUR,
+    timeframe,
     defaultResponsePredicate,
     namespace,
   );
@@ -44,7 +44,7 @@ export const useFetchKserveRequestCountData = (
     active,
     failedQuery,
     endInMs,
-    TimeframeTitle.ONE_HOUR,
+    timeframe,
     defaultResponsePredicate,
     namespace,
   );
@@ -59,6 +59,26 @@ export const useFetchKserveRequestCountData = (
 
   return useAllSettledContextResourceData(data);
 };
+
+type MeanLatencyData = {
+  data: {
+    inferenceLatency: ReturnType<
+      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
+    >;
+    requestLatency: ReturnType<
+      typeof useRestructureContextResourceData<PrometheusQueryRangeResultValue>
+    >;
+  };
+  refreshAll: () => void;
+};
+
+// export const useFetchKserveMeanLatencyData = (
+//   metricsDef: KserveMetricGraphDefinition,
+//   endInMs: number,
+//   namespace: string,
+// ): MeanLatencyData => {
+//   const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
+// };
 
 const useAllSettledContextResourceData = <
   T,

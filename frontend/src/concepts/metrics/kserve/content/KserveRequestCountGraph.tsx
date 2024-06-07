@@ -3,21 +3,24 @@ import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 // eslint-disable-next-line no-restricted-imports
 import { useFetchKserveRequestCountData } from '~/api/prometheus/kservePerformanceMetrics';
 import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
+import { TimeframeTitle } from '~/concepts/metrics/types';
 
 type KserveRequestCountGraphProps = {
   graphDefinition: KserveMetricGraphDefinition;
+  timeframe: TimeframeTitle;
   end: number;
   namespace: string;
 };
 
 const KserveRequestCountGraph: React.FC<KserveRequestCountGraphProps> = ({
   graphDefinition,
+  timeframe,
   end,
   namespace,
 }) => {
   const {
     data: { successCount, failedCount },
-  } = useFetchKserveRequestCountData(graphDefinition, end, namespace);
+  } = useFetchKserveRequestCountData(graphDefinition, timeframe, end, namespace);
 
   return (
     <MetricsChart

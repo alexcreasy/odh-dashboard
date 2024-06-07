@@ -13,6 +13,7 @@ import React from 'react';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { KserveMetricsGraphTypes } from '~/concepts/metrics/kserve/const';
 import KserveRequestCountGraph from '~/concepts/metrics/kserve/content/KserveRequestCountGraph';
+import { TimeframeTitle } from '~/concepts/metrics/types';
 
 type KservePerformanceGraphsProps = {
   namespace: string;
@@ -28,6 +29,8 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
   const requestCountDef = graphDefinitions.find(
     (x) => x.type === KserveMetricsGraphTypes.REQUEST_COUNT,
   );
+
+  const timeframe = TimeframeTitle.ONE_HOUR;
 
   const end = React.useRef(Date.now());
 
@@ -54,6 +57,7 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <StackItem>
             <KserveRequestCountGraph
               graphDefinition={requestCountDef}
+              timeframe={timeframe}
               end={end.current}
               namespace={namespace}
             />
