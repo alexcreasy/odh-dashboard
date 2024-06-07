@@ -101,6 +101,40 @@ export const useFetchKserveMeanLatencyData = (
   return useAllSettledContextResourceData(data);
 };
 
+type CpuUsageData = {
+  data: {
+    cpuUsage: PendingContextResourceData<PrometheusQueryRangeResultValue>;
+  };
+  refreshAll: () => void;
+};
+
+export const useFetchKserveCpuUsageData = (
+  metricsDef: KserveMetricGraphDefinition,
+  timeframe: TimeframeTitle,
+  endInMs: number,
+  namespace: string,
+): CpuUsageData => {
+  const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
+
+  const cpuUsage = useQueryRangeResourceData(
+    active,
+    metricsDef.queries[0].query,
+    endInMs,
+    timeframe,
+    defaultResponsePredicate,
+    namespace,
+  );
+
+  const data = React.useMemo(
+    () => ({
+      cpuUsage,
+    }),
+    [cpuUsage],
+  );
+
+  return useAllSettledContextResourceData(data);
+};
+
 const useAllSettledContextResourceData = <
   T,
   U extends Record<string, ReturnType<typeof useRestructureContextResourceData<T>>>,
