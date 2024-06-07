@@ -72,13 +72,42 @@ type MeanLatencyData = {
   refreshAll: () => void;
 };
 
-// export const useFetchKserveMeanLatencyData = (
-//   metricsDef: KserveMetricGraphDefinition,
-//   endInMs: number,
-//   namespace: string,
-// ): MeanLatencyData => {
-//   const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
-// };
+export const useFetchKserveMeanLatencyData = (
+  metricsDef: KserveMetricGraphDefinition,
+  timeframe: TimeframeTitle,
+  endInMs: number,
+  namespace: string,
+): MeanLatencyData => {
+  const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
+
+  const inferenceLatency = useQueryRangeResourceData(
+    active,
+    metricsDef.queries[0].query,
+    endInMs,
+    timeframe,
+    defaultResponsePredicate,
+    namespace,
+  );
+
+  const requestLatency = useQueryRangeResourceData(
+    active,
+    metricsDef.queries[1].query,
+    endInMs,
+    timeframe,
+    defaultResponsePredicate,
+    namespace,
+  );
+
+  const data = React.useMemo(
+    () => ({
+      inferenceLatency,
+      requestLatency,
+    }),
+    [inferenceLatency, requestLatency],
+  );
+
+  return useAllSettledContextResourceData(data);
+};
 
 const useAllSettledContextResourceData = <
   T,

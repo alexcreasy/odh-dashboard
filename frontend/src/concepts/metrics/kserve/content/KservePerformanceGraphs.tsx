@@ -14,6 +14,7 @@ import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { KserveMetricsGraphTypes } from '~/concepts/metrics/kserve/const';
 import KserveRequestCountGraph from '~/concepts/metrics/kserve/content/KserveRequestCountGraph';
 import { TimeframeTitle } from '~/concepts/metrics/types';
+import KserveMeanLatencyGraph from '~/concepts/metrics/kserve/content/KserveMeanLatencyGraph';
 
 type KservePerformanceGraphsProps = {
   namespace: string;
@@ -30,8 +31,12 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
     (x) => x.type === KserveMetricsGraphTypes.REQUEST_COUNT,
   );
 
-  const timeframe = TimeframeTitle.ONE_HOUR;
+  const meanLatencyDef = graphDefinitions.find(
+    (x) => x.type === KserveMetricsGraphTypes.MEAN_LATENCY,
+  );
 
+  //TODO: handle user changing of these values
+  const timeframe = TimeframeTitle.ONE_HOUR;
   const end = React.useRef(Date.now());
 
   return (
@@ -57,6 +62,16 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <StackItem>
             <KserveRequestCountGraph
               graphDefinition={requestCountDef}
+              timeframe={timeframe}
+              end={end.current}
+              namespace={namespace}
+            />
+          </StackItem>
+        )}
+        {meanLatencyDef && (
+          <StackItem>
+            <KserveMeanLatencyGraph
+              graphDefinition={meanLatencyDef}
               timeframe={timeframe}
               end={end.current}
               namespace={namespace}
