@@ -48,82 +48,48 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
   const end = React.useRef(Date.now());
 
   return (
-    <>
-      <Stack hasGutter>
+    <Stack hasGutter>
+      {requestCountDef && (
         <StackItem>
-          <Card>
-            <CardBody>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Namespace</DescriptionListTerm>
-                  <DescriptionListDescription>{namespace}</DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Model Name</DescriptionListTerm>
-                  <DescriptionListDescription>{modelName}</DescriptionListDescription>
-                </DescriptionListGroup>
-              </DescriptionList>
-            </CardBody>
-          </Card>
+          <KserveRequestCountGraph
+            graphDefinition={requestCountDef}
+            timeframe={timeframe}
+            end={end.current}
+            namespace={namespace}
+          />
         </StackItem>
-        {requestCountDef && (
-          <StackItem>
-            <KserveRequestCountGraph
-              graphDefinition={requestCountDef}
-              timeframe={timeframe}
-              end={end.current}
-              namespace={namespace}
-            />
-          </StackItem>
-        )}
-        {meanLatencyDef && (
-          <StackItem>
-            <KserveMeanLatencyGraph
-              graphDefinition={meanLatencyDef}
-              timeframe={timeframe}
-              end={end.current}
-              namespace={namespace}
-            />
-          </StackItem>
-        )}
-        {cpuUsageDef && (
-          <StackItem>
-            <KserveCpuUsageGraph
-              graphDefinition={cpuUsageDef}
-              timeframe={timeframe}
-              end={end.current}
-              namespace={namespace}
-            />
-          </StackItem>
-        )}
-        {memoryUsageDef && (
-          <StackItem>
-            <KserveMemoryUsageGraph
-              graphDefinition={memoryUsageDef}
-              timeframe={timeframe}
-              end={end.current}
-              namespace={namespace}
-            />
-          </StackItem>
-        )}
-        {graphDefinitions.map((def) => (
-          <StackItem key={`${def.type}${def.title}`}>
-            <Card>
-              <CardTitle>{def.title}</CardTitle>
-              <CardBody>
-                <p>Type: {def.type}</p>
-                <p>Queries:</p>
-                {def.queries.map((query) => (
-                  <p key={query.title}>
-                    {query.title}: {query.query}
-                  </p>
-                ))}
-              </CardBody>
-            </Card>
-          </StackItem>
-        ))}
-      </Stack>
-    </>
+      )}
+      {meanLatencyDef && (
+        <StackItem>
+          <KserveMeanLatencyGraph
+            graphDefinition={meanLatencyDef}
+            timeframe={timeframe}
+            end={end.current}
+            namespace={namespace}
+          />
+        </StackItem>
+      )}
+      {cpuUsageDef && (
+        <StackItem>
+          <KserveCpuUsageGraph
+            graphDefinition={cpuUsageDef}
+            timeframe={timeframe}
+            end={end.current}
+            namespace={namespace}
+          />
+        </StackItem>
+      )}
+      {memoryUsageDef && (
+        <StackItem>
+          <KserveMemoryUsageGraph
+            graphDefinition={memoryUsageDef}
+            timeframe={timeframe}
+            end={end.current}
+            namespace={namespace}
+          />
+        </StackItem>
+      )}
+    </Stack>
   );
 };
 
