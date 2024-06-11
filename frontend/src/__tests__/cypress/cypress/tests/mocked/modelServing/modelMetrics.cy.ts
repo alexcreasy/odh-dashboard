@@ -164,7 +164,7 @@ const initIntercepts = ({
   cy.interceptK8s(RouteModel, mockRouteK8sResource({ name: 'trustyai-service' }));
 };
 
-describe.only('KServe performance metrics page', () => {
+describe.only('KServe performance metrics', () => {
   it('should show error when ConfigMap is missing', () => {
     initIntercepts({
       disableBiasMetrics: false,
@@ -193,6 +193,25 @@ describe.only('KServe performance metrics page', () => {
 
     modelMetricsKserve.visit('test-project', 'test-inference-service');
     modelMetricsKserve.findUnsupportedRuntimeCard().should('be.visible');
+  });
+
+  it('charts should show data when available', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: true }));
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveData();
   });
 });
 
