@@ -164,76 +164,6 @@ const initIntercepts = ({
   cy.interceptK8s(RouteModel, mockRouteK8sResource({ name: 'trustyai-service' }));
 };
 
-describe.only('KServe performance metrics', () => {
-  it('should show error when ConfigMap is missing', () => {
-    initIntercepts({
-      disableBiasMetrics: false,
-      disablePerformanceMetrics: false,
-      disableKServeMetrics: false,
-      hasServingData: true,
-      hasBiasData: false,
-      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
-    });
-
-    modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.findConfigMapErrorCard().should('be.visible');
-  });
-
-  it('should inform user when serving runtime is unsupported', () => {
-    initIntercepts({
-      disableBiasMetrics: false,
-      disablePerformanceMetrics: false,
-      disableKServeMetrics: false,
-      hasServingData: true,
-      hasBiasData: false,
-      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
-    });
-
-    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: false }));
-
-    modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.findUnsupportedRuntimeCard().should('be.visible');
-  });
-
-  it('charts should function data when available', () => {
-    initIntercepts({
-      disableBiasMetrics: false,
-      disablePerformanceMetrics: false,
-      disableKServeMetrics: false,
-      hasServingData: true,
-      hasBiasData: false,
-      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
-    });
-
-    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: true }));
-
-    modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveData();
-    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveData();
-    modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveData();
-    modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveData();
-  });
-
-  it('charts should show empty state when data when no serving data available', () => {
-    initIntercepts({
-      disableBiasMetrics: false,
-      disablePerformanceMetrics: false,
-      disableKServeMetrics: false,
-      hasServingData: false,
-      hasBiasData: false,
-      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
-    });
-
-    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: true }));
-
-    modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveNoData();
-    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveNoData();
-    modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveNoData();
-    modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveNoData();
-  });
-});
-
 describe('Model Metrics', () => {
   it('Empty State No Serving Data Available', () => {
     initIntercepts({
@@ -688,5 +618,75 @@ describe('Model Metrics', () => {
         batchSize: 20,
       });
     });
+  });
+});
+
+describe.only('KServe performance metrics', () => {
+  it('should show error when ConfigMap is missing', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findConfigMapErrorCard().should('be.visible');
+  });
+
+  it('should inform user when serving runtime is unsupported', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: false }));
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findUnsupportedRuntimeCard().should('be.visible');
+  });
+
+  it('charts should function when data is available', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: true }));
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveData();
+  });
+
+  it('charts should show empty state when no serving data is available', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: false,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: true }));
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveNoData();
+    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveNoData();
+    modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveNoData();
+    modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveNoData();
   });
 });
