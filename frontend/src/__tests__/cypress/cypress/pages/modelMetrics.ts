@@ -32,13 +32,23 @@ class ModelMetricsPerformance extends ModelMetricsGlobal {
     this.wait();
   }
 
-  private wait() {
+  protected wait() {
     cy.findByTestId('performance-metrics-loaded');
     cy.testA11y();
   }
 
   findTab() {
     return cy.findByTestId('performance-tab');
+  }
+}
+
+class ModelMetricsKserve extends ModelMetricsPerformance {
+  findConfigMapErrorCard() {
+    return cy.findByTestId('kserve-configmap-error');
+  }
+
+  findUnsupportedRuntimeCard() {
+    return cy.findByTestId('kserve-metrics-runtime-unsupported');
   }
 }
 
@@ -181,3 +191,4 @@ export const modelMetricsBias = new ModelMetricsBias();
 export const serverMetrics = new ServerMetrics();
 export const modelMetricsConfigureSection = new ModelMetricsConfigureSection();
 export const configureBiasMetricModal = new ConfigureBiasMetricModal();
+export const modelMetricsKserve = new ModelMetricsKserve();

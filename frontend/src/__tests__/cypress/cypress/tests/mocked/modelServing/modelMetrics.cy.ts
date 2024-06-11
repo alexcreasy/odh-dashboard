@@ -8,6 +8,7 @@ import {
   configureBiasMetricModal,
   modelMetricsBias,
   modelMetricsConfigureSection,
+  modelMetricsKserve,
   modelMetricsPerformance,
   serverMetrics,
 } from '~/__tests__/cypress/cypress/pages/modelMetrics';
@@ -26,6 +27,7 @@ import {
 import { ServingRuntimePlatform } from '~/types';
 import { mock403Error, mock404Error } from '~/__mocks__/mockK8sStatus';
 import {
+  ConfigMapModel,
   InferenceServiceModel,
   ProjectModel,
   RouteModel,
@@ -34,10 +36,12 @@ import {
   TemplateModel,
   TrustyAIApplicationsModel,
 } from '~/__tests__/cypress/cypress/utils/models';
+import { mockKserveMetricsConfigMap } from '~/__mocks__/mockKserveMetricsConfigMap';
 
 type HandlersProps = {
   disablePerformanceMetrics?: boolean;
   disableBiasMetrics?: boolean;
+  disableKServeMetrics?: boolean;
   servingRuntimes?: ServingRuntimeKind[];
   inferenceServices?: InferenceServiceKind[];
   hasServingData: boolean;
@@ -50,6 +54,7 @@ type HandlersProps = {
 const initIntercepts = ({
   disablePerformanceMetrics,
   disableBiasMetrics,
+  disableKServeMetrics,
   servingRuntimes = [mockServingRuntimeK8sResource({})],
   inferenceServices = [mockInferenceServiceK8sResource({ isModelMesh: true })],
   hasServingData = false,
@@ -69,6 +74,7 @@ const initIntercepts = ({
     mockDashboardConfig({
       disableBiasMetrics,
       disablePerformanceMetrics,
+      disableKServeMetrics,
     }),
   );
 
@@ -157,6 +163,38 @@ const initIntercepts = ({
   );
   cy.interceptK8s(RouteModel, mockRouteK8sResource({ name: 'trustyai-service' }));
 };
+
+describe.only('KServe performance metrics page', () => {
+  it('should show error when ConfigMap is missing', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findConfigMapErrorCard().should('be.visible');
+  });
+
+  it('should show unsupported runtime screen', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(ConfigMapModel, mockKserveMetricsConfigMap({ supported: false }));
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findUnsupportedRuntimeCard().should('be.visible');
+  });
+});
 
 describe('Model Metrics', () => {
   it('Empty State No Serving Data Available', () => {
