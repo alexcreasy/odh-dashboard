@@ -1,8 +1,6 @@
 import React from 'react';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
-//TODO REMOVE THIS OVERRIDE! Figure out where the hooks should go.
-// eslint-disable-next-line no-restricted-imports
-import { useFetchKserveRequestCountData } from '~/api/prometheus/kservePerformanceMetrics';
+import { useFetchKserveRequestCountData } from '~/api';
 import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
 import { TimeframeTitle } from '~/concepts/metrics/types';
 

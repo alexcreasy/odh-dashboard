@@ -22,3 +22,10 @@ export type KserveMetricQueryDefinition = {
 export type KserveMetricsDataObject = {
   config: KserveMetricGraphDefinition[];
 };
+
+export type KserveMetricsDefinition = {
+  supported: boolean;
+  loaded: boolean;
+  error?: Error;
+  graphDefinitions: KserveMetricGraphDefinition[];
+};

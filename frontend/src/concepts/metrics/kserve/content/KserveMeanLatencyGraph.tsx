@@ -2,9 +2,7 @@ import React from 'react';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { TimeframeTitle } from '~/concepts/metrics/types';
 import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
-//TODO: Remove this override, figure out where hooks should live.
-// eslint-disable-next-line no-restricted-imports
-import { useFetchKserveMeanLatencyData } from '~/api/prometheus/kservePerformanceMetrics';
+import { useFetchKserveMeanLatencyData } from '~/api';
 import { convertPrometheusNaNToZero } from '~/pages/modelServing/screens/metrics/utils';
 
 type KserveMeanLatencyGraphProps = {

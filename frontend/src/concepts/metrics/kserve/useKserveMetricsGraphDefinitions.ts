@@ -1,19 +1,35 @@
 import React from 'react';
 import {
-  KserveMetricGraphDefinition,
   KserveMetricsConfigMapKind,
-  KserveMetricsDataObject,
+  KserveMetricsDefinition,
 } from '~/concepts/metrics/kserve/types';
 
 const useKserveMetricsGraphDefinitions = (
   kserveMetricsConfigMap: KserveMetricsConfigMapKind | null,
-): KserveMetricGraphDefinition[] =>
+): KserveMetricsDefinition =>
   React.useMemo(() => {
-    if (kserveMetricsConfigMap && kserveMetricsConfigMap.data.supported === 'true') {
-      const data: KserveMetricsDataObject = JSON.parse(kserveMetricsConfigMap.data.metrics);
-      return data.config;
+    const result: KserveMetricsDefinition = {
+      supported: false,
+      loaded: !!kserveMetricsConfigMap,
+      graphDefinitions: [],
+    };
+
+    if (kserveMetricsConfigMap) {
+      result.supported = kserveMetricsConfigMap.data.supported === 'true';
+
+      if (result.supported) {
+        try {
+          result.graphDefinitions = JSON.parse(kserveMetricsConfigMap.data.metrics).config;
+        } catch (e) {
+          if (e instanceof Error) {
+            result.error = e;
+          } else {
+            result.error = new Error('Unable to parse graphDefinition');
+          }
+        }
+      }
     }
-    return [];
+    return result;
   }, [kserveMetricsConfigMap]);
 
 export default useKserveMetricsGraphDefinitions;

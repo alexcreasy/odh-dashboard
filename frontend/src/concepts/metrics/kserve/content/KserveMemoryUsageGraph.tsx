@@ -1,9 +1,8 @@
 import React from 'react';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { TimeframeTitle } from '~/concepts/metrics/types';
-// TODO: remove this, figure out where to put the hook!!!!!!
-// eslint-disable-next-line no-restricted-imports
-import { useFetchKserveMemoryUsageData } from '~/api/prometheus/kservePerformanceMetrics';
+
+import { useFetchKserveMemoryUsageData } from '~/api';
 import MetricsChart from '~/pages/modelServing/screens/metrics/MetricsChart';
 import { toPercentage } from '~/pages/modelServing/screens/metrics/utils';
 

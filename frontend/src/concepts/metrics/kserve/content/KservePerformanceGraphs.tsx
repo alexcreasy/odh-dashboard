@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Stack,
-  StackItem,
-} from '@patternfly/react-core/dist/esm';
+import { Stack, StackItem } from '@patternfly/react-core/dist/esm';
 import React from 'react';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { KserveMetricsGraphTypes } from '~/concepts/metrics/kserve/const';
@@ -20,14 +10,16 @@ import KserveMemoryUsageGraph from '~/concepts/metrics/kserve/content/KserveMemo
 
 type KservePerformanceGraphsProps = {
   namespace: string;
-  modelName: string;
   graphDefinitions: KserveMetricGraphDefinition[];
+  timeframe: TimeframeTitle;
+  end: number;
 };
 
 const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
   namespace,
-  modelName,
   graphDefinitions,
+  timeframe,
+  end,
 }) => {
   const requestCountDef = graphDefinitions.find(
     (x) => x.type === KserveMetricsGraphTypes.REQUEST_COUNT,
@@ -43,10 +35,6 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
     (x) => x.type === KserveMetricsGraphTypes.MEMORY_USAGE,
   );
 
-  //TODO: handle user changing of these values
-  const timeframe = TimeframeTitle.ONE_HOUR;
-  const end = React.useRef(Date.now());
-
   return (
     <Stack hasGutter>
       {requestCountDef && (
@@ -54,7 +42,7 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <KserveRequestCountGraph
             graphDefinition={requestCountDef}
             timeframe={timeframe}
-            end={end.current}
+            end={end}
             namespace={namespace}
           />
         </StackItem>
@@ -64,7 +52,7 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <KserveMeanLatencyGraph
             graphDefinition={meanLatencyDef}
             timeframe={timeframe}
-            end={end.current}
+            end={end}
             namespace={namespace}
           />
         </StackItem>
@@ -74,7 +62,7 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <KserveCpuUsageGraph
             graphDefinition={cpuUsageDef}
             timeframe={timeframe}
-            end={end.current}
+            end={end}
             namespace={namespace}
           />
         </StackItem>
@@ -84,7 +72,7 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
           <KserveMemoryUsageGraph
             graphDefinition={memoryUsageDef}
             timeframe={timeframe}
-            end={end.current}
+            end={end}
             namespace={namespace}
           />
         </StackItem>

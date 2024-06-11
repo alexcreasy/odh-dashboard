@@ -3,7 +3,6 @@ import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
 import { defaultResponsePredicate } from '~/api/prometheus/usePrometheusQueryRange';
 import { SupportedArea, useIsAreaAvailable } from '~/concepts/areas';
 import { TimeframeTitle } from '~/concepts/metrics/types';
-import useRestructureContextResourceData from '~/utilities/useRestructureContextResourceData';
 import useQueryRangeResourceData from '~/api/prometheus/useQueryRangeResourceData';
 import { PendingContextResourceData, PrometheusQueryRangeResultValue } from '~/types';
 
@@ -24,8 +23,8 @@ export const useFetchKserveRequestCountData = (
   const active = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
 
   //TODO: Necessary due to bug on backend - must be removed before release.
-  const successQuery = metricsDef.queries[0].query.replace('[${rate_interval}]', '[5m]');
-  const failedQuery = metricsDef.queries[1].query.replace('[${rate_interval}]', '[5m]');
+  const successQuery = metricsDef.queries[0].query; //.replace('[${rate_interval}]', '[5m]');
+  const failedQuery = metricsDef.queries[1].query; //.replace('[${rate_interval}]', '[5m]');
 
   const successCount = useQueryRangeResourceData(
     active,
@@ -171,7 +170,7 @@ export const useFetchKserveMemoryUsageData = (
 
 const useAllSettledContextResourceData = <
   T,
-  U extends Record<string, ReturnType<typeof useRestructureContextResourceData<T>>>,
+  U extends Record<string, PendingContextResourceData<T>>,
 >(
   data: U,
 ) => {
@@ -192,7 +191,7 @@ const useAllSettledContextResourceData = <
   //      need to take a default empty value to return first time.
   const resultRef = React.useRef(result);
 
-  if (!Object.values(result.data).find((x) => x.pending)) {
+  if (!Object.values(result.data).some((x) => x.pending)) {
     resultRef.current = result;
   }
 
