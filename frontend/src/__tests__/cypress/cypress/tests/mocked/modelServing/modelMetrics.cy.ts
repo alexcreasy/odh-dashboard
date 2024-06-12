@@ -688,7 +688,7 @@ describe.only('KServe performance metrics', () => {
     modelMetricsKserve.findInvalidDefinitionError().should('be.visible');
   });
 
-  it.only('should display 2 graphs with the given config', () => {
+  it('should display 2 graphs with the given config', () => {
     initIntercepts({
       disableBiasMetrics: false,
       disablePerformanceMetrics: false,

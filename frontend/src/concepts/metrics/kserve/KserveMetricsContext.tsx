@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   Bullseye,
   EmptyState,
+  EmptyStateBody,
+  EmptyStateHeader,
   EmptyStateIcon,
   PageSectionVariants,
   Spinner,
@@ -109,10 +111,17 @@ export const KserveMetricsContextProvider = conditionalArea<KserveMetricsContext
   if (!supported) {
     return (
       <EmptyState>
-        <EmptyStateIcon icon={CubesIcon} />
-        <Title headingLevel="h4" size="lg" data-testid="kserve-metrics-runtime-unsupported">
-          Metrics are unsupported for this serving runtime.
-        </Title>
+        <EmptyStateHeader
+          data-testid="kserve-metrics-runtime-unsupported"
+          titleText="Metrics not supported"
+          headingLevel="h4"
+          icon={<EmptyStateIcon icon={CubesIcon} />}
+        />
+        <EmptyStateBody>
+          {modelName} is using a custom serving runtime. Metrics are only supported for models
+          served via a pre-installed runtime when the single-model serving platform is enabled for a
+          project.
+        </EmptyStateBody>
       </EmptyState>
     );
   }
