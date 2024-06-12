@@ -21,62 +21,63 @@ const KservePerformanceGraphs: React.FC<KservePerformanceGraphsProps> = ({
   timeframe,
   end,
 }) => {
-  const requestCountDef = graphDefinitions.find(
-    (x) => x.type === KserveMetricsGraphTypes.REQUEST_COUNT,
-  );
+  const renderGraph = (graphDefinition: KserveMetricGraphDefinition) => {
+    if (graphDefinition.type === KserveMetricsGraphTypes.REQUEST_COUNT) {
+      return (
+        <KserveRequestCountGraph
+          graphDefinition={graphDefinition}
+          timeframe={timeframe}
+          end={end}
+          namespace={namespace}
+        />
+      );
+    }
 
-  const meanLatencyDef = graphDefinitions.find(
-    (x) => x.type === KserveMetricsGraphTypes.MEAN_LATENCY,
-  );
+    if (graphDefinition.type === KserveMetricsGraphTypes.MEAN_LATENCY) {
+      return (
+        <KserveMeanLatencyGraph
+          graphDefinition={graphDefinition}
+          timeframe={timeframe}
+          end={end}
+          namespace={namespace}
+        />
+      );
+    }
 
-  const cpuUsageDef = graphDefinitions.find((x) => x.type === KserveMetricsGraphTypes.CPU_USAGE);
+    if (graphDefinition.type === KserveMetricsGraphTypes.CPU_USAGE) {
+      return (
+        <KserveCpuUsageGraph
+          graphDefinition={graphDefinition}
+          timeframe={timeframe}
+          end={end}
+          namespace={namespace}
+        />
+      );
+    }
 
-  const memoryUsageDef = graphDefinitions.find(
-    (x) => x.type === KserveMetricsGraphTypes.MEMORY_USAGE,
-  );
+    // Condition IS necessary as graph types are provided by the backend.
+    // We need to guard against receiving an unknown value at runtime and fail gracefully.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (graphDefinition.type === KserveMetricsGraphTypes.MEMORY_USAGE) {
+      return (
+        <KserveMemoryUsageGraph
+          graphDefinition={graphDefinition}
+          timeframe={timeframe}
+          end={end}
+          namespace={namespace}
+        />
+      );
+    }
+
+    // TODO: add an unsupported graph type error state.
+    return null;
+  };
 
   return (
     <Stack hasGutter>
-      {requestCountDef && (
-        <StackItem>
-          <KserveRequestCountGraph
-            graphDefinition={requestCountDef}
-            timeframe={timeframe}
-            end={end}
-            namespace={namespace}
-          />
-        </StackItem>
-      )}
-      {meanLatencyDef && (
-        <StackItem>
-          <KserveMeanLatencyGraph
-            graphDefinition={meanLatencyDef}
-            timeframe={timeframe}
-            end={end}
-            namespace={namespace}
-          />
-        </StackItem>
-      )}
-      {cpuUsageDef && (
-        <StackItem>
-          <KserveCpuUsageGraph
-            graphDefinition={cpuUsageDef}
-            timeframe={timeframe}
-            end={end}
-            namespace={namespace}
-          />
-        </StackItem>
-      )}
-      {memoryUsageDef && (
-        <StackItem>
-          <KserveMemoryUsageGraph
-            graphDefinition={memoryUsageDef}
-            timeframe={timeframe}
-            end={end}
-            namespace={namespace}
-          />
-        </StackItem>
-      )}
+      {graphDefinitions.map((x) => (
+        <StackItem key={x.title}>{renderGraph(x)}</StackItem>
+      ))}
     </Stack>
   );
 };
