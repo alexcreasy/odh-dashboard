@@ -22,18 +22,19 @@ const PerformanceTab: React.FC<PerformanceTabsProps> = ({ model }) => {
   const modelMesh = isModelMesh(model);
   const kserveMetricsEnabled = useIsAreaAvailable(SupportedArea.K_SERVE_METRICS).status;
 
-  if (!modelMesh && !kserveMetricsEnabled) {
-    return (
-      <EmptyState variant="full">
-        <EmptyStateHeader
-          titleText="Single-model serving platform model metrics are not enabled."
-          headingLevel="h4"
-          icon={<EmptyStateIcon icon={WarningTriangleIcon} />}
-          alt=""
-        />
-      </EmptyState>
-    );
-  }
+  // if (!modelMesh && !kserveMetricsEnabled) {
+  //   return (
+  //     <EmptyState variant="full">
+  //       <EmptyStateHeader
+  //         titleText="Single-model serving platform model metrics are not enabled."
+  //         headingLevel="h4"
+  //         icon={<EmptyStateIcon icon={WarningTriangleIcon} />}
+  //         alt=""
+  //         data-testid="kserve-metrics-disabled"
+  //       />
+  //     </EmptyState>
+  //   );
+  // }
 
   return (
     <Stack data-testid="performance-metrics-loaded">

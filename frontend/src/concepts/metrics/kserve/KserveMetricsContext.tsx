@@ -16,6 +16,7 @@ import { RefreshIntervalValue } from '~/concepts/metrics/const';
 import UnknownError from '~/pages/UnknownError';
 import { RefreshIntervalTitle, TimeframeTitle } from '~/concepts/metrics/types';
 import { KserveMetricGraphDefinition } from '~/concepts/metrics/kserve/types';
+import { conditionalArea, SupportedArea } from '~/concepts/areas';
 
 type KserveMetricsContextProps = {
   namespace: string;
@@ -39,11 +40,10 @@ type KserveMetricsContextProviderProps = {
   modelName: string;
 };
 
-export const KserveMetricsContextProvider: React.FC<KserveMetricsContextProviderProps> = ({
-  children,
-  namespace,
-  modelName,
-}) => {
+export const KserveMetricsContextProvider = conditionalArea<KserveMetricsContextProviderProps>(
+  SupportedArea.K_SERVE_METRICS,
+  true,
+)(({ children, namespace, modelName }) => {
   const { currentTimeframe, currentRefreshInterval, lastUpdateTime, setLastUpdateTime } =
     React.useContext(MetricsCommonContext);
   const [configMap, configMapLoaded, configMapError] = useKserveMetricsConfigMap(
@@ -120,4 +120,4 @@ export const KserveMetricsContextProvider: React.FC<KserveMetricsContextProvider
   return (
     <KserveMetricsContext.Provider value={contextValue}>{children}</KserveMetricsContext.Provider>
   );
-};
+});

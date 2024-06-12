@@ -622,6 +622,19 @@ describe('Model Metrics', () => {
 });
 
 describe.only('KServe performance metrics', () => {
+  it.only('should show not found when area disabled', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: true,
+      hasServingData: false,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findConfigMapErrorCard().should('be.visible');
+  });
+
   it('should show error when ConfigMap is missing', () => {
     initIntercepts({
       disableBiasMetrics: false,
