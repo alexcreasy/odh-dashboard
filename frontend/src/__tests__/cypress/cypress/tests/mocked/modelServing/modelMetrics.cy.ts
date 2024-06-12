@@ -688,7 +688,7 @@ describe.only('KServe performance metrics', () => {
     modelMetricsKserve.findInvalidDefinitionError().should('be.visible');
   });
 
-  it('should display 2 graphs with the given config', () => {
+  it('should display only 2 graphs, when the config specifies', () => {
     initIntercepts({
       disableBiasMetrics: false,
       disablePerformanceMetrics: false,
@@ -709,7 +709,7 @@ describe.only('KServe performance metrics', () => {
     modelMetricsKserve.getAllMetricsCharts().should('have.length', 2);
   });
 
-  it('charts should function when data is available', () => {
+  it('charts should show data when serving data is available', () => {
     initIntercepts({
       disableBiasMetrics: false,
       disablePerformanceMetrics: false,
@@ -726,6 +726,7 @@ describe.only('KServe performance metrics', () => {
     modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveData();
     modelMetricsKserve.getMetricsChart('CPU usage').shouldHaveData();
     modelMetricsKserve.getMetricsChart('Memory usage').shouldHaveData();
+    modelMetricsKserve.getAllMetricsCharts().should('have.length', 4);
   });
 
   it('charts should show empty state when no serving data is available', () => {
