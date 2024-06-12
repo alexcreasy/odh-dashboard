@@ -14,6 +14,10 @@ class ModelMetricsGlobal {
   getMetricsChart(title: string) {
     return new ModelMetricsChart(() => cy.findByTestId(`metrics-card-${title}`).parents());
   }
+
+  getAllMetricsCharts() {
+    return cy.findAllByTestId(/metrics-card-.*/);
+  }
 }
 
 class ModelMetricsChart extends Contextual<HTMLTableRowElement> {
@@ -47,12 +51,16 @@ class ModelMetricsKserve extends ModelMetricsPerformance {
     return cy.findByTestId('kserve-configmap-error');
   }
 
-  findKserveAreasDisabledCard() {
+  findKserveAreaDisabledCard() {
     return cy.findByTestId('kserve-metrics-disabled');
   }
 
   findUnsupportedRuntimeCard() {
     return cy.findByTestId('kserve-metrics-runtime-unsupported');
+  }
+
+  findInvalidDefinitionError() {
+    return cy.findByTestId('kserve-invalid-definition-error');
   }
 }
 

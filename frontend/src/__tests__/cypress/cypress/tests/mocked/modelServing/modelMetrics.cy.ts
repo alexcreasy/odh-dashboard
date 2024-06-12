@@ -36,7 +36,11 @@ import {
   TemplateModel,
   TrustyAIApplicationsModel,
 } from '~/__tests__/cypress/cypress/utils/models';
-import { mockKserveMetricsConfigMap } from '~/__mocks__/mockKserveMetricsConfigMap';
+import {
+  MOCK_KSERVE_METRICS_CONFIG_2,
+  MOCK_KSERVE_METRICS_CONFIG_3,
+  mockKserveMetricsConfigMap,
+} from '~/__mocks__/mockKserveMetricsConfigMap';
 
 type HandlersProps = {
   disablePerformanceMetrics?: boolean;
@@ -621,7 +625,7 @@ describe('Model Metrics', () => {
   });
 });
 
-describe('KServe performance metrics', () => {
+describe.only('KServe performance metrics', () => {
   it('should inform user when area disabled', () => {
     initIntercepts({
       disableBiasMetrics: false,
@@ -632,7 +636,7 @@ describe('KServe performance metrics', () => {
       inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
     });
     modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.findKserveAreasDisabledCard().should('be.visible');
+    modelMetricsKserve.findKserveAreaDisabledCard().should('be.visible');
   });
 
   it('should show error when ConfigMap is missing', () => {
@@ -663,6 +667,46 @@ describe('KServe performance metrics', () => {
 
     modelMetricsKserve.visit('test-project', 'test-inference-service');
     modelMetricsKserve.findUnsupportedRuntimeCard().should('be.visible');
+  });
+
+  it('should handle a malformed graph definition gracefully', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(
+      ConfigMapModel,
+      mockKserveMetricsConfigMap({ config: MOCK_KSERVE_METRICS_CONFIG_2 }),
+    );
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.findInvalidDefinitionError().should('be.visible');
+  });
+
+  it.only('should display 2 graphs with the given config', () => {
+    initIntercepts({
+      disableBiasMetrics: false,
+      disablePerformanceMetrics: false,
+      disableKServeMetrics: false,
+      hasServingData: true,
+      hasBiasData: false,
+      inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
+    });
+
+    cy.interceptK8s(
+      ConfigMapModel,
+      mockKserveMetricsConfigMap({ config: MOCK_KSERVE_METRICS_CONFIG_3 }),
+    );
+
+    modelMetricsKserve.visit('test-project', 'test-inference-service');
+    modelMetricsKserve.getMetricsChart('Number of incoming requests').shouldHaveData();
+    modelMetricsKserve.getMetricsChart('Mean Model Latency').shouldHaveData();
+    modelMetricsKserve.getAllMetricsCharts().should('have.length', 2);
   });
 
   it('charts should function when data is available', () => {
