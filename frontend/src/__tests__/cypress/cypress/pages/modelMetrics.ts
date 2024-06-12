@@ -47,6 +47,10 @@ class ModelMetricsKserve extends ModelMetricsPerformance {
     return cy.findByTestId('kserve-configmap-error');
   }
 
+  findKserveAreasDisabledCard() {
+    return cy.findByTestId('kserve-metrics-disabled');
+  }
+
   findUnsupportedRuntimeCard() {
     return cy.findByTestId('kserve-metrics-runtime-unsupported');
   }

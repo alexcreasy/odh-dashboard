@@ -621,8 +621,8 @@ describe('Model Metrics', () => {
   });
 });
 
-describe.only('KServe performance metrics', () => {
-  it.only('should show not found when area disabled', () => {
+describe('KServe performance metrics', () => {
+  it('should inform user when area disabled', () => {
     initIntercepts({
       disableBiasMetrics: false,
       disablePerformanceMetrics: false,
@@ -632,7 +632,7 @@ describe.only('KServe performance metrics', () => {
       inferenceServices: [mockInferenceServiceK8sResource({ isModelMesh: false })],
     });
     modelMetricsKserve.visit('test-project', 'test-inference-service');
-    modelMetricsKserve.findConfigMapErrorCard().should('be.visible');
+    modelMetricsKserve.findKserveAreasDisabledCard().should('be.visible');
   });
 
   it('should show error when ConfigMap is missing', () => {
