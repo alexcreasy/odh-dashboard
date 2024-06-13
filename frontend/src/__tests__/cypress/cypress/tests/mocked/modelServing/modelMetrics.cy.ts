@@ -625,7 +625,7 @@ describe('Model Metrics', () => {
   });
 });
 
-describe.only('KServe performance metrics', () => {
+describe('KServe performance metrics', () => {
   it('should inform user when area disabled', () => {
     initIntercepts({
       disableBiasMetrics: false,
