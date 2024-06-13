@@ -7,7 +7,6 @@ import {
   EmptyStateIcon,
   PageSectionVariants,
   Spinner,
-  Title,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 import { MetricsCommonContext } from '~/concepts/metrics/MetricsCommonContext';
